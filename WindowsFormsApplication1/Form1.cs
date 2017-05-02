@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using HttpHelper_namespace;
 using System.Runtime.InteropServices;
+using System.Web;
 
 namespace WindowsFormsApplication1
 {
@@ -272,7 +273,7 @@ namespace WindowsFormsApplication1
 
         }
 
-        // 登录
+        // 登录阿里妈妈
         private void button5_Click(object sender, EventArgs e)
         {
             HtmlElement nameText = webBrowser1.Document.GetElementById("TPL_username_1");
@@ -282,6 +283,37 @@ namespace WindowsFormsApplication1
 
             HtmlElement submitButton = webBrowser1.Document.GetElementById("J_SubmitStatic");
             submitButton.InvokeMember("click");
+
+            RefreshTimer.Start();
+        }
+
+        // 定时器
+        private void RefreshTimerTick(object sender, EventArgs e)
+        {
+            webBrowser1.Refresh();
+            Console.WriteLine("Timer refresh");
+        }
+
+        // 查询商品
+        private void button6_Click(object sender, EventArgs e)
+        {
+            string QueryURL = "http://pub.alimama.com/items/search.json?q=";
+            QueryURL += System.Web.HttpUtility.UrlEncode(textBox1.Text);
+            HttpItem GetJuItem = new HttpItem()
+            {
+                URL = QueryURL,
+                ContentType = "application/x-www-form-urlencoded",
+                Accept = "*/*",
+                UserAgent = "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)"
+            };
+            HttpHelper GetJuHelper = new HttpHelper();
+            HttpResult GetJuResult = GetJuHelper.GetHtml(GetJuItem);
+            string result = GetJuResult.Html;
+
+            JObject jp1 = (JObject)JsonConvert.DeserializeObject(result);
+            string title = jp1["data"]["pageList"]["title"].ToString();
+            string price = jp1["data"]["pageList"]["zkPrice"].ToString();
+            string coupon = jp1["data"]["pageList"][]
         }
     }
 
