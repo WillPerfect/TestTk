@@ -38,6 +38,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.button6 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -50,15 +52,21 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.button8 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.RefreshTimer = new System.Windows.Forms.Timer(this.components);
-            this.button6 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -67,6 +75,7 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -156,8 +165,27 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
             // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(359, 110);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(275, 102);
+            this.textBox2.TabIndex = 3;
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(237, 108);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(100, 23);
+            this.button6.TabIndex = 2;
+            this.button6.Text = "查询商品";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
             // button2
             // 
+            this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(359, 65);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
@@ -276,28 +304,68 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.button8);
+            this.tabPage5.Controls.Add(this.button7);
+            this.tabPage5.Controls.Add(this.textBox4);
+            this.tabPage5.Controls.Add(this.textBox3);
+            this.tabPage5.Controls.Add(this.pictureBox1);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(524, 383);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "tabPage5";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(371, 348);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(75, 23);
+            this.button8.TabIndex = 4;
+            this.button8.Text = "copy2";
+            this.button8.UseVisualStyleBackColor = true;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(84, 349);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 23);
+            this.button7.TabIndex = 3;
+            this.button7.Text = "copy1";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(291, 188);
+            this.textBox4.Multiline = true;
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(225, 154);
+            this.textBox4.TabIndex = 2;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(8, 188);
+            this.textBox3.Multiline = true;
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(225, 154);
+            this.textBox3.TabIndex = 1;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(167, 14);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(180, 154);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
             // RefreshTimer
             // 
             this.RefreshTimer.Interval = 600000;
             this.RefreshTimer.Tick += new System.EventHandler(this.RefreshTimerTick);
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(237, 108);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(100, 23);
-            this.button6.TabIndex = 2;
-            this.button6.Text = "查询商品";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(359, 110);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(275, 102);
-            this.textBox2.TabIndex = 3;
             // 
             // Form1
             // 
@@ -316,6 +384,9 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -346,6 +417,12 @@
         private System.Windows.Forms.Timer RefreshTimer;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button7;
 
     }
 }

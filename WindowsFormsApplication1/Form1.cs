@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using HttpHelper_namespace;
 using System.Runtime.InteropServices;
 using System.Web;
+using System.Threading;
 
 namespace WindowsFormsApplication1
 {
@@ -20,6 +21,7 @@ namespace WindowsFormsApplication1
 
     public partial class Form1 : Form
     {
+        private string current_cookie;
         private List<Site> SiteList = new List<Site>();
         public Form1()
         {
@@ -165,6 +167,114 @@ namespace WindowsFormsApplication1
             return id;
         }
 
+        // 获取下单链接
+        private void getOrderURL(string product_url, out string order_url, out string coupon_token)
+        {
+            string itemid = getIdFromURL(product_url); // 商品id
+            Console.WriteLine("id = " + itemid);
+
+            // 得到当前选择的siteid和adzoneid
+            string siteid = "", adzoneid = "";
+            string selected_adzone = comboBox1.Text;
+            foreach (Site site in SiteList)
+            {
+                bool bFind = false;
+                foreach (Adzone adzone in site.zones)
+                {
+                    if (adzone.name == selected_adzone)
+                    {
+                        Console.WriteLine("site id : " + site.id + ", adzone id : " + adzone.id);
+                        siteid = site.id;
+                        adzoneid = adzone.id;
+                        bFind = true;
+                        break;
+                    }
+                }
+                if (bFind)
+                {
+                    break;
+                }
+            }
+
+            // 转链
+            string newURL = "http://pub.alimama.com/common/code/getAuctionCode.json?";
+            newURL += "auctionid=" + itemid;
+            newURL += "&adzoneid=" + adzoneid;
+            newURL += "&siteid=" + siteid;
+            newURL += "&scenes=1&t=1445487172579&_input_charset=utf-8";
+
+            string cookie = GetCookies(webBrowser1.Document.Url.ToString());
+            HttpItem GetJuItem = new HttpItem()
+            {
+                URL = newURL,
+                ContentType = "application/x-www-form-urlencoded",
+                Cookie = cookie,
+                Accept = "*/*",
+                UserAgent = "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)"
+            };
+            HttpHelper GetJuHelper = new HttpHelper();
+            HttpResult GetJuResult = GetJuHelper.GetHtml(GetJuItem);
+            string result = GetJuResult.Html;
+
+            JObject jp1 = (JObject)JsonConvert.DeserializeObject(result);
+            order_url = jp1["data"]["shortLinkUrl"].ToString();
+            coupon_token = jp1["data"]["taoToken"].ToString();
+        }
+
+        // 获取优惠券地址
+        private void getCouponURL(string product_url, out string order_url, out string coupon_url, out string coupon_token)
+        {
+            string itemid = getIdFromURL(product_url); // 商品id
+
+            // 得到当前选择的siteid和adzoneid
+            string siteid = "", adzoneid = "";
+            string selected_adzone = comboBox1.Text;
+            foreach (Site site in SiteList)
+            {
+                bool bFind = false;
+                foreach (Adzone adzone in site.zones)
+                {
+                    if (adzone.name == selected_adzone)
+                    {
+                        Console.WriteLine("site id : " + site.id + ", adzone id : " + adzone.id);
+                        siteid = site.id;
+                        adzoneid = adzone.id;
+                        bFind = true;
+                        break;
+                    }
+                }
+                if (bFind)
+                {
+                    break;
+                }
+            }
+
+            // 转链
+            string newURL = "http://pub.alimama.com/common/code/getAuctionCode.json?";
+            newURL += "auctionid=" + itemid;
+            newURL += "&adzoneid=" + adzoneid;
+            newURL += "&siteid=" + siteid;
+            newURL += "&scenes=3&channel=tk_qqhd";
+
+            string cookie = GetCookies(webBrowser1.Document.Url.ToString());
+            HttpItem GetJuItem = new HttpItem()
+            {
+                URL = newURL,
+                ContentType = "application/x-www-form-urlencoded",
+                Cookie = cookie,
+                Accept = "*/*",
+                UserAgent = "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)"
+            };
+            HttpHelper GetJuHelper = new HttpHelper();
+            HttpResult GetJuResult = GetJuHelper.GetHtml(GetJuItem);
+            string result = GetJuResult.Html;
+
+            JObject jp1 = (JObject)JsonConvert.DeserializeObject(result);
+            coupon_url = jp1["data"]["couponLink"].ToString();
+            order_url = jp1["data"]["shortLinkUrl"].ToString();
+            coupon_token = jp1["data"]["couponLinkTaoToken"].ToString();
+        }
+
         // 获取
         private void button1_Click(object sender, EventArgs e)
         {
@@ -276,13 +386,13 @@ namespace WindowsFormsApplication1
         // 登录阿里妈妈
         private void button5_Click(object sender, EventArgs e)
         {
-            HtmlElement nameText = webBrowser1.Document.GetElementById("TPL_username_1");
-            HtmlElement passwordText = webBrowser1.Document.GetElementById("TPL_password_1");
-            nameText.InnerText = UserNameTextBox.Text;
-            passwordText.InnerText = PasswordTextBox.Text;
-
-            HtmlElement submitButton = webBrowser1.Document.GetElementById("J_SubmitStatic");
-            submitButton.InvokeMember("click");
+//             HtmlElement nameText = webBrowser1.Document.GetElementById("TPL_username_1");
+//             HtmlElement passwordText = webBrowser1.Document.GetElementById("TPL_password_1");
+//             nameText.InnerText = UserNameTextBox.Text;
+//             passwordText.InnerText = PasswordTextBox.Text;
+// 
+//             HtmlElement submitButton = webBrowser1.Document.GetElementById("J_SubmitStatic");
+//             submitButton.InvokeMember("click");
 
             RefreshTimer.Start();
         }
@@ -290,7 +400,9 @@ namespace WindowsFormsApplication1
         // 定时器
         private void RefreshTimerTick(object sender, EventArgs e)
         {
-            webBrowser1.Refresh();
+            webBrowser1.Navigate("http://media.alimama.com/account/overview.htm");
+            Thread.Sleep(5000);
+            webBrowser1.Navigate("http://www.alimama.com/index.htm");
             Console.WriteLine("Timer refresh");
         }
 
@@ -310,10 +422,50 @@ namespace WindowsFormsApplication1
             HttpResult GetJuResult = GetJuHelper.GetHtml(GetJuItem);
             string result = GetJuResult.Html;
 
-            JObject jp1 = (JObject)JsonConvert.DeserializeObject(result);
-            string title = jp1["data"]["pageList"]["title"].ToString();
-            string price = jp1["data"]["pageList"]["zkPrice"].ToString();
-            string coupon = jp1["data"]["pageList"][]
+            try
+            {
+                JObject jp1 = (JObject)JsonConvert.DeserializeObject(result);
+                string title = jp1["data"]["pageList"][0]["title"].ToString();
+                string price = jp1["data"]["pageList"][0]["zkPrice"].ToString();
+                string coupon = jp1["data"]["pageList"][0]["couponAmount"].ToString();
+                string pictureURL = jp1["data"]["pageList"][0]["pictUrl"].ToString();
+
+                pictureURL = "http:" + pictureURL;
+                pictureBox1.ImageLocation = pictureURL;
+
+                string TotalText = "【商品】 " + title + "\r\n";
+                if (coupon == "0")
+                {
+                    // 没有优惠券
+                    TotalText += "【价格】 " + price + "元！\r\n";
+                    string order_url, coupon_token;
+                    getOrderURL(textBox1.Text, out order_url, out coupon_token);
+                    TotalText += "【口令】 " + coupon_token + "\r\n";
+                    TotalText += "【下单】 " + order_url + "\r\n";
+                }
+                else
+                {
+                    // 有优惠券
+                    TotalText += "【原价】 " + price + "元！\r\n";
+                    TotalText += "【现价】 " + (float.Parse(price) - float.Parse(coupon)).ToString() + "秒杀！\r\n";
+                    string order_url, coupon_url, coupon_token;
+                    getCouponURL(textBox1.Text, out order_url, out coupon_url, out coupon_token);
+                    TotalText += "【领券】 " + coupon_url + "\r\n";
+                    TotalText += "【口令】 " + coupon_token + "\r\n";
+                    TotalText += "【下单】 " + order_url + "\r\n";
+                }
+                textBox2.Text = TotalText;
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        // copy1
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetDataObject(pictureBox1.Image, true);
         }
     }
 
