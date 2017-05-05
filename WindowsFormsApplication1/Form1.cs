@@ -281,59 +281,11 @@ namespace WindowsFormsApplication1
             getAdzoneEx();
         }
 
-        // 转换
+        // 群发
         private void button2_Click(object sender, EventArgs e)
         {
-            // 从URL中提取商品ID
-            string url = textBox1.Text;
-            string itemid = getIdFromURL(url); // 商品id
-            Console.WriteLine("id = " + itemid);
-
-            // 得到当前选择的siteid和adzoneid
-            string siteid = "", adzoneid = "";
-            string selected_adzone = comboBox1.Text;
-            foreach(Site site in SiteList)
-            {
-                bool bFind = false;
-                foreach(Adzone adzone in site.zones)
-                {
-                    if(adzone.name == selected_adzone)
-                    {
-                        Console.WriteLine("site id : " + site.id + ", adzone id : " + adzone.id);
-                        siteid = site.id;
-                        adzoneid = adzone.id;
-                        bFind = true;
-                        break;
-                    }
-                }
-                if (bFind)
-                {
-                    break;
-                }
-            }
-
-            // 转链
-            string newURL = "http://pub.alimama.com/common/code/getAuctionCode.json?";
-            newURL += "auctionid=" + itemid;
-            newURL += "&adzoneid=" + adzoneid;
-            newURL += "&siteid=" + siteid;
-            newURL += "&t=1445487172579&_input_charset=utf-8";
-
-            string cookie = GetCookies(webBrowser1.Document.Url.ToString());
-            HttpItem GetJuItem = new HttpItem()
-            {
-                URL = newURL,
-                ContentType = "application/x-www-form-urlencoded",
-                Cookie = cookie,
-                Accept = "*/*",
-                UserAgent = "Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)"
-            };
-            HttpHelper GetJuHelper = new HttpHelper();
-            HttpResult GetJuResult = GetJuHelper.GetHtml(GetJuItem);
-            string result = GetJuResult.Html;
-
-            JObject jp1 = (JObject)JsonConvert.DeserializeObject(result);
-            textBox1.Text = jp1["data"]["shortLinkUrl"].ToString();
+            CallBack myCallBack = new CallBack(EnumWindowsProc);
+            EnumWindows(myCallBack, 0);
         }
 
         // 引用3个API
@@ -345,6 +297,13 @@ namespace WindowsFormsApplication1
 
         [DllImport("user32.dll")]
         public static extern int GetWindowText(int hWnd, StringBuilder lpString, int nMaxCount);
+
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(int hWnd, uint msg, int wParam, int lParam);
+
+        [DllImport("user32.dll")]
+        public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
+
         private bool EnumWindowsProc(int hwnd, int param)
         {
             StringBuilder className = new StringBuilder(200);
@@ -362,25 +321,59 @@ namespace WindowsFormsApplication1
                         string strWndName = wndName.ToString();
                         if (strWndName != "QQ" && strWndName != "TXMenuWindow")
                         {
-                            listBox1.Items.Add(wndName.ToString());
+                            Clipboard.SetDataObject(pictureBox2.Image, true); // copy
+                            uint WM_PASTE = 0x0302;
+                            uint WM_KEYDOWN = 0x0100;
+                            int VK_RETURN = 0x0D;
+                            SendMessage(hwnd, WM_PASTE, 0, 0); // paste
+
+                            Clipboard.SetDataObject(textBox2.Text); // copy
+                            SendMessage(hwnd, WM_PASTE, 0, 0); // paste
+
+                            SendMessage(hwnd, WM_KEYDOWN, VK_RETURN, 0); // send
                         }
                     }
                 }
+                else if (className.ToString() == "ChatWnd")
+                {
+                    uint WM_LBUTTONDOWN = 0x0201;
+                    uint WM_LBUTTONUP = 0x0202;
+                    uint WM_KEYDOWN = 0x0100;
+                    uint WM_KEYUP = 0x0101;
+                    int MK_LBUTTON = 1;
+                    byte VK_CONTROL = 0x11;
+                    uint KEYEVENTF_KEYUP = 2;
+                    int pos = 0x023a0113; // 275, 570
+                    int VK_RETURN = 0x0D;
+
+                    Clipboard.SetDataObject(pictureBox2.Image, true); // copy
+
+                    // paster
+                    SendMessage(hwnd, WM_LBUTTONDOWN, MK_LBUTTON, pos);
+                    Thread.Sleep(10);
+                    SendMessage(hwnd, WM_LBUTTONUP, 0, pos);
+
+                    keybd_event(VK_CONTROL, 0, 0, 0);
+                    SendMessage(hwnd, WM_KEYDOWN, 'V', 0);
+                    SendMessage(hwnd, WM_KEYUP, 'V', 0);
+                    keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0);
+
+                    Clipboard.SetDataObject(textBox2.Text); // copy
+
+                    // paster
+                    SendMessage(hwnd, WM_LBUTTONDOWN, MK_LBUTTON, pos);
+                    Thread.Sleep(10);
+                    SendMessage(hwnd, WM_LBUTTONUP, 0, pos);
+
+                    keybd_event(VK_CONTROL, 0, 0, 0);
+                    SendMessage(hwnd, WM_KEYDOWN, 'V', 0);
+                    SendMessage(hwnd, WM_KEYUP, 'V', 0);
+                    keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0);
+
+                    SendMessage(hwnd, WM_KEYDOWN, VK_RETURN, 0); // send
+                }
             }
             return true;
-        }
-        // 获取QQ
-        private void button3_Click(object sender, EventArgs e)
-        {
-            listBox1.Items.Clear();
-            CallBack myCallBack = new CallBack(EnumWindowsProc);
-            EnumWindows(myCallBack, 0);
-        }
-
-        // 群发
-        private void button4_Click(object sender, EventArgs e)
-        {
-
         }
 
         // 登录阿里妈妈
@@ -431,7 +424,7 @@ namespace WindowsFormsApplication1
                 string pictureURL = jp1["data"]["pageList"][0]["pictUrl"].ToString();
 
                 pictureURL = "http:" + pictureURL;
-                pictureBox1.ImageLocation = pictureURL;
+                pictureBox2.ImageLocation = pictureURL; // picture
 
                 string TotalText = "【商品】 " + title + "\r\n";
                 if (coupon == "0")
@@ -460,12 +453,6 @@ namespace WindowsFormsApplication1
             {
 
             }
-        }
-
-        // copy1
-        private void button7_Click(object sender, EventArgs e)
-        {
-            Clipboard.SetDataObject(pictureBox1.Image, true);
         }
     }
 
