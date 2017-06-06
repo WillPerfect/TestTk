@@ -31,6 +31,9 @@
             this.components = new System.ComponentModel.Container();
             this.RefreshTimer = new System.Windows.Forms.Timer(this.components);
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.HookButton = new System.Windows.Forms.Button();
+            this.KeepAliveBtn = new System.Windows.Forms.Button();
+            this.saveCookieBtn = new System.Windows.Forms.Button();
             this.PasswordTextBox = new System.Windows.Forms.TextBox();
             this.UserNameTextBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -50,12 +53,21 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.LoginTimer = new System.Windows.Forms.Timer(this.components);
+            this.InputTimer1 = new System.Windows.Forms.Timer(this.components);
+            this.InputTimer2 = new System.Windows.Forms.Timer(this.components);
+            this.InputTimer3 = new System.Windows.Forms.Timer(this.components);
+            this.KeepLiveTimer = new System.Windows.Forms.Timer(this.components);
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.button3 = new System.Windows.Forms.Button();
             this.tabPage4.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // RefreshTimer
@@ -65,6 +77,9 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.HookButton);
+            this.tabPage4.Controls.Add(this.KeepAliveBtn);
+            this.tabPage4.Controls.Add(this.saveCookieBtn);
             this.tabPage4.Controls.Add(this.PasswordTextBox);
             this.tabPage4.Controls.Add(this.UserNameTextBox);
             this.tabPage4.Controls.Add(this.label4);
@@ -74,8 +89,43 @@
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(524, 383);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "tabPage4";
+            this.tabPage4.Text = "登录";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // HookButton
+            // 
+            this.HookButton.Enabled = false;
+            this.HookButton.Location = new System.Drawing.Point(395, 177);
+            this.HookButton.Name = "HookButton";
+            this.HookButton.Size = new System.Drawing.Size(75, 23);
+            this.HookButton.TabIndex = 7;
+            this.HookButton.Text = "Hook";
+            this.HookButton.UseVisualStyleBackColor = true;
+            this.HookButton.Visible = false;
+            this.HookButton.Click += new System.EventHandler(this.HookButton_Click);
+            // 
+            // KeepAliveBtn
+            // 
+            this.KeepAliveBtn.Enabled = false;
+            this.KeepAliveBtn.Location = new System.Drawing.Point(281, 178);
+            this.KeepAliveBtn.Name = "KeepAliveBtn";
+            this.KeepAliveBtn.Size = new System.Drawing.Size(75, 23);
+            this.KeepAliveBtn.TabIndex = 6;
+            this.KeepAliveBtn.Text = "KeepAlive";
+            this.KeepAliveBtn.UseVisualStyleBackColor = true;
+            this.KeepAliveBtn.Visible = false;
+            this.KeepAliveBtn.Click += new System.EventHandler(this.KeepAliveBtn_Click);
+            // 
+            // saveCookieBtn
+            // 
+            this.saveCookieBtn.Location = new System.Drawing.Point(174, 178);
+            this.saveCookieBtn.Name = "saveCookieBtn";
+            this.saveCookieBtn.Size = new System.Drawing.Size(75, 23);
+            this.saveCookieBtn.TabIndex = 5;
+            this.saveCookieBtn.Text = "saveCookie";
+            this.saveCookieBtn.UseVisualStyleBackColor = true;
+            this.saveCookieBtn.Visible = false;
+            this.saveCookieBtn.Click += new System.EventHandler(this.saveCookieBtn_Click);
             // 
             // PasswordTextBox
             // 
@@ -85,6 +135,7 @@
             this.PasswordTextBox.Size = new System.Drawing.Size(153, 21);
             this.PasswordTextBox.TabIndex = 4;
             this.PasswordTextBox.Text = "jfKSK941";
+            this.PasswordTextBox.Visible = false;
             // 
             // UserNameTextBox
             // 
@@ -93,6 +144,7 @@
             this.UserNameTextBox.Size = new System.Drawing.Size(153, 21);
             this.UserNameTextBox.TabIndex = 3;
             this.UserNameTextBox.Text = "xingkong_2000";
+            this.UserNameTextBox.Visible = false;
             // 
             // label4
             // 
@@ -102,6 +154,7 @@
             this.label4.Size = new System.Drawing.Size(59, 12);
             this.label4.TabIndex = 2;
             this.label4.Text = "Password:";
+            this.label4.Visible = false;
             // 
             // label3
             // 
@@ -111,6 +164,7 @@
             this.label3.Size = new System.Drawing.Size(59, 12);
             this.label3.TabIndex = 1;
             this.label3.Text = "UserName:";
+            this.label3.Visible = false;
             // 
             // button5
             // 
@@ -135,7 +189,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(524, 383);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.Text = "推广";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // textBox1
@@ -240,7 +294,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(524, 383);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.Text = "阿里妈妈";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // webBrowser1
@@ -251,18 +305,74 @@
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.Size = new System.Drawing.Size(518, 377);
             this.webBrowser1.TabIndex = 2;
+            this.webBrowser1.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.OnDocumentCompleted);
             // 
             // tabControl1
             // 
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(532, 409);
             this.tabControl1.TabIndex = 1;
+            // 
+            // LoginTimer
+            // 
+            this.LoginTimer.Interval = 10000;
+            this.LoginTimer.Tick += new System.EventHandler(this.OnLoginTimer);
+            // 
+            // InputTimer1
+            // 
+            this.InputTimer1.Interval = 5000;
+            this.InputTimer1.Tick += new System.EventHandler(this.OnInputTimer1);
+            // 
+            // InputTimer2
+            // 
+            this.InputTimer2.Interval = 1000;
+            this.InputTimer2.Tick += new System.EventHandler(this.OnInputTimer2);
+            // 
+            // InputTimer3
+            // 
+            this.InputTimer3.Interval = 1300;
+            this.InputTimer3.Tick += new System.EventHandler(this.OnInputTimer3);
+            // 
+            // KeepLiveTimer
+            // 
+            this.KeepLiveTimer.Interval = 180000;
+            this.KeepLiveTimer.Tick += new System.EventHandler(this.OnKeepLiveTimer);
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.button3);
+            this.tabPage3.Controls.Add(this.textBox3);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(524, 383);
+            this.tabPage3.TabIndex = 4;
+            this.tabPage3.Text = "监控";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(51, 34);
+            this.textBox3.Multiline = true;
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(417, 246);
+            this.textBox3.TabIndex = 0;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(222, 304);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 1;
+            this.button3.Text = "获取";
+            this.button3.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -271,6 +381,7 @@
             this.ClientSize = new System.Drawing.Size(532, 409);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
@@ -281,6 +392,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.tabPage1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -308,6 +421,17 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.Timer LoginTimer;
+        private System.Windows.Forms.Timer InputTimer1;
+        private System.Windows.Forms.Timer InputTimer2;
+        private System.Windows.Forms.Timer InputTimer3;
+        private System.Windows.Forms.Button saveCookieBtn;
+        private System.Windows.Forms.Timer KeepLiveTimer;
+        private System.Windows.Forms.Button KeepAliveBtn;
+        private System.Windows.Forms.Button HookButton;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.TextBox textBox3;
 
     }
 }
