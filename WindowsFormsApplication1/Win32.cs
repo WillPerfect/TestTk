@@ -34,5 +34,28 @@ namespace WindowsFormsApplication1
 
         [DllImport("user32.dll")]
         public static extern void SwitchToThisWindow(int hWnd, int fAltTab);
+
+        public const int CHILDID_SELF = 0;
+        public const int CHILDID_1 = 1;
+        public const int OBJID_CLIENT = -4;
+        [DllImport("Oleacc.dll")]
+        public static extern int AccessibleObjectFromWindow(
+        IntPtr hwnd,
+        int dwObjectID,
+        ref Guid refID,
+        ref IAccessible ppvObject);
+
+        [DllImport("Oleacc.dll")]
+        public static extern int WindowFromAccessibleObject(
+            IAccessible pacc,
+            out IntPtr phwnd);
+
+        [DllImport("Oleacc.dll")]
+        public static extern int AccessibleChildren(
+        Accessibility.IAccessible paccContainer,
+        int iChildStart,
+        int cChildren,
+        [Out] object[] rgvarChildren,
+        out int pcObtained);
     }
 }

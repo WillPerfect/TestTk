@@ -344,11 +344,11 @@ namespace WindowsFormsApplication1
         // 群发
         private void button2_Click(object sender, EventArgs e)
         {
-            CallBack myCallBack = new CallBack(EnumWindowsProc);
+            CallBack myCallBack = new CallBack(EnumWindowsAndSendMessage);
             Win32.EnumWindows(myCallBack, 0);
         }
 
-        private bool EnumWindowsProc(int hwnd, int param)
+        private bool EnumWindowsAndSendMessage(int hwnd, int param)
         {
             StringBuilder className = new StringBuilder(200);
             int len;
@@ -877,6 +877,136 @@ namespace WindowsFormsApplication1
         private void HookButton_Click(object sender, EventArgs e)
         {
             OpenHook();
+        }
+
+        // 还原淘客链接到原始链接
+        private string ParseTkURL(string tkURL)
+        {
+            string strOrignalURL = ""; // 原始链接
+            if (tkURL.IndexOf("https://s.click.taobao.com") == 0)
+            {
+                // 是淘客链接
+                HttpItem GetJuItem = new HttpItem() // 第一次跳转
+                {
+                    URL = tkURL,
+                    ContentType = "application/x-www-form-urlencoded",
+                    Accept = "*/*",
+                    UserAgent = ua
+                };
+                HttpHelper GetJuHelper = new HttpHelper();
+                HttpResult GetJuResult = GetJuHelper.GetHtml(GetJuItem);
+                if (GetJuResult.StatusCode == HttpStatusCode.Found)
+                {
+                    // 重定向
+                    string strNewURL = GetJuResult.Header["Location"];
+                    
+                    HttpItem GetJuItem2 = new HttpItem() // 第二次跳转
+                    {
+                        URL = strNewURL,
+                        ContentType = "application/x-www-form-urlencoded",
+                        Accept = "*/*",
+                        UserAgent = ua
+                    };
+                    HttpHelper GetJuHelper2 = new HttpHelper();
+                    HttpResult GetJuResult2 = GetJuHelper2.GetHtml(GetJuItem2);
+                    if (GetJuResult2.StatusCode == HttpStatusCode.Found)
+                    {
+                        string strNewURL2 = GetJuResult2.Header["Location"];
+
+                        // 解析出tu
+                        int pos = strNewURL2.IndexOf("?tu=");
+                        if (pos != -1)
+                        {
+                            string tuURL = strNewURL2.Substring(pos + 4);
+                            string decURL = HttpUtility.UrlDecode(tuURL); // 解码
+
+                            HttpItem GetJuItem3 = new HttpItem() // 第三次跳转
+                            {
+                                URL = decURL,
+                                ContentType = "application/x-www-form-urlencoded",
+                                Accept = "*/*",
+                                UserAgent = ua,
+                                Referer = strNewURL2
+                            };
+                            HttpHelper GetJuHelper3 = new HttpHelper();
+                            HttpResult GetJuResult3 = GetJuHelper3.GetHtml(GetJuItem3);
+                            if (GetJuResult3.StatusCode == HttpStatusCode.Found)
+                            {
+                                string strNewURL3 = GetJuResult3.Header["Location"];
+                                int pos2 = strNewURL3.IndexOf("&ali_trackid");
+
+                                strOrignalURL = strNewURL3.Substring(0, pos2);
+                            }
+                        }
+                    }
+
+                }
+            }
+            return strOrignalURL;
+        }
+
+        // 从聊天内容中解析出链接
+        private void ParseChatContent(string content)
+        {
+            string signal = "https://s.click.taobao.com/";
+            int pos = content.IndexOf(signal);
+            while(pos != -1)
+            {
+                if (content.Length >= signal.Length + 7)
+                {
+                    string url = content.Substring(pos, signal.Length + 7);
+                    content = content.Substring(pos + signal.Length + 7);
+
+                    pos = content.IndexOf(signal);
+
+                    string strOriginURL = ParseTkURL(url);
+                    ListViewItem lvi = listView1.Items.Add(url);
+                    lvi.SubItems.Add(strOriginURL);
+                }
+            }
+        }
+
+        private bool EnumWindowsAndGetContent(int hwnd, int param)
+        {
+            StringBuilder className = new StringBuilder(200);
+            int len;
+            len = Win32.GetClassName(hwnd, className, 200);
+            if (len > 0)
+            {
+                if (className.ToString() == "TXGuiFoundation")
+                {
+                    StringBuilder wndName = new StringBuilder(200);
+                    int nameLen;
+                    nameLen = Win32.GetWindowText(hwnd, wndName, 200);
+                    if (nameLen > 0)
+                    {
+                        string strWndName = wndName.ToString();
+                        if (strWndName != "QQ" && strWndName != "TXMenuWindow")
+                        {
+                            // QQ窗口
+                            QqWindowHelper a = new QqWindowHelper((IntPtr)hwnd);
+                            textBox3.Text += a.GetContent();
+                            ParseChatContent(a.GetContent());
+                            textBox3.Text += "\n\n\n";
+                        }
+                    }
+                }
+                else if (className.ToString() == "ChatWnd")
+                {
+                    // 微信窗口
+                }
+            }
+            return true;
+        }
+
+        // 监控QQ，微信聊天信息
+        private void button3_Click(object sender, EventArgs e)
+        {
+            textBox3.Text = "";
+            listView1.Items.Clear();
+
+            CallBack myCallBack = new CallBack(EnumWindowsAndGetContent);
+            Win32.EnumWindows(myCallBack, 0);
         }
     }
 
