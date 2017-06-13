@@ -59,10 +59,18 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.button3 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
-            this.LoginTimer = new System.Windows.Forms.Timer(this.components);
-            this.InputTimer1 = new System.Windows.Forms.Timer(this.components);
-            this.InputTimer2 = new System.Windows.Forms.Timer(this.components);
-            this.InputTimer3 = new System.Windows.Forms.Timer(this.components);
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.button8 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.listView2 = new System.Windows.Forms.ListView();
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.KeepLiveTimer = new System.Windows.Forms.Timer(this.components);
             this.tabPage4.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -71,6 +79,7 @@
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // RefreshTimer
@@ -316,6 +325,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -349,6 +359,7 @@
             this.listView1.TabIndex = 2;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.DoubleClick += new System.EventHandler(this.OnDoubleClickURL);
             // 
             // columnHeader1
             // 
@@ -379,25 +390,96 @@
             this.textBox3.Size = new System.Drawing.Size(508, 166);
             this.textBox3.TabIndex = 0;
             // 
-            // LoginTimer
+            // tabPage5
             // 
-            this.LoginTimer.Interval = 10000;
-            this.LoginTimer.Tick += new System.EventHandler(this.OnLoginTimer);
+            this.tabPage5.Controls.Add(this.button8);
+            this.tabPage5.Controls.Add(this.button7);
+            this.tabPage5.Controls.Add(this.button4);
+            this.tabPage5.Controls.Add(this.listView2);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(524, 383);
+            this.tabPage5.TabIndex = 5;
+            this.tabPage5.Text = "产品库";
+            this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // InputTimer1
+            // button8
             // 
-            this.InputTimer1.Interval = 5000;
-            this.InputTimer1.Tick += new System.EventHandler(this.OnInputTimer1);
+            this.button8.Location = new System.Drawing.Point(426, 345);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(75, 23);
+            this.button8.TabIndex = 3;
+            this.button8.Text = "下一页";
+            this.button8.UseVisualStyleBackColor = true;
             // 
-            // InputTimer2
+            // button7
             // 
-            this.InputTimer2.Interval = 1000;
-            this.InputTimer2.Tick += new System.EventHandler(this.OnInputTimer2);
+            this.button7.Location = new System.Drawing.Point(334, 345);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 23);
+            this.button7.TabIndex = 2;
+            this.button7.Text = "加入发送池";
+            this.button7.UseVisualStyleBackColor = true;
             // 
-            // InputTimer3
+            // button4
             // 
-            this.InputTimer3.Interval = 1300;
-            this.InputTimer3.Tick += new System.EventHandler(this.OnInputTimer3);
+            this.button4.Location = new System.Drawing.Point(242, 345);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 1;
+            this.button4.Text = "立即发送";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // listView2
+            // 
+            this.listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader3,
+            this.columnHeader4,
+            this.columnHeader5,
+            this.columnHeader6,
+            this.columnHeader7,
+            this.columnHeader8});
+            this.listView2.FullRowSelect = true;
+            this.listView2.GridLines = true;
+            this.listView2.Location = new System.Drawing.Point(8, 10);
+            this.listView2.Name = "listView2";
+            this.listView2.Size = new System.Drawing.Size(508, 318);
+            this.listView2.SmallImageList = this.imageList1;
+            this.listView2.TabIndex = 0;
+            this.listView2.UseCompatibleStateImageBehavior = false;
+            this.listView2.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "标题";
+            this.columnHeader3.Width = 250;
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "价格";
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "佣金比例";
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "佣金";
+            // 
+            // columnHeader7
+            // 
+            this.columnHeader7.Text = "月销";
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "网址";
+            this.columnHeader8.Width = 200;
+            // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(64, 64);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // KeepLiveTimer
             // 
@@ -413,6 +495,7 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.OnFormLoad);
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.tabPage2.ResumeLayout(false);
@@ -424,6 +507,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -451,10 +535,6 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.Timer LoginTimer;
-        private System.Windows.Forms.Timer InputTimer1;
-        private System.Windows.Forms.Timer InputTimer2;
-        private System.Windows.Forms.Timer InputTimer3;
         private System.Windows.Forms.Button saveCookieBtn;
         private System.Windows.Forms.Timer KeepLiveTimer;
         private System.Windows.Forms.Button KeepAliveBtn;
@@ -465,6 +545,18 @@
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.ListView listView2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.ColumnHeader columnHeader6;
+        private System.Windows.Forms.ColumnHeader columnHeader7;
+        private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.ImageList imageList1;
 
     }
 }

@@ -24,12 +24,12 @@ namespace WindowsFormsApplication1
     public partial class Form1 : Form
     {
         private List<Site> SiteList = new List<Site>();
-        private bool bLoginManual = true; // 手动登录
         private string loginURL1 = "https://login.taobao.com/member/login.jhtml?style=mini&newMini2=true&from=alimama&redirectURL=http%3A%2F%2Flogin.taobao.com%2Fmember%2Ftaobaoke%2Flogin.htm%3Fis_login%3d1&full_redirect=true";
-//         private string loginURL2 = "https://login.taobao.com/member/login.jhtml?style=mini&from=alimama";
 
         private string initCookies = "";
         private string ua = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36";
+        private int curPage = 1;
+        private object insertImgLock = new object();
 
 
         void setCookies(string url, string cookies)
@@ -423,21 +423,6 @@ namespace WindowsFormsApplication1
             return true;
         }
 
-        void AutoLogin()
-        {
-            Console.WriteLine("自动登录");
-            InputTimer1.Start();
-        }
-
-        void QuickLogin()
-        {
-            Console.WriteLine("快速登录");
-            HtmlElement quickSubmit = webBrowser1.Document.GetElementById("J_SubmitQuick");
-            if (quickSubmit != null)
-            {
-                quickSubmit.InvokeMember("click"); // 自动登录
-            }
-        }
         public static DateTime GetTime(string timeStamp)
         {
             DateTime dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
@@ -455,7 +440,6 @@ namespace WindowsFormsApplication1
         // 登录阿里妈妈
         private void button5_Click(object sender, EventArgs e)
         {
-            bLoginManual = false;
             OpenHook();
 //             if (!IsOnline())
             {
@@ -605,30 +589,6 @@ namespace WindowsFormsApplication1
             Console.WriteLine(curUrl);
             Debugger.Log(0, null, curUrl);
 
-            if (bLoginManual)
-            {
-                HtmlElement quickLoginForm = webBrowser1.Document.GetElementById("J_QuickLogin");
-                if(quickLoginForm != null)
-                {
-                    bLoginManual = false;
-//                     string strStyle = quickLoginForm.OuterHtml;           
-//                     if (strStyle.IndexOf("user-pic") != -1)
-                    {
-                        // 快速登录
-                        QuickLogin();
-                        LoginTimer.Start();
-                    }
-//                     else
-//                     {
-//                         // 普通登录
-//                         AutoLogin();
-//                     }
-                }
-
-                Console.WriteLine("OnDocumentCompleted");
-                Debugger.Log(0, null, "OnDocumentCompleted");
-            }
-            else
             {
                 if (IsOnline())
                 {
@@ -692,66 +652,6 @@ namespace WindowsFormsApplication1
                 mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
                 mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
             }
-        }
-
-        private void OnLoginTimer(object sender, EventArgs e)
-        {
-            LoginTimer.Stop();
-            if(!IsOnline())
-            {
-//                 if(nLoginTryCount < 5)
-//                 {
-//                     // 重试
-//                     nLoginTryCount++;
-//                     bLoginManual = false;
-//                     webBrowser1.Navigate(loginURL2, "_self", null, "User-Agent: " + ua); // 跳转到登录页面 
-//                 }
-//                 else
-                {
-                    Console.WriteLine("登录失败，请手动登录");
-                    MessageBox.Show("登录失败，请手动登录");
-                }
-
-//                 ScrollSlider();
-//                 InputTimer2.Start(); // 重新输入密码
-            }
-            else
-            {
-                Console.WriteLine("登录成功");
-                string strCookies = GetCookies(webBrowser1.Document.Url.ToString());
-                Console.WriteLine(strCookies);
-            }
-        }
-
-        // 输入用户名
-        private void OnInputTimer1(object sender, EventArgs e)
-        {
-            InputTimer1.Stop();
-            HtmlElement nameText = webBrowser1.Document.GetElementById("TPL_username_1");
-            if(nameText.InnerText != UserNameTextBox.Text)
-            {
-                nameText.Focus();
-                nameText.InnerText = UserNameTextBox.Text;
-            }
-            InputTimer2.Start();
-        }
-
-        // 输入密码
-        private void OnInputTimer2(object sender, EventArgs e)
-        {
-            InputTimer2.Stop();
-            HtmlElement passwordText = webBrowser1.Document.GetElementById("TPL_password_1");
-            passwordText.InnerText = PasswordTextBox.Text;
-            InputTimer3.Start();
-        }
-
-        // 点击“登录”按钮
-        private void OnInputTimer3(object sender, EventArgs e)
-        {
-            InputTimer3.Stop();
-            HtmlElement submitButton = webBrowser1.Document.GetElementById("J_SubmitStatic");
-            submitButton.InvokeMember("click");
-            LoginTimer.Start();
         }
 
         // 保存cookie
@@ -857,9 +757,6 @@ namespace WindowsFormsApplication1
         private void OnKeepLiveTimer(object sender, EventArgs e)
         {
             KeepLive();
-//             stepOne();
-//             stepTwo();
-//             stepThree();
         }
 
         private void KeepAliveBtn_Click(object sender, EventArgs e)
@@ -1007,6 +904,93 @@ namespace WindowsFormsApplication1
 
             CallBack myCallBack = new CallBack(EnumWindowsAndGetContent);
             Win32.EnumWindows(myCallBack, 0);
+        }
+
+        private void OnDoubleClickURL(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                Clipboard.SetDataObject(listView1.SelectedItems[0].SubItems[1].Text); // copy
+                Console.WriteLine(listView1.SelectedItems[0].SubItems[1].Text);
+            }
+        }
+
+        public static string ReplaceHtmlTag(string html, int length = 0)
+        {
+            string strText = System.Text.RegularExpressions.Regex.Replace(html, "<[^>]+>", "");
+            strText = System.Text.RegularExpressions.Regex.Replace(strText, "&[^;]+;", "");
+
+            if (length > 0 && strText.Length > length)
+                return strText.Substring(0, length);
+
+            return strText;
+        }
+
+        public void GetResponseCallBack(IAsyncResult ia)
+        {
+            ///线程锁
+            lock (insertImgLock)
+            {
+                ProductListData data = ia.AsyncState as ProductListData;
+
+                HttpWebResponse resp = data.req.EndGetResponse(ia) as HttpWebResponse;
+                Image img1 = Image.FromStream(resp.GetResponseStream());
+                imageList1.Images.Add(data.name, img1);
+            }
+        }
+        // 解析产品列表
+        private void parseProducts(String jsonText)
+        {
+            JObject jp = (JObject)JsonConvert.DeserializeObject(jsonText);
+            JArray items = (JArray)jp["data"]["pageList"];
+            foreach (var item in items)
+            {
+                var title = ((JObject)item)["title"];
+                var picURL = ((JObject)item)["pictUrl"];
+                var Sale30 = ((JObject)item)["biz30day"];
+                var tkRate = ((JObject)item)["tkRate"];
+                var tkCommFee = ((JObject)item)["tkCommFee"];
+                var zkPrice = ((JObject)item)["zkPrice"];
+                var auctionUrl = ((JObject)item)["auctionUrl"];
+
+                string strTitle = HttpUtility.HtmlDecode(title.ToString());
+                strTitle = ReplaceHtmlTag(strTitle);
+                ListViewItem lv = listView2.Items.Add(strTitle);
+                lv.SubItems.Add(zkPrice.ToString());
+                lv.SubItems.Add(tkRate.ToString() + "%");
+                lv.SubItems.Add(tkCommFee.ToString());
+                lv.SubItems.Add(Sale30.ToString());
+                lv.SubItems.Add(auctionUrl.ToString());
+                lv.ImageKey = picURL.ToString();
+
+                // 异步下载图片
+                HttpWebRequest pReq = (HttpWebRequest)WebRequest.Create(new Uri("http:" + picURL));
+                ProductListData data = new ProductListData();
+                data.name = lv.ImageKey;
+                data.req = pReq;
+                pReq.BeginGetResponse(new AsyncCallback(GetResponseCallBack), data);
+            }
+        }
+        // 加载产品库
+        private void LoadProducts()
+        {
+            string strURL = "http://pub.alimama.com/items/search.json?spm=a219t.7664554.1998457203.dfb730492.J3mH3D&toPage=" + curPage.ToString() + "&queryType=2&auctionTag=&perPageSize=40";
+            HttpItem GetJuItem = new HttpItem()
+            {
+                URL = strURL,
+                ContentType = "application/x-www-form-urlencoded",
+                Accept = "*/*",
+                UserAgent = ua
+            };
+            HttpHelper GetJuHelper = new HttpHelper();
+            HttpResult GetJuResult = GetJuHelper.GetHtml(GetJuItem);
+            string result = GetJuResult.Html;
+            parseProducts(result);
+        }
+
+        private void OnFormLoad(object sender, EventArgs e)
+        {
+            LoadProducts();
         }
     }
 
