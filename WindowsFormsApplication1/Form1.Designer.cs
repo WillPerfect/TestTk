@@ -60,9 +60,9 @@
             this.button3 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.UpPageButton = new System.Windows.Forms.Button();
+            this.DownPageButton = new System.Windows.Forms.Button();
             this.listView2 = new System.Windows.Forms.ListView();
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -72,6 +72,10 @@
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.KeepLiveTimer = new System.Windows.Forms.Timer(this.components);
+            this.LoadImgTimer = new System.Windows.Forms.Timer(this.components);
+            this.label6 = new System.Windows.Forms.Label();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.SearchButton = new System.Windows.Forms.Button();
             this.tabPage4.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -392,9 +396,12 @@
             // 
             // tabPage5
             // 
-            this.tabPage5.Controls.Add(this.button8);
-            this.tabPage5.Controls.Add(this.button7);
-            this.tabPage5.Controls.Add(this.button4);
+            this.tabPage5.Controls.Add(this.SearchButton);
+            this.tabPage5.Controls.Add(this.textBox4);
+            this.tabPage5.Controls.Add(this.label6);
+            this.tabPage5.Controls.Add(this.label5);
+            this.tabPage5.Controls.Add(this.UpPageButton);
+            this.tabPage5.Controls.Add(this.DownPageButton);
             this.tabPage5.Controls.Add(this.listView2);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
@@ -403,32 +410,34 @@
             this.tabPage5.Text = "产品库";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // button8
+            // label5
             // 
-            this.button8.Location = new System.Drawing.Point(426, 345);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(75, 23);
-            this.button8.TabIndex = 3;
-            this.button8.Text = "下一页";
-            this.button8.UseVisualStyleBackColor = true;
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(392, 350);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(11, 12);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "1";
             // 
-            // button7
+            // UpPageButton
             // 
-            this.button7.Location = new System.Drawing.Point(334, 345);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(75, 23);
-            this.button7.TabIndex = 2;
-            this.button7.Text = "加入发送池";
-            this.button7.UseVisualStyleBackColor = true;
+            this.UpPageButton.Location = new System.Drawing.Point(292, 345);
+            this.UpPageButton.Name = "UpPageButton";
+            this.UpPageButton.Size = new System.Drawing.Size(75, 23);
+            this.UpPageButton.TabIndex = 4;
+            this.UpPageButton.Text = "上一页";
+            this.UpPageButton.UseVisualStyleBackColor = true;
+            this.UpPageButton.Click += new System.EventHandler(this.UpPageButton_Click);
             // 
-            // button4
+            // DownPageButton
             // 
-            this.button4.Location = new System.Drawing.Point(242, 345);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 1;
-            this.button4.Text = "立即发送";
-            this.button4.UseVisualStyleBackColor = true;
+            this.DownPageButton.Location = new System.Drawing.Point(426, 345);
+            this.DownPageButton.Name = "DownPageButton";
+            this.DownPageButton.Size = new System.Drawing.Size(75, 23);
+            this.DownPageButton.TabIndex = 3;
+            this.DownPageButton.Text = "下一页";
+            this.DownPageButton.UseVisualStyleBackColor = true;
+            this.DownPageButton.Click += new System.EventHandler(this.DownPageButton_Click);
             // 
             // listView2
             // 
@@ -441,9 +450,10 @@
             this.columnHeader8});
             this.listView2.FullRowSelect = true;
             this.listView2.GridLines = true;
-            this.listView2.Location = new System.Drawing.Point(8, 10);
+            this.listView2.LargeImageList = this.imageList1;
+            this.listView2.Location = new System.Drawing.Point(8, 59);
             this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(508, 318);
+            this.listView2.Size = new System.Drawing.Size(508, 269);
             this.listView2.SmallImageList = this.imageList1;
             this.listView2.TabIndex = 0;
             this.listView2.UseCompatibleStateImageBehavior = false;
@@ -486,6 +496,37 @@
             this.KeepLiveTimer.Interval = 180000;
             this.KeepLiveTimer.Tick += new System.EventHandler(this.OnKeepLiveTimer);
             // 
+            // LoadImgTimer
+            // 
+            this.LoadImgTimer.Interval = 2000;
+            this.LoadImgTimer.Tick += new System.EventHandler(this.OnLoadImgTimer);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(40, 25);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(41, 12);
+            this.label6.TabIndex = 6;
+            this.label6.Text = "搜索：";
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(87, 22);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(316, 21);
+            this.textBox4.TabIndex = 7;
+            // 
+            // SearchButton
+            // 
+            this.SearchButton.Location = new System.Drawing.Point(409, 21);
+            this.SearchButton.Name = "SearchButton";
+            this.SearchButton.Size = new System.Drawing.Size(75, 23);
+            this.SearchButton.TabIndex = 8;
+            this.SearchButton.Text = "搜索";
+            this.SearchButton.UseVisualStyleBackColor = true;
+            this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -508,6 +549,7 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -546,9 +588,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button DownPageButton;
         private System.Windows.Forms.ListView listView2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
@@ -557,6 +597,12 @@
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.Timer LoadImgTimer;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button UpPageButton;
+        private System.Windows.Forms.Button SearchButton;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Label label6;
 
     }
 }

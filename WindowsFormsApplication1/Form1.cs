@@ -30,7 +30,8 @@ namespace WindowsFormsApplication1
         private string ua = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36";
         private int curPage = 1;
         private object insertImgLock = new object();
-
+        private List<ProductItem> productList = new List<ProductItem>();
+        private string searchText = "";
 
         void setCookies(string url, string cookies)
         {
@@ -928,14 +929,15 @@ namespace WindowsFormsApplication1
 
         public void GetResponseCallBack(IAsyncResult ia)
         {
+            ProductListData data = ia.AsyncState as ProductListData;
+
+            HttpWebResponse resp = data.req.EndGetResponse(ia) as HttpWebResponse;
+            Image img1 = Image.FromStream(resp.GetResponseStream());
+
             ///线程锁
             lock (insertImgLock)
             {
-                ProductListData data = ia.AsyncState as ProductListData;
-
-                HttpWebResponse resp = data.req.EndGetResponse(ia) as HttpWebResponse;
-                Image img1 = Image.FromStream(resp.GetResponseStream());
-                imageList1.Images.Add(data.name, img1);
+                productList.Add(new ProductItem(data.name, img1));
             }
         }
         // 解析产品列表
@@ -953,6 +955,13 @@ namespace WindowsFormsApplication1
                 var zkPrice = ((JObject)item)["zkPrice"];
                 var auctionUrl = ((JObject)item)["auctionUrl"];
 
+                // 异步下载图片
+                HttpWebRequest pReq = (HttpWebRequest)WebRequest.Create(new Uri("http:" + picURL));
+                ProductListData data = new ProductListData();
+                data.name = picURL.ToString();
+                data.req = pReq;
+                pReq.BeginGetResponse(new AsyncCallback(GetResponseCallBack), data);
+
                 string strTitle = HttpUtility.HtmlDecode(title.ToString());
                 strTitle = ReplaceHtmlTag(strTitle);
                 ListViewItem lv = listView2.Items.Add(strTitle);
@@ -962,19 +971,24 @@ namespace WindowsFormsApplication1
                 lv.SubItems.Add(Sale30.ToString());
                 lv.SubItems.Add(auctionUrl.ToString());
                 lv.ImageKey = picURL.ToString();
-
-                // 异步下载图片
-                HttpWebRequest pReq = (HttpWebRequest)WebRequest.Create(new Uri("http:" + picURL));
-                ProductListData data = new ProductListData();
-                data.name = lv.ImageKey;
-                data.req = pReq;
-                pReq.BeginGetResponse(new AsyncCallback(GetResponseCallBack), data);
             }
         }
         // 加载产品库
         private void LoadProducts()
         {
-            string strURL = "http://pub.alimama.com/items/search.json?spm=a219t.7664554.1998457203.dfb730492.J3mH3D&toPage=" + curPage.ToString() + "&queryType=2&auctionTag=&perPageSize=40";
+            listView2.Items.Clear();
+            imageList1.Images.Clear();
+
+//             strURL = "http://pub.alimama.com/items/search.json?spm=a219t.7664554.1998457203.dfb730492.J3mH3D&toPage=" + curPage.ToString() + "&queryType=2&auctionTag=&perPageSize=40";
+            string strURL = "http://pub.alimama.com/items/search.json";
+            if (searchText != "")
+            {
+                strURL += "?q=" + HttpUtility.UrlEncode(searchText) + "&";
+            }
+            else{
+                strURL += "?";
+            }
+            strURL += "toPage=" + curPage.ToString() + "&queryType=2&auctionTag=&perPageSize=40";
             HttpItem GetJuItem = new HttpItem()
             {
                 URL = strURL,
@@ -991,6 +1005,49 @@ namespace WindowsFormsApplication1
         private void OnFormLoad(object sender, EventArgs e)
         {
             LoadProducts();
+            LoadImgTimer.Start();
+        }
+
+        private void OnLoadImgTimer(object sender, EventArgs e)
+        {
+            lock (insertImgLock)
+            {
+                if (productList.Count != 0)
+                {
+                    foreach (ProductItem item in productList)
+                    {
+                        imageList1.Images.Add(item._name, item._img);
+                    }
+                    productList.Clear();
+                }
+            }
+
+        }
+
+        private void UpPageButton_Click(object sender, EventArgs e)
+        {
+            if (curPage > 1)
+            {
+                curPage--;
+                LoadProducts();
+                label5.Text = curPage.ToString();
+            }
+        }
+
+        private void DownPageButton_Click(object sender, EventArgs e)
+        {
+            curPage++;
+            LoadProducts();
+            label5.Text = curPage.ToString();
+        }
+
+        // 搜索产品库
+        private void SearchButton_Click(object sender, EventArgs e)
+        {
+            searchText = textBox4.Text;
+            curPage = 1;
+            LoadProducts();
+            label5.Text = curPage.ToString();
         }
     }
 
