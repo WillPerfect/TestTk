@@ -52,10 +52,7 @@
             this.delButton = new System.Windows.Forms.Button();
             this.addToMyLibrary2 = new System.Windows.Forms.Button();
             this.collectListView = new System.Windows.Forms.ListView();
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.label3 = new System.Windows.Forms.Label();
+            this.collectProductLabel = new System.Windows.Forms.Label();
             this.collectListBox = new System.Windows.Forms.CheckedListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.collectButton = new System.Windows.Forms.Button();
@@ -107,7 +104,13 @@
             this.getAdzoneButton = new System.Windows.Forms.Button();
             this.loginAliButton = new System.Windows.Forms.Button();
             this.loadImageTimer = new System.Windows.Forms.Timer(this.components);
-            this.columnHeader17 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.collectProductTimer = new System.Windows.Forms.Timer(this.components);
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader21 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader22 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader25 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -203,8 +206,7 @@
             this.columnHeader2,
             this.columnHeader3,
             this.columnHeader4,
-            this.columnHeader5,
-            this.columnHeader17});
+            this.columnHeader5});
             this.productListView.FullRowSelect = true;
             this.productListView.LargeImageList = this.productLibraryImageList;
             this.productListView.Location = new System.Drawing.Point(9, 44);
@@ -218,7 +220,7 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "标题";
-            this.columnHeader1.Width = 400;
+            this.columnHeader1.Width = 500;
             // 
             // columnHeader2
             // 
@@ -297,7 +299,7 @@
             this.groupBox2.Controls.Add(this.delButton);
             this.groupBox2.Controls.Add(this.addToMyLibrary2);
             this.groupBox2.Controls.Add(this.collectListView);
-            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.collectProductLabel);
             this.groupBox2.Location = new System.Drawing.Point(262, 7);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(560, 582);
@@ -336,8 +338,12 @@
             // 
             this.collectListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader6,
-            this.columnHeader7,
-            this.columnHeader8});
+            this.columnHeader21,
+            this.columnHeader22,
+            this.columnHeader23,
+            this.columnHeader24,
+            this.columnHeader25});
+            this.collectListView.FullRowSelect = true;
             this.collectListView.Location = new System.Drawing.Point(19, 59);
             this.collectListView.Name = "collectListView";
             this.collectListView.Size = new System.Drawing.Size(523, 468);
@@ -345,28 +351,14 @@
             this.collectListView.UseCompatibleStateImageBehavior = false;
             this.collectListView.View = System.Windows.Forms.View.Details;
             // 
-            // columnHeader6
+            // collectProductLabel
             // 
-            this.columnHeader6.Text = "链接";
-            this.columnHeader6.Width = 200;
-            // 
-            // columnHeader7
-            // 
-            this.columnHeader7.Text = "标题";
-            this.columnHeader7.Width = 200;
-            // 
-            // columnHeader8
-            // 
-            this.columnHeader8.Text = "采集时间";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(261, 21);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(65, 12);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "已采集商品";
+            this.collectProductLabel.AutoSize = true;
+            this.collectProductLabel.Location = new System.Drawing.Point(261, 24);
+            this.collectProductLabel.Name = "collectProductLabel";
+            this.collectProductLabel.Size = new System.Drawing.Size(65, 12);
+            this.collectProductLabel.TabIndex = 0;
+            this.collectProductLabel.Text = "已采集商品";
             // 
             // collectListBox
             // 
@@ -396,6 +388,7 @@
             this.collectButton.TabIndex = 2;
             this.collectButton.Text = "开始采集";
             this.collectButton.UseVisualStyleBackColor = true;
+            this.collectButton.Click += new System.EventHandler(this.collectButton_Click);
             // 
             // refreshCollectButton
             // 
@@ -405,6 +398,7 @@
             this.refreshCollectButton.TabIndex = 1;
             this.refreshCollectButton.Text = "刷新";
             this.refreshCollectButton.UseVisualStyleBackColor = true;
+            this.refreshCollectButton.Click += new System.EventHandler(this.refreshCollectButton_Click);
             // 
             // label2
             // 
@@ -814,10 +808,35 @@
             this.loadImageTimer.Interval = 2000;
             this.loadImageTimer.Tick += new System.EventHandler(this.OnLoadImageTimer);
             // 
-            // columnHeader17
+            // collectProductTimer
             // 
-            this.columnHeader17.Text = "网址";
-            this.columnHeader17.Width = 200;
+            this.collectProductTimer.Interval = 60000;
+            this.collectProductTimer.Tick += new System.EventHandler(this.OnCollectProductTimer);
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "标题";
+            this.columnHeader6.Width = 300;
+            // 
+            // columnHeader21
+            // 
+            this.columnHeader21.Text = "价格";
+            // 
+            // columnHeader22
+            // 
+            this.columnHeader22.Text = "佣金比例";
+            // 
+            // columnHeader23
+            // 
+            this.columnHeader23.Text = "佣金";
+            // 
+            // columnHeader24
+            // 
+            this.columnHeader24.Text = "月销";
+            // 
+            // columnHeader25
+            // 
+            this.columnHeader25.Text = "采集时间";
             // 
             // MainForm
             // 
@@ -830,6 +849,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "淘客家";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
             this.Load += new System.EventHandler(this.OnFormLoad);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -886,10 +906,7 @@
         private System.Windows.Forms.Button delButton;
         private System.Windows.Forms.Button addToMyLibrary2;
         private System.Windows.Forms.ListView collectListView;
-        private System.Windows.Forms.ColumnHeader columnHeader6;
-        private System.Windows.Forms.ColumnHeader columnHeader7;
-        private System.Windows.Forms.ColumnHeader columnHeader8;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label collectProductLabel;
         private System.Windows.Forms.ListView listView2;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ColumnHeader columnHeader10;
@@ -937,6 +954,12 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.ImageList productLibraryImageList;
         private System.Windows.Forms.Timer loadImageTimer;
-        private System.Windows.Forms.ColumnHeader columnHeader17;
+        private System.Windows.Forms.Timer collectProductTimer;
+        private System.Windows.Forms.ColumnHeader columnHeader6;
+        private System.Windows.Forms.ColumnHeader columnHeader21;
+        private System.Windows.Forms.ColumnHeader columnHeader22;
+        private System.Windows.Forms.ColumnHeader columnHeader23;
+        private System.Windows.Forms.ColumnHeader columnHeader24;
+        private System.Windows.Forms.ColumnHeader columnHeader25;
     }
 }

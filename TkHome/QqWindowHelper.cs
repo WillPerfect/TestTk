@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Accessibility;
 
-namespace WindowsFormsApplication1
+namespace TkHome
 {
     class QqWindowHelper
     {

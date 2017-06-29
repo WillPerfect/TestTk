@@ -13,6 +13,7 @@ namespace TkHome
     public partial class MainForm : Form
     {
         private ProductLibrary _productLibrary = new ProductLibrary();
+        private ProductCollector _productCollector = new ProductCollector();
         public MainForm()
         {
             InitializeComponent();
@@ -22,6 +23,11 @@ namespace TkHome
         {
             LoadProductLibrary(); // 加载产品库
             loadImageTimer.Start();
+        }
+
+        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        {
+            _productCollector.StopMonitor();
         }
 
         #region 产品库页面
@@ -92,11 +98,90 @@ namespace TkHome
                     lv.SubItems.Add(item._tkRate + "%");
                     lv.SubItems.Add(item._tkCommFee);
                     lv.SubItems.Add(item._Sale30);
-                    lv.SubItems.Add(item._auctionUrl);
                     lv.ImageKey = item._picURL;
+                    lv.Tag = item._auctionUrl;
                 }
             }
         }
         #endregion 产品库页面
+
+        #region 商品采集页面
+        // 开始采集
+        private void collectButton_Click(object sender, EventArgs e)
+        {
+            if (!collectProductTimer.Enabled)
+            {
+                List<int> monitorQQWndList = new List<int>();
+                for (int i = 0; i < collectListBox.CheckedItems.Count; i++)
+                {
+                    QQQun item = ((QQQun)collectListBox.CheckedItems[i]);
+                    monitorQQWndList.Add(item.Wnd);
+                }
+                _productCollector.StartMonitor(monitorQQWndList); // 开始监控
+                collectProductTimer.Start();
+                collectButton.Text = "停止采集";
+            }
+            else
+            {
+                _productCollector.StopMonitor(); // 停止监控
+                collectProductTimer.Stop();
+                collectButton.Text = "开始采集";
+            }
+        }
+
+        // 采集定时器
+        private void OnCollectProductTimer(object sender, EventArgs e)
+        {
+            List<CollectURL> collectURLList = _productCollector.GetCollectedURL();
+            foreach (CollectURL item in collectURLList)
+            {
+                if (collectListView.Items.Count == 0 || collectListView.FindItemWithText(item.Title, false, 0, false) == null) // 没有找到则加入
+                {
+                    ListViewItem lv = collectListView.Items.Add(item.Title);
+                    lv.SubItems.Add(item.ZkPrice);
+                    lv.SubItems.Add(item.TkRate);
+                    lv.SubItems.Add(item.TkCommFee);
+                    lv.SubItems.Add(item.Sale30);
+                    lv.SubItems.Add(item.Time);
+                    lv.Tag = item.OriginURL;
+                }
+                collectProductLabel.Text = "已采集商品(" + collectListView.Items.Count.ToString() + ")";
+            }
+        }
+
+        // 刷新QQ群
+        private void refreshCollectButton_Click(object sender, EventArgs e)
+        {
+            List<QQQun> wndList = _productCollector.GetAllQQQunWnd();
+            collectListBox.DisplayMember = "Name";
+            foreach (QQQun item in wndList)
+            {
+                if (collectListBox.FindString(item.Name) == -1)
+                {
+                    collectListBox.Items.Add(item);
+                }
+            }
+            // 删除项
+            for (int i = collectListBox.Items.Count - 1; i >= 0; i--)
+            {
+                bool bFind = false;
+                foreach (QQQun curItem in wndList)
+                {
+                    QQQun item = collectListBox.Items[i] as QQQun;
+                    if (curItem.Name == item.Name)
+                    {
+                        bFind = true;
+                        break;
+                    }
+                }
+                if (!bFind)
+                {
+                    collectListBox.Items.RemoveAt(i);
+                }
+            }
+        }
+        #endregion 商品采集页面
+
+
     }
 }

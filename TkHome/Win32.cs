@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Accessibility;
 
-namespace WindowsFormsApplication1
+namespace TkHome
 {
+    public delegate bool EnumWindowsCallBack(int hwnd, int lParam); // 枚举窗口的回调函数
     class Win32
     {
         [DllImport("wininet.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -16,7 +17,6 @@ namespace WindowsFormsApplication1
         [DllImport("wininet.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool InternetGetCookieEx(string pchURL, string pchCookieName, StringBuilder pchCookieData, ref System.UInt32 pcchCookieData, int dwFlags, IntPtr lpReserved);
 
-        public delegate bool EnumWindowsCallBack(int hwnd, int lParam); // 枚举窗口的回调函数
         // 引用3个API
         [DllImport("user32")]
         public static extern int EnumWindows(EnumWindowsCallBack x, int y);
