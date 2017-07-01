@@ -14,6 +14,8 @@ namespace TkHome
     {
         private ProductLibrary _productLibrary = new ProductLibrary();
         private ProductCollector _productCollector = new ProductCollector();
+        private DbOperator _dbOperator = new DbOperator();
+        private int _productCountPerPage = 100; // 自选库中每页显示的商品数
         public MainForm()
         {
             InitializeComponent();
@@ -23,11 +25,14 @@ namespace TkHome
         {
             LoadProductLibrary(); // 加载产品库
             loadImageTimer.Start();
+            _dbOperator.init();
+            LoadMyLibrary(); // 加载自选库
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)
         {
             _productCollector.StopMonitor();
+            _dbOperator.deinit();
         }
 
         #region 产品库页面
@@ -102,6 +107,17 @@ namespace TkHome
                     lv.Tag = item._auctionUrl;
                 }
             }
+        }
+
+        // 添加到自选库
+        private void addToMyLibrary1_Click(object sender, EventArgs e)
+        {
+            List<ProductInfo> selectedProductList = new List<ProductInfo>();
+            foreach (ListViewItem item in productListView.SelectedItems)
+            {
+                selectedProductList.Add(new ProductInfo(item.SubItems[0].Text, "", item.SubItems[4].Text, item.SubItems[2].Text, item.SubItems[3].Text, item.SubItems[1].Text, item.Tag as string));
+            }
+            _dbOperator.addProductList(selectedProductList);
         }
         #endregion 产品库页面
 
@@ -180,7 +196,98 @@ namespace TkHome
                 }
             }
         }
+        // 添加到自选库
+        private void addToMyLibrary2_Click(object sender, EventArgs e)
+        {
+            List<ProductInfo> selectedProductList = new List<ProductInfo>();
+            foreach (ListViewItem item in collectListView.SelectedItems)
+            {
+                selectedProductList.Add(new ProductInfo(item.SubItems[0].Text, "", item.SubItems[4].Text, item.SubItems[2].Text, item.SubItems[3].Text, item.SubItems[1].Text, item.Tag as string));
+            }
+            _dbOperator.addProductList(selectedProductList);
+        }
+
+        // 删除采集项
+        private void delCollectButton_Click(object sender, EventArgs e)
+        {
+            for (int i = collectListView.SelectedItems.Count - 1; i >= 0; i--)
+            {
+                ListViewItem lv = collectListView.SelectedItems[i];
+                collectListView.Items.Remove(lv);
+            }
+        }
+
+        // 清空采集项
+        private void clearCollectButton_Click(object sender, EventArgs e)
+        {
+            collectListView.Items.Clear();
+        }
         #endregion 商品采集页面
+
+        #region 自选库页面
+        // 加载自选库
+        private void LoadMyLibrary()
+        {
+            MyLibraryListView.Items.Clear();
+
+            int curPage = int.Parse(pageLabel2.Text);
+            int startRow = (curPage - 1) * _productCountPerPage;
+            List<ProductInfo> productList = _dbOperator.loadProductList(startRow, _productCountPerPage);
+            foreach (ProductInfo product in productList)
+            {
+                ListViewItem lv = MyLibraryListView.Items.Add(product._id.ToString());
+                lv.SubItems.Add(product._title);
+                lv.SubItems.Add(product._zkPrice);
+                lv.SubItems.Add(product._tkRate);
+                lv.SubItems.Add(product._tkCommFee);
+                lv.SubItems.Add(product._addTime);
+            }
+        }
+
+        // 刷新自选库
+        private void refreshMyLibraryButton_Click(object sender, EventArgs e)
+        {
+            LoadMyLibrary();
+        }
+
+        // 自选库上一页
+        private void lastPage2_Click(object sender, EventArgs e)
+        {
+            int curPage = int.Parse(pageLabel2.Text);
+            if (curPage > 1)
+            {
+                pageLabel2.Text = (curPage - 1).ToString();
+            }
+            LoadMyLibrary();
+        }
+
+        // 自选库下一页
+        private void nextPage2_Click(object sender, EventArgs e)
+        {
+            int curPage = int.Parse(pageLabel2.Text);
+            pageLabel2.Text = (curPage + 1).ToString();
+            LoadMyLibrary();
+        }
+
+        // 删除自选库商品
+        private void delMyLibraryItemButton_Click(object sender, EventArgs e)
+        {
+            List<int> productIdList = new List<int>();
+            foreach (ListViewItem item in MyLibraryListView.SelectedItems)
+            {
+                productIdList.Add(Convert.ToInt32(item.Text));
+            }
+            _dbOperator.delProductIdList(productIdList);
+            LoadMyLibrary();
+        }
+        #endregion 自选库页面
+
+
+
+
+
+
+
 
 
     }

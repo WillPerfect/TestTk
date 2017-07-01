@@ -48,10 +48,16 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.clearButton = new System.Windows.Forms.Button();
-            this.delButton = new System.Windows.Forms.Button();
+            this.clearCollectButton = new System.Windows.Forms.Button();
+            this.delCollectButton = new System.Windows.Forms.Button();
             this.addToMyLibrary2 = new System.Windows.Forms.Button();
             this.collectListView = new System.Windows.Forms.ListView();
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader21 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader22 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader25 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.collectProductLabel = new System.Windows.Forms.Label();
             this.collectListBox = new System.Windows.Forms.CheckedListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -60,7 +66,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.delMyLibraryItemButton = new System.Windows.Forms.Button();
-            this.listView2 = new System.Windows.Forms.ListView();
+            this.MyLibraryListView = new System.Windows.Forms.ListView();
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -105,12 +111,10 @@
             this.loginAliButton = new System.Windows.Forms.Button();
             this.loadImageTimer = new System.Windows.Forms.Timer(this.components);
             this.collectProductTimer = new System.Windows.Forms.Timer(this.components);
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader21 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader22 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader25 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.refreshMyLibraryButton = new System.Windows.Forms.Button();
+            this.lastPage2 = new System.Windows.Forms.Button();
+            this.pageLabel2 = new System.Windows.Forms.Label();
+            this.nextPage2 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -174,7 +178,7 @@
             // pageLabel1
             // 
             this.pageLabel1.AutoSize = true;
-            this.pageLabel1.Location = new System.Drawing.Point(688, 562);
+            this.pageLabel1.Location = new System.Drawing.Point(692, 562);
             this.pageLabel1.Name = "pageLabel1";
             this.pageLabel1.Size = new System.Drawing.Size(11, 12);
             this.pageLabel1.TabIndex = 7;
@@ -198,6 +202,7 @@
             this.addToMyLibrary1.TabIndex = 5;
             this.addToMyLibrary1.Text = "添加到自选库";
             this.addToMyLibrary1.UseVisualStyleBackColor = true;
+            this.addToMyLibrary1.Click += new System.EventHandler(this.addToMyLibrary1_Click);
             // 
             // productListView
             // 
@@ -208,6 +213,7 @@
             this.columnHeader4,
             this.columnHeader5});
             this.productListView.FullRowSelect = true;
+            this.productListView.HideSelection = false;
             this.productListView.LargeImageList = this.productLibraryImageList;
             this.productListView.Location = new System.Drawing.Point(9, 44);
             this.productListView.Name = "productListView";
@@ -295,8 +301,8 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.clearButton);
-            this.groupBox2.Controls.Add(this.delButton);
+            this.groupBox2.Controls.Add(this.clearCollectButton);
+            this.groupBox2.Controls.Add(this.delCollectButton);
             this.groupBox2.Controls.Add(this.addToMyLibrary2);
             this.groupBox2.Controls.Add(this.collectListView);
             this.groupBox2.Controls.Add(this.collectProductLabel);
@@ -307,23 +313,25 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "结果";
             // 
-            // clearButton
+            // clearCollectButton
             // 
-            this.clearButton.Location = new System.Drawing.Point(467, 542);
-            this.clearButton.Name = "clearButton";
-            this.clearButton.Size = new System.Drawing.Size(75, 23);
-            this.clearButton.TabIndex = 4;
-            this.clearButton.Text = "清空列表";
-            this.clearButton.UseVisualStyleBackColor = true;
+            this.clearCollectButton.Location = new System.Drawing.Point(467, 542);
+            this.clearCollectButton.Name = "clearCollectButton";
+            this.clearCollectButton.Size = new System.Drawing.Size(75, 23);
+            this.clearCollectButton.TabIndex = 4;
+            this.clearCollectButton.Text = "清空列表";
+            this.clearCollectButton.UseVisualStyleBackColor = true;
+            this.clearCollectButton.Click += new System.EventHandler(this.clearCollectButton_Click);
             // 
-            // delButton
+            // delCollectButton
             // 
-            this.delButton.Location = new System.Drawing.Point(386, 543);
-            this.delButton.Name = "delButton";
-            this.delButton.Size = new System.Drawing.Size(75, 23);
-            this.delButton.TabIndex = 3;
-            this.delButton.Text = "删除";
-            this.delButton.UseVisualStyleBackColor = true;
+            this.delCollectButton.Location = new System.Drawing.Point(386, 543);
+            this.delCollectButton.Name = "delCollectButton";
+            this.delCollectButton.Size = new System.Drawing.Size(75, 23);
+            this.delCollectButton.TabIndex = 3;
+            this.delCollectButton.Text = "删除";
+            this.delCollectButton.UseVisualStyleBackColor = true;
+            this.delCollectButton.Click += new System.EventHandler(this.delCollectButton_Click);
             // 
             // addToMyLibrary2
             // 
@@ -333,6 +341,7 @@
             this.addToMyLibrary2.TabIndex = 2;
             this.addToMyLibrary2.Text = "添加到自选库";
             this.addToMyLibrary2.UseVisualStyleBackColor = true;
+            this.addToMyLibrary2.Click += new System.EventHandler(this.addToMyLibrary2_Click);
             // 
             // collectListView
             // 
@@ -344,12 +353,38 @@
             this.columnHeader24,
             this.columnHeader25});
             this.collectListView.FullRowSelect = true;
+            this.collectListView.HideSelection = false;
             this.collectListView.Location = new System.Drawing.Point(19, 59);
             this.collectListView.Name = "collectListView";
             this.collectListView.Size = new System.Drawing.Size(523, 468);
             this.collectListView.TabIndex = 1;
             this.collectListView.UseCompatibleStateImageBehavior = false;
             this.collectListView.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "标题";
+            this.columnHeader6.Width = 300;
+            // 
+            // columnHeader21
+            // 
+            this.columnHeader21.Text = "价格";
+            // 
+            // columnHeader22
+            // 
+            this.columnHeader22.Text = "佣金比例";
+            // 
+            // columnHeader23
+            // 
+            this.columnHeader23.Text = "佣金";
+            // 
+            // columnHeader24
+            // 
+            this.columnHeader24.Text = "月销";
+            // 
+            // columnHeader25
+            // 
+            this.columnHeader25.Text = "采集时间";
             // 
             // collectProductLabel
             // 
@@ -411,8 +446,12 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.nextPage2);
+            this.tabPage3.Controls.Add(this.pageLabel2);
+            this.tabPage3.Controls.Add(this.lastPage2);
+            this.tabPage3.Controls.Add(this.refreshMyLibraryButton);
             this.tabPage3.Controls.Add(this.delMyLibraryItemButton);
-            this.tabPage3.Controls.Add(this.listView2);
+            this.tabPage3.Controls.Add(this.MyLibraryListView);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(830, 595);
@@ -422,28 +461,31 @@
             // 
             // delMyLibraryItemButton
             // 
-            this.delMyLibraryItemButton.Location = new System.Drawing.Point(406, 557);
+            this.delMyLibraryItemButton.Location = new System.Drawing.Point(477, 557);
             this.delMyLibraryItemButton.Name = "delMyLibraryItemButton";
             this.delMyLibraryItemButton.Size = new System.Drawing.Size(75, 23);
             this.delMyLibraryItemButton.TabIndex = 1;
             this.delMyLibraryItemButton.Text = "删除";
             this.delMyLibraryItemButton.UseVisualStyleBackColor = true;
+            this.delMyLibraryItemButton.Click += new System.EventHandler(this.delMyLibraryItemButton_Click);
             // 
-            // listView2
+            // MyLibraryListView
             // 
-            this.listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.MyLibraryListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader9,
             this.columnHeader10,
             this.columnHeader11,
             this.columnHeader12,
             this.columnHeader13,
             this.columnHeader14});
-            this.listView2.Location = new System.Drawing.Point(9, 4);
-            this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(813, 546);
-            this.listView2.TabIndex = 0;
-            this.listView2.UseCompatibleStateImageBehavior = false;
-            this.listView2.View = System.Windows.Forms.View.Details;
+            this.MyLibraryListView.FullRowSelect = true;
+            this.MyLibraryListView.HideSelection = false;
+            this.MyLibraryListView.Location = new System.Drawing.Point(9, 4);
+            this.MyLibraryListView.Name = "MyLibraryListView";
+            this.MyLibraryListView.Size = new System.Drawing.Size(813, 546);
+            this.MyLibraryListView.TabIndex = 0;
+            this.MyLibraryListView.UseCompatibleStateImageBehavior = false;
+            this.MyLibraryListView.View = System.Windows.Forms.View.Details;
             // 
             // columnHeader9
             // 
@@ -452,7 +494,7 @@
             // columnHeader10
             // 
             this.columnHeader10.Text = "标题";
-            this.columnHeader10.Width = 400;
+            this.columnHeader10.Width = 500;
             // 
             // columnHeader11
             // 
@@ -469,6 +511,7 @@
             // columnHeader14
             // 
             this.columnHeader14.Text = "加入时间";
+            this.columnHeader14.Width = 120;
             // 
             // tabPage4
             // 
@@ -813,30 +856,44 @@
             this.collectProductTimer.Interval = 60000;
             this.collectProductTimer.Tick += new System.EventHandler(this.OnCollectProductTimer);
             // 
-            // columnHeader6
+            // refreshMyLibraryButton
             // 
-            this.columnHeader6.Text = "标题";
-            this.columnHeader6.Width = 300;
+            this.refreshMyLibraryButton.Location = new System.Drawing.Point(388, 556);
+            this.refreshMyLibraryButton.Name = "refreshMyLibraryButton";
+            this.refreshMyLibraryButton.Size = new System.Drawing.Size(75, 23);
+            this.refreshMyLibraryButton.TabIndex = 2;
+            this.refreshMyLibraryButton.Text = "刷新";
+            this.refreshMyLibraryButton.UseVisualStyleBackColor = true;
+            this.refreshMyLibraryButton.Click += new System.EventHandler(this.refreshMyLibraryButton_Click);
             // 
-            // columnHeader21
+            // lastPage2
             // 
-            this.columnHeader21.Text = "价格";
+            this.lastPage2.Location = new System.Drawing.Point(611, 556);
+            this.lastPage2.Name = "lastPage2";
+            this.lastPage2.Size = new System.Drawing.Size(75, 23);
+            this.lastPage2.TabIndex = 3;
+            this.lastPage2.Text = "上一页";
+            this.lastPage2.UseVisualStyleBackColor = true;
+            this.lastPage2.Click += new System.EventHandler(this.lastPage2_Click);
             // 
-            // columnHeader22
+            // pageLabel2
             // 
-            this.columnHeader22.Text = "佣金比例";
+            this.pageLabel2.AutoSize = true;
+            this.pageLabel2.Location = new System.Drawing.Point(702, 561);
+            this.pageLabel2.Name = "pageLabel2";
+            this.pageLabel2.Size = new System.Drawing.Size(11, 12);
+            this.pageLabel2.TabIndex = 4;
+            this.pageLabel2.Text = "1";
             // 
-            // columnHeader23
+            // nextPage2
             // 
-            this.columnHeader23.Text = "佣金";
-            // 
-            // columnHeader24
-            // 
-            this.columnHeader24.Text = "月销";
-            // 
-            // columnHeader25
-            // 
-            this.columnHeader25.Text = "采集时间";
+            this.nextPage2.Location = new System.Drawing.Point(731, 557);
+            this.nextPage2.Name = "nextPage2";
+            this.nextPage2.Size = new System.Drawing.Size(75, 23);
+            this.nextPage2.TabIndex = 5;
+            this.nextPage2.Text = "下一页";
+            this.nextPage2.UseVisualStyleBackColor = true;
+            this.nextPage2.Click += new System.EventHandler(this.nextPage2_Click);
             // 
             // MainForm
             // 
@@ -860,6 +917,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -902,12 +960,12 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button collectButton;
-        private System.Windows.Forms.Button clearButton;
-        private System.Windows.Forms.Button delButton;
+        private System.Windows.Forms.Button clearCollectButton;
+        private System.Windows.Forms.Button delCollectButton;
         private System.Windows.Forms.Button addToMyLibrary2;
         private System.Windows.Forms.ListView collectListView;
         private System.Windows.Forms.Label collectProductLabel;
-        private System.Windows.Forms.ListView listView2;
+        private System.Windows.Forms.ListView MyLibraryListView;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ColumnHeader columnHeader10;
         private System.Windows.Forms.ColumnHeader columnHeader11;
@@ -961,5 +1019,9 @@
         private System.Windows.Forms.ColumnHeader columnHeader23;
         private System.Windows.Forms.ColumnHeader columnHeader24;
         private System.Windows.Forms.ColumnHeader columnHeader25;
+        private System.Windows.Forms.Button refreshMyLibraryButton;
+        private System.Windows.Forms.Button nextPage2;
+        private System.Windows.Forms.Label pageLabel2;
+        private System.Windows.Forms.Button lastPage2;
     }
 }

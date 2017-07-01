@@ -33,6 +33,7 @@ namespace TkHome
 
     class ProductInfo
     {
+        public int _id { get; set; }
         public string _title { get; set; }
         public string _picURL { get; set; }
         public string _Sale30 { get; set; }
@@ -40,6 +41,30 @@ namespace TkHome
         public string _tkCommFee { get; set; }
         public string _zkPrice { get; set; }
         public string _auctionUrl { get; set; }
+        public string _addTime { get; set; }
+
+        public ProductInfo(string title, string picURL, string sale30, string tkRate, string tkCommFee, string zkPrice, string auctionUrl)
+        {
+            _title = title;
+            _picURL = picURL;
+            _Sale30 = sale30;
+            _tkRate = tkRate;
+            _tkCommFee = tkCommFee;
+            _zkPrice = zkPrice;
+            _auctionUrl = auctionUrl;
+        }
+
+        public ProductInfo(int id, string title, string sale30, string tkRate, string tkCommFee, string zkPrice, string auctionUrl, string addTime)
+        {
+            _id = id;
+            _title = title;
+            _Sale30 = sale30;
+            _tkRate = tkRate;
+            _tkCommFee = tkCommFee;
+            _zkPrice = zkPrice;
+            _auctionUrl = auctionUrl;
+            _addTime = addTime;
+        }
     }
 
     class ProductLibrary
@@ -133,15 +158,7 @@ namespace TkHome
                 string strTitle = HttpUtility.HtmlDecode(title.ToString());
                 strTitle = ReplaceHtmlTag(strTitle);
 
-                ProductInfo info = new ProductInfo();
-                info._title = strTitle;
-                info._picURL = picURL.ToString();
-                info._Sale30 = Sale30.ToString();
-                info._tkRate = tkRate.ToString();
-                info._tkCommFee = tkCommFee.ToString();
-                info._zkPrice = zkPrice.ToString();
-                info._auctionUrl = auctionUrl.ToString();
-
+                ProductInfo info = new ProductInfo(strTitle, picURL.ToString(), Sale30.ToString(), tkRate.ToString(), tkCommFee.ToString(), zkPrice.ToString(), auctionUrl.ToString());
                 productList.Add(info);
             }
             return productList;

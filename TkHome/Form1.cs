@@ -12,6 +12,7 @@ namespace TkHome
 {
     public partial class Form1 : Form
     {
+        public static string UserName { get; set; }
         public Form1()
         {
             InitializeComponent();
@@ -19,6 +20,8 @@ namespace TkHome
 
         private void loginButton_Click(object sender, EventArgs e)
         {
+            UserName = nameTextBox.Text;
+
             this.Hide();
             MainForm mainForm = new MainForm();
             mainForm.ShowDialog();
