@@ -15,6 +15,8 @@ namespace TkHome
         private ProductLibrary _productLibrary = new ProductLibrary();
         private ProductCollector _productCollector = new ProductCollector();
         private DbOperator _dbOperator = new DbOperator();
+        private ProductQunfa _productQunfa = new ProductQunfa();
+        private Alimama _alimama = new Alimama();
         private int _productCountPerPage = 100; // 自选库中每页显示的商品数
         public MainForm()
         {
@@ -130,7 +132,7 @@ namespace TkHome
                 List<int> monitorQQWndList = new List<int>();
                 for (int i = 0; i < collectListBox.CheckedItems.Count; i++)
                 {
-                    QQQun item = ((QQQun)collectListBox.CheckedItems[i]);
+                    WndInfo item = ((WndInfo)collectListBox.CheckedItems[i]);
                     monitorQQWndList.Add(item.Wnd);
                 }
                 _productCollector.StartMonitor(monitorQQWndList); // 开始监控
@@ -168,9 +170,9 @@ namespace TkHome
         // 刷新QQ群
         private void refreshCollectButton_Click(object sender, EventArgs e)
         {
-            List<QQQun> wndList = _productCollector.GetAllQQQunWnd();
+            List<WndInfo> wndList = _productCollector.GetAllQQQunWnd();
             collectListBox.DisplayMember = "Name";
-            foreach (QQQun item in wndList)
+            foreach (WndInfo item in wndList)
             {
                 if (collectListBox.FindString(item.Name) == -1)
                 {
@@ -181,9 +183,9 @@ namespace TkHome
             for (int i = collectListBox.Items.Count - 1; i >= 0; i--)
             {
                 bool bFind = false;
-                foreach (QQQun curItem in wndList)
+                foreach (WndInfo curItem in wndList)
                 {
-                    QQQun item = collectListBox.Items[i] as QQQun;
+                    WndInfo item = collectListBox.Items[i] as WndInfo;
                     if (curItem.Name == item.Name)
                     {
                         bFind = true;
@@ -282,12 +284,78 @@ namespace TkHome
         }
         #endregion 自选库页面
 
+        #region 商品群发页面
+
+        // 刷新QQ微信群
+        private void refreshSendButton_Click(object sender, EventArgs e)
+        {
+            List<WndInfo> wndList = _productQunfa.GetAllQQWechatWnd();
+            qunfaListBox.DisplayMember = "Name";
+            foreach (WndInfo item in wndList)
+            {
+                if (qunfaListBox.FindString(item.Name) == -1)
+                {
+                    qunfaListBox.Items.Add(item);
+                }
+            }
+            // 删除项
+            for (int i = collectListBox.Items.Count - 1; i >= 0; i--)
+            {
+                bool bFind = false;
+                foreach (WndInfo curItem in wndList)
+                {
+                    WndInfo item = qunfaListBox.Items[i] as WndInfo;
+                    if (curItem.Name == item.Name)
+                    {
+                        bFind = true;
+                        break;
+                    }
+                }
+                if (!bFind)
+                {
+                    qunfaListBox.Items.RemoveAt(i);
+                }
+            }
+        }
+
+        // 开始群发
+        private void qunfaButton_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion 登录阿里妈妈页面
 
 
+        #region 登录阿里妈妈页面
 
+        // 登录阿里妈妈
+        private void loginAliButton_Click_1(object sender, EventArgs e)
+        {
+            WebForm webForm = new WebForm();
+            webForm.ShowDialog();
+            if (webForm.IsLogined)
+            {
+                loginAliButton.Enabled = false;
+                getAdzoneButton.Enabled = true;
+            }
+        }
 
-
-
+        // 登录后获取推广位
+        private void getAdzoneButton_Click(object sender, EventArgs e)
+        {
+            List<string> adzoneList = _alimama.GetAdzone();
+            foreach (string item in adzoneList)
+            {
+                adzoneComboBox.Items.Add(item);
+            }
+            if (adzoneComboBox.Items.Count > 0)
+            {
+                adzoneComboBox.SelectedIndex = 0;
+                qunfaButton.Enabled = true;
+                translateButton.Enabled = true;
+            }
+        }
+        #endregion
 
 
     }

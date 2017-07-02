@@ -65,6 +65,10 @@
             this.refreshCollectButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.nextPage2 = new System.Windows.Forms.Button();
+            this.pageLabel2 = new System.Windows.Forms.Label();
+            this.lastPage2 = new System.Windows.Forms.Button();
+            this.refreshMyLibraryButton = new System.Windows.Forms.Button();
             this.delMyLibraryItemButton = new System.Windows.Forms.Button();
             this.MyLibraryListView = new System.Windows.Forms.ListView();
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -111,10 +115,6 @@
             this.loginAliButton = new System.Windows.Forms.Button();
             this.loadImageTimer = new System.Windows.Forms.Timer(this.components);
             this.collectProductTimer = new System.Windows.Forms.Timer(this.components);
-            this.refreshMyLibraryButton = new System.Windows.Forms.Button();
-            this.lastPage2 = new System.Windows.Forms.Button();
-            this.pageLabel2 = new System.Windows.Forms.Label();
-            this.nextPage2 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -459,6 +459,45 @@
             this.tabPage3.Text = "自选库";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // nextPage2
+            // 
+            this.nextPage2.Location = new System.Drawing.Point(731, 557);
+            this.nextPage2.Name = "nextPage2";
+            this.nextPage2.Size = new System.Drawing.Size(75, 23);
+            this.nextPage2.TabIndex = 5;
+            this.nextPage2.Text = "下一页";
+            this.nextPage2.UseVisualStyleBackColor = true;
+            this.nextPage2.Click += new System.EventHandler(this.nextPage2_Click);
+            // 
+            // pageLabel2
+            // 
+            this.pageLabel2.AutoSize = true;
+            this.pageLabel2.Location = new System.Drawing.Point(702, 561);
+            this.pageLabel2.Name = "pageLabel2";
+            this.pageLabel2.Size = new System.Drawing.Size(11, 12);
+            this.pageLabel2.TabIndex = 4;
+            this.pageLabel2.Text = "1";
+            // 
+            // lastPage2
+            // 
+            this.lastPage2.Location = new System.Drawing.Point(611, 556);
+            this.lastPage2.Name = "lastPage2";
+            this.lastPage2.Size = new System.Drawing.Size(75, 23);
+            this.lastPage2.TabIndex = 3;
+            this.lastPage2.Text = "上一页";
+            this.lastPage2.UseVisualStyleBackColor = true;
+            this.lastPage2.Click += new System.EventHandler(this.lastPage2_Click);
+            // 
+            // refreshMyLibraryButton
+            // 
+            this.refreshMyLibraryButton.Location = new System.Drawing.Point(388, 556);
+            this.refreshMyLibraryButton.Name = "refreshMyLibraryButton";
+            this.refreshMyLibraryButton.Size = new System.Drawing.Size(75, 23);
+            this.refreshMyLibraryButton.TabIndex = 2;
+            this.refreshMyLibraryButton.Text = "刷新";
+            this.refreshMyLibraryButton.UseVisualStyleBackColor = true;
+            this.refreshMyLibraryButton.Click += new System.EventHandler(this.refreshMyLibraryButton_Click);
+            // 
             // delMyLibraryItemButton
             // 
             this.delMyLibraryItemButton.Location = new System.Drawing.Point(477, 557);
@@ -528,6 +567,7 @@
             // 
             // qunfaButton
             // 
+            this.qunfaButton.Enabled = false;
             this.qunfaButton.Location = new System.Drawing.Point(736, 566);
             this.qunfaButton.Name = "qunfaButton";
             this.qunfaButton.Size = new System.Drawing.Size(75, 23);
@@ -593,6 +633,7 @@
             this.refreshSendButton.TabIndex = 1;
             this.refreshSendButton.Text = "刷新";
             this.refreshSendButton.UseVisualStyleBackColor = true;
+            this.refreshSendButton.Click += new System.EventHandler(this.refreshSendButton_Click);
             // 
             // label4
             // 
@@ -627,6 +668,7 @@
             // 
             // translateButton
             // 
+            this.translateButton.Enabled = false;
             this.translateButton.Location = new System.Drawing.Point(355, 87);
             this.translateButton.Name = "translateButton";
             this.translateButton.Size = new System.Drawing.Size(75, 23);
@@ -822,6 +864,7 @@
             // 
             // adzoneComboBox
             // 
+            this.adzoneComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.adzoneComboBox.FormattingEnabled = true;
             this.adzoneComboBox.Location = new System.Drawing.Point(501, 37);
             this.adzoneComboBox.Name = "adzoneComboBox";
@@ -830,12 +873,14 @@
             // 
             // getAdzoneButton
             // 
+            this.getAdzoneButton.Enabled = false;
             this.getAdzoneButton.Location = new System.Drawing.Point(405, 35);
             this.getAdzoneButton.Name = "getAdzoneButton";
             this.getAdzoneButton.Size = new System.Drawing.Size(89, 23);
             this.getAdzoneButton.TabIndex = 1;
             this.getAdzoneButton.Text = "获取推广位";
             this.getAdzoneButton.UseVisualStyleBackColor = true;
+            this.getAdzoneButton.Click += new System.EventHandler(this.getAdzoneButton_Click);
             // 
             // loginAliButton
             // 
@@ -845,6 +890,7 @@
             this.loginAliButton.TabIndex = 0;
             this.loginAliButton.Text = "登录阿里妈妈";
             this.loginAliButton.UseVisualStyleBackColor = true;
+            this.loginAliButton.Click += new System.EventHandler(this.loginAliButton_Click_1);
             // 
             // loadImageTimer
             // 
@@ -855,45 +901,6 @@
             // 
             this.collectProductTimer.Interval = 60000;
             this.collectProductTimer.Tick += new System.EventHandler(this.OnCollectProductTimer);
-            // 
-            // refreshMyLibraryButton
-            // 
-            this.refreshMyLibraryButton.Location = new System.Drawing.Point(388, 556);
-            this.refreshMyLibraryButton.Name = "refreshMyLibraryButton";
-            this.refreshMyLibraryButton.Size = new System.Drawing.Size(75, 23);
-            this.refreshMyLibraryButton.TabIndex = 2;
-            this.refreshMyLibraryButton.Text = "刷新";
-            this.refreshMyLibraryButton.UseVisualStyleBackColor = true;
-            this.refreshMyLibraryButton.Click += new System.EventHandler(this.refreshMyLibraryButton_Click);
-            // 
-            // lastPage2
-            // 
-            this.lastPage2.Location = new System.Drawing.Point(611, 556);
-            this.lastPage2.Name = "lastPage2";
-            this.lastPage2.Size = new System.Drawing.Size(75, 23);
-            this.lastPage2.TabIndex = 3;
-            this.lastPage2.Text = "上一页";
-            this.lastPage2.UseVisualStyleBackColor = true;
-            this.lastPage2.Click += new System.EventHandler(this.lastPage2_Click);
-            // 
-            // pageLabel2
-            // 
-            this.pageLabel2.AutoSize = true;
-            this.pageLabel2.Location = new System.Drawing.Point(702, 561);
-            this.pageLabel2.Name = "pageLabel2";
-            this.pageLabel2.Size = new System.Drawing.Size(11, 12);
-            this.pageLabel2.TabIndex = 4;
-            this.pageLabel2.Text = "1";
-            // 
-            // nextPage2
-            // 
-            this.nextPage2.Location = new System.Drawing.Point(731, 557);
-            this.nextPage2.Name = "nextPage2";
-            this.nextPage2.Size = new System.Drawing.Size(75, 23);
-            this.nextPage2.TabIndex = 5;
-            this.nextPage2.Text = "下一页";
-            this.nextPage2.UseVisualStyleBackColor = true;
-            this.nextPage2.Click += new System.EventHandler(this.nextPage2_Click);
             // 
             // MainForm
             // 

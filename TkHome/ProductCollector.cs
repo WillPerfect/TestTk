@@ -13,14 +13,17 @@ using Newtonsoft.Json.Linq;
 // 产品收集类
 namespace TkHome
 {
-    class QQQun
+    class WndInfo
     {
         public string Name { get; set; }
         public int Wnd { get; set; }
-        public QQQun(string name, int wnd)
+
+        public bool IsQQWnd { get; set; }
+        public WndInfo(string name, int wnd, bool isQQWnd = true)
         {
             Name = name;
             Wnd = wnd;
+            IsQQWnd = IsQQWnd;
         }
     }
 
@@ -39,7 +42,7 @@ namespace TkHome
     }
     class ProductCollector
     {
-        private List<QQQun> _qqQunList = new List<QQQun>();
+        private List<WndInfo> _qqQunList = new List<WndInfo>();
         private List<int> _monitorQQWndList = new List<int>(); // 当前正在监控的QQ窗口列表
         private object _collectURLLock = new object();
         private Thread _monitorThread;
@@ -48,7 +51,7 @@ namespace TkHome
         private List<string> _parsedURLList = new List<string>(); // 已经解析过的URL列表，不需要重复解析
         private List<CollectURL> _failedURLList = new List<CollectURL>(); // 超级搜索失败的URL列表，后续重试
 
-        public List<QQQun> GetAllQQQunWnd()
+        public List<WndInfo> GetAllQQQunWnd()
         {
             _qqQunList.Clear();
             EnumWindowsCallBack myCallBack = new EnumWindowsCallBack(EnumWindowsAndGetContent);
@@ -105,7 +108,7 @@ namespace TkHome
                         if (strWndName != "QQ" && strWndName != "TXMenuWindow")
                         {
                             // QQ窗口
-                            _qqQunList.Add(new QQQun(strWndName, hwnd));
+                            _qqQunList.Add(new WndInfo(strWndName, hwnd));
                         }
                     }
                 }
