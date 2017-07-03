@@ -675,6 +675,7 @@
             this.translateButton.TabIndex = 2;
             this.translateButton.Text = "转链";
             this.translateButton.UseVisualStyleBackColor = true;
+            this.translateButton.Click += new System.EventHandler(this.translateButton_Click);
             // 
             // urlTextBox
             // 

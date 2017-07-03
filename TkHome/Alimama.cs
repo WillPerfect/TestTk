@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using DotNet4.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
+using System.Drawing;
 
 namespace TkHome
 {
@@ -73,6 +75,67 @@ namespace TkHome
             return adzoneList;
         }
 
+        // 转链，返回下载的图片路径以及文案
+        public void TranslateURL(string orignalURL, string adzoneName, out string imgPath, out string showContent)
+        {
+            string QueryURL = "http://pub.alimama.com/items/search.json?q=";
+            QueryURL += System.Web.HttpUtility.UrlEncode(orignalURL);
+            HttpItem GetJuItem = new HttpItem()
+            {
+                URL = QueryURL,
+                ContentType = "application/x-www-form-urlencoded",
+                Accept = "*/*",
+            };
+            HttpHelper GetJuHelper = new HttpHelper();
+            HttpResult GetJuResult = GetJuHelper.GetHtml(GetJuItem);
+            string result = GetJuResult.Html;
+
+            try
+            {
+                JObject jp1 = (JObject)JsonConvert.DeserializeObject(result);
+                string title = jp1["data"]["pageList"][0]["title"].ToString();
+                string price = jp1["data"]["pageList"][0]["zkPrice"].ToString();
+                string coupon = jp1["data"]["pageList"][0]["couponAmount"].ToString();
+                string pictureURL = jp1["data"]["pageList"][0]["pictUrl"].ToString();
+
+                pictureURL = "http:" + pictureURL;
+                DownloadImg(pictureURL, out imgPath);
+
+                string siteId, adzoneId;
+                getSiteAdzoneId(adzoneName, out siteId, out adzoneId);
+
+                string itemid = getIdFromURL(orignalURL); // 商品id
+
+                string TotalText = "【商品】 " + title + "\n";
+                if (coupon == "0")
+                {
+                    // 没有优惠券
+                    TotalText += "【价格】 " + price + "元！\n";
+                    string order_url, coupon_token;
+                    getOrderURL(itemid, siteId, adzoneId, out order_url, out coupon_token);
+                    TotalText += "【口令】 " + coupon_token + "\n";
+                    TotalText += "【下单】 " + order_url + "\n";
+                }
+                else
+                {
+                    // 有优惠券
+                    TotalText += "【原价】 " + price + "元！\n";
+                    TotalText += "【现价】 " + (float.Parse(price) - float.Parse(coupon)).ToString() + "秒杀！\n";
+                    string order_url, coupon_url, coupon_token;
+                    getCouponURL(itemid, siteId, adzoneId, out order_url, out coupon_url, out coupon_token);
+                    TotalText += "【领券】 " + coupon_url + "\n";
+                    TotalText += "【口令】 " + coupon_token + "\n";
+                    TotalText += "【下单】 " + order_url + "\n";
+                }
+                showContent = TotalText;
+            }
+            catch (Exception)
+            {
+                imgPath = "";
+                showContent = "";
+            }
+
+        }
         private void parseAdzone(String jsonText, List<string> adzoneList)
         {
             JObject jp2 = (JObject)JsonConvert.DeserializeObject(jsonText);
@@ -134,6 +197,134 @@ namespace TkHome
             catch (Exception)
             {
                 return "";
+            }
+        }
+
+        private void DownloadImg(string imgURL, out string downloadPath)
+        {
+            HttpItem item = new HttpItem
+            {
+                URL = imgURL,
+                ResultType = ResultType.Byte
+            };
+            HttpHelper http = new HttpHelper();
+            HttpResult result = http.GetHtml(item);
+            Image img = byteArrayToImage(result.ResultByte);
+
+            string imgFileName = imgURL.Substring(imgURL.LastIndexOf('/') + 1);
+            downloadPath = System.IO.Directory.GetCurrentDirectory();
+            downloadPath += "\\";
+            downloadPath += imgFileName;
+            img.Save(downloadPath);
+        }
+
+        // 获取下单链接
+        private void getOrderURL(string itemId, string siteId, string adzoneId, out string order_url, out string coupon_token)
+        {
+            Console.WriteLine("id = " + itemId);
+
+            // 转链
+            string newURL = "http://pub.alimama.com/common/code/getAuctionCode.json?";
+            newURL += "auctionid=" + itemId;
+            newURL += "&adzoneid=" + adzoneId;
+            newURL += "&siteid=" + siteId;
+            newURL += "&scenes=1&_input_charset=utf-8";
+
+            string cookie = GetCookies(_frontPage);
+            HttpItem GetJuItem = new HttpItem()
+            {
+                URL = newURL,
+                ContentType = "application/x-www-form-urlencoded",
+                Cookie = cookie,
+                Accept = "*/*",
+            };
+            HttpHelper GetJuHelper = new HttpHelper();
+            HttpResult GetJuResult = GetJuHelper.GetHtml(GetJuItem);
+            string result = GetJuResult.Html;
+
+            JObject jp1 = (JObject)JsonConvert.DeserializeObject(result);
+            order_url = jp1["data"]["shortLinkUrl"].ToString();
+            coupon_token = jp1["data"]["taoToken"].ToString();
+        }
+
+        // 获取优惠券地址
+        private void getCouponURL(string itemId, string siteId, string adzoneId, out string order_url, out string coupon_url, out string coupon_token)
+        {
+            // 转链
+            string newURL = "http://pub.alimama.com/common/code/getAuctionCode.json?";
+            newURL += "auctionid=" + itemId;
+            newURL += "&adzoneid=" + adzoneId;
+            newURL += "&siteid=" + siteId;
+            newURL += "&scenes=3&channel=tk_qqhd";
+
+            string cookie = GetCookies(_frontPage);
+            HttpItem GetJuItem = new HttpItem()
+            {
+                URL = newURL,
+                ContentType = "application/x-www-form-urlencoded",
+                Cookie = cookie,
+                Accept = "*/*",
+            };
+            HttpHelper GetJuHelper = new HttpHelper();
+            HttpResult GetJuResult = GetJuHelper.GetHtml(GetJuItem);
+            string result = GetJuResult.Html;
+
+            JObject jp1 = (JObject)JsonConvert.DeserializeObject(result);
+            coupon_url = jp1["data"]["couponLink"].ToString();
+            order_url = jp1["data"]["shortLinkUrl"].ToString();
+            coupon_token = jp1["data"]["couponLinkTaoToken"].ToString();
+        }
+
+        private Image byteArrayToImage(byte[] Bytes)
+        {
+            MemoryStream ms = new MemoryStream(Bytes);
+            return Bitmap.FromStream(ms, true);
+        }
+
+        private string getIdFromURL(string url)
+        {
+            int pos = url.IndexOf("&id=");
+            if (pos == -1)
+            {
+                pos = url.IndexOf("?id=");
+            }
+            if (pos == -1)
+            {
+                return "";
+            }
+
+            string id = url.Substring(pos + 4);
+            pos = id.IndexOf("&");
+            if (pos != -1)
+            {
+                id = id.Substring(0, pos);
+            }
+            return id;
+        }
+
+        // 根据推广位名得到推广位ID和站点ID
+        private void getSiteAdzoneId(string adzoneName, out string siteId, out string adzoneId)
+        {
+            siteId = "";
+            adzoneId = "";
+            foreach (Site site in _siteList)
+            {
+                bool bFind = false;
+                foreach (Adzone adzone in site.zones)
+                {
+                    if (adzone.name == adzoneName)
+                    {
+                        Console.WriteLine("site id : " + site.id + ", adzone id : " + adzone.id);
+                        siteId = site.id;
+                        adzoneId = adzone.id;
+                        bFind = true;
+                        break;
+                    }
+                }
+                if (bFind)
+                {
+                    break;
+                }
             }
         }
     }

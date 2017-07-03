@@ -325,6 +325,25 @@ namespace TkHome
         }
         #endregion 登录阿里妈妈页面
 
+        #region 实用工具页面
+        // 转链
+        private void translateButton_Click(object sender, EventArgs e)
+        {
+            string url = urlTextBox.Text;
+            if (url == "")
+            {
+                return;
+            }
+            string adzoneName = adzoneComboBox.Text;
+            string imagePath, showContent;
+            _alimama.TranslateURL(url, adzoneName, out imagePath, out showContent);
+
+            TranslateLinkForm tlFrom = new TranslateLinkForm();
+            tlFrom.ImagePath = imagePath;
+            tlFrom.ShowText = showContent;
+            tlFrom.ShowDialog();
+        }
+        #endregion 实用工具页面
 
         #region 登录阿里妈妈页面
 
@@ -356,6 +375,7 @@ namespace TkHome
             }
         }
         #endregion
+
 
 
     }

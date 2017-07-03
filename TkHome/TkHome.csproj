@@ -79,6 +79,12 @@
     <Compile Include="SQLiteHelper\SQLiteColumnList.cs" />
     <Compile Include="SQLiteHelper\SQLiteHelper.cs" />
     <Compile Include="SQLiteHelper\SQLiteTable.cs" />
+    <Compile Include="TranslateLinkForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TranslateLinkForm.Designer.cs">
+      <DependentUpon>TranslateLinkForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="WebForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,6 +107,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="TranslateLinkForm.resx">
+      <DependentUpon>TranslateLinkForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WebForm.resx">
       <DependentUpon>WebForm.cs</DependentUpon>
     </EmbeddedResource>
