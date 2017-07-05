@@ -3,20 +3,89 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using System.Drawing;
+using System.Windows.Forms;
 
 // 商品群发类
 namespace TkHome
 {
+    class QunfaParam
+    {
+        public ProductQunfa Qunfa { get; set; }
+        public DbOperator Database { get; set; }
+        public Alimama Mama { get; set; }
+        public string AdzoneName { get; set; }
+        public QunfaParam(ProductQunfa qunfa, DbOperator database, Alimama alimama, string adzoneName)
+        {
+            Qunfa = qunfa;
+            Database = database;
+            Mama = alimama;
+            AdzoneName = adzoneName;
+        }
+    }
+
+    class TranslateUrlResult
+    {
+        public string ProductTitle { get; set; }
+        public string QQShowContent { get; set; }
+        public string WechatShowContent { get; set; } // 文案
+
+        public TranslateUrlResult(string title, string qqShowContent, string wechatShowContent)
+        {
+            ProductTitle = title;
+            QQShowContent = qqShowContent;
+            WechatShowContent = wechatShowContent;
+        }
+    }
+
     class ProductQunfa
     {
         private List<WndInfo> _qqWechatList = new List<WndInfo>(); // QQ微信窗口列表
+        private Thread _qunfaThread;
+        public bool StopThread { get; set; }
+        public int QunfaStartRow { get; set; } // 群发开始行
+        public int QunfaCount { get; set; } // 一次群发的数量
+        private List<TranslateUrlResult> _translateList = new List<TranslateUrlResult>();
+        private object _translateListLock = new object();
 
+        public ProductQunfa()
+        {
+            QunfaStartRow = 0; // 从第一行开始
+            QunfaCount = 1; // 一次群发1个商品
+        }
         public List<WndInfo> GetAllQQWechatWnd()
         {
             _qqWechatList.Clear();
             EnumWindowsCallBack myCallBack = new EnumWindowsCallBack(EnumWindowsAndGetContent);
             Win32.EnumWindows(myCallBack, 0);
             return _qqWechatList;
+        }
+
+        public void StartTranslateUrl(DbOperator database, Alimama alimama, string adzoneName)
+        {
+            StopThread = false;
+            _qunfaThread = new Thread(QunfaThreadProc);
+            QunfaParam param = new QunfaParam(this, database, alimama, adzoneName);
+            _qunfaThread.Start(param);
+        }
+
+        public void StopTranslateUrl()
+        {
+            StopThread = true;
+            if (_qunfaThread != null && _qunfaThread.IsAlive)
+                _qunfaThread.Join();
+        }
+
+        public List<TranslateUrlResult> GetTranslateResult()
+        {
+            List<TranslateUrlResult> retList = new List<TranslateUrlResult>();
+            lock (_translateListLock)
+            {
+                _translateList.ForEach(t => retList.Add(t));
+                _translateList.Clear();
+            }
+            return retList;
         }
 
         private bool EnumWindowsAndGetContent(int hwnd, int param)
@@ -37,7 +106,7 @@ namespace TkHome
                         if (strWndName != "QQ" && strWndName != "TXMenuWindow")
                         {
                             // QQ窗口
-                            _qqWechatList.Add(new WndInfo(strWndName, hwnd));
+                            _qqWechatList.Add(new WndInfo(strWndName, hwnd, true));
                         }
                     }
                 }
@@ -55,6 +124,62 @@ namespace TkHome
                 }
             }
             return true;
+        }
+
+        private void QunfaThreadProc(object param)
+        {
+            QunfaParam qunfaParam = param as QunfaParam;
+            DateTime lastQunfaTime = new DateTime();
+            while (!qunfaParam.Qunfa.StopThread)
+            {
+                DateTime nowTime = DateTime.Now;
+                TimeSpan delta = nowTime - lastQunfaTime;
+                if (delta.TotalSeconds > 180) // 180秒
+                {
+                    // 从数据库中加载商品
+                    List<ProductInfo> productList = qunfaParam.Database.loadProductList(qunfaParam.Qunfa.QunfaStartRow, qunfaParam.Qunfa.QunfaCount);
+                    foreach (ProductInfo product in productList)
+                    {
+                        string url = product._auctionUrl;
+                        string decryptURL = EncryptDES.Decrypt(url); // 解密
+
+                        if (qunfaParam.Qunfa.StopThread)
+                        {
+                            break;
+                        }
+                        string imgPath, showContent; // 图片路径，文案
+                        bool bSuccess = qunfaParam.Mama.TranslateURL(decryptURL, qunfaParam.AdzoneName, out imgPath, out showContent); // 转链
+                        if (qunfaParam.Qunfa.StopThread)
+                        {
+                            break;
+                        }
+                        if (!bSuccess) // 转链失败
+                        {
+                            Console.WriteLine("{0} translate failed", decryptURL);
+                            continue;
+                        }
+
+                        string strQQShowContent = ClipboardDataWrapper.WrapFroQQ(imgPath, showContent);
+                        string strWechatShowContent = ClipboardDataWrapper.WrapForWechat(imgPath, showContent);
+                        TranslateUrlResult result = new TranslateUrlResult(product._title, strQQShowContent, strWechatShowContent);
+                        lock (_translateListLock)
+                        {
+                            _translateList.Add(result);
+                        }
+                    }
+
+                    if (productList.Count == 0)
+                    {
+                        qunfaParam.Qunfa.QunfaStartRow = 0; // 从头开始群发
+                    }
+                    else
+                    {
+                        qunfaParam.Qunfa.QunfaStartRow += qunfaParam.Qunfa.QunfaCount; // 取后面的数据
+                    }
+
+                    lastQunfaTime = nowTime;
+                }
+            }
         }
     }
 }

@@ -19,11 +19,11 @@ namespace TkHome
         public int Wnd { get; set; }
 
         public bool IsQQWnd { get; set; }
-        public WndInfo(string name, int wnd, bool isQQWnd = true)
+        public WndInfo(string name, int wnd, bool isQQWnd)
         {
             Name = name;
             Wnd = wnd;
-            IsQQWnd = IsQQWnd;
+            IsQQWnd = isQQWnd;
         }
     }
 
@@ -108,7 +108,7 @@ namespace TkHome
                         if (strWndName != "QQ" && strWndName != "TXMenuWindow")
                         {
                             // QQ窗口
-                            _qqQunList.Add(new WndInfo(strWndName, hwnd));
+                            _qqQunList.Add(new WndInfo(strWndName, hwnd, true));
                         }
                     }
                 }

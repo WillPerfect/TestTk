@@ -115,6 +115,7 @@
             this.loginAliButton = new System.Windows.Forms.Button();
             this.loadImageTimer = new System.Windows.Forms.Timer(this.components);
             this.collectProductTimer = new System.Windows.Forms.Timer(this.components);
+            this.qunfaTimer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -567,13 +568,13 @@
             // 
             // qunfaButton
             // 
-            this.qunfaButton.Enabled = false;
             this.qunfaButton.Location = new System.Drawing.Point(736, 566);
             this.qunfaButton.Name = "qunfaButton";
             this.qunfaButton.Size = new System.Drawing.Size(75, 23);
             this.qunfaButton.TabIndex = 3;
             this.qunfaButton.Text = "开始群发";
             this.qunfaButton.UseVisualStyleBackColor = true;
+            this.qunfaButton.Click += new System.EventHandler(this.qunfaButton_Click_1);
             // 
             // qunfaListView
             // 
@@ -590,11 +591,12 @@
             // columnHeader15
             // 
             this.columnHeader15.Text = "商品";
-            this.columnHeader15.Width = 300;
+            this.columnHeader15.Width = 400;
             // 
             // columnHeader16
             // 
             this.columnHeader16.Text = "发送时间";
+            this.columnHeader16.Width = 150;
             // 
             // label5
             // 
@@ -903,6 +905,11 @@
             this.collectProductTimer.Interval = 60000;
             this.collectProductTimer.Tick += new System.EventHandler(this.OnCollectProductTimer);
             // 
+            // qunfaTimer
+            // 
+            this.qunfaTimer.Interval = 5000;
+            this.qunfaTimer.Tick += new System.EventHandler(this.OnQunfaTimer);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1031,5 +1038,6 @@
         private System.Windows.Forms.Button nextPage2;
         private System.Windows.Forms.Label pageLabel2;
         private System.Windows.Forms.Button lastPage2;
+        private System.Windows.Forms.Timer qunfaTimer;
     }
 }

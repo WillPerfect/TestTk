@@ -51,14 +51,6 @@ namespace TkHome
 
             MemoryStream ms = new MemoryStream(System.Text.Encoding.Default.GetBytes(sb1.ToString()));
             Clipboard.SetData("QQ_RichEdit_Format", ms);
-
-            if (Clipboard.ContainsData("QQ_RichEdit_Format"))
-            {
-                IDataObject clipobj = Clipboard.GetDataObject();
-                object obj = clipobj.GetData("QQ_RichEdit_Format");
-                string text = obj.ToString();
-                Console.WriteLine(obj);
-            }
         }
 
         // 复制到微信

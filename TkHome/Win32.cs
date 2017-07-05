@@ -22,10 +22,30 @@ namespace TkHome
         public static extern int EnumWindows(EnumWindowsCallBack x, int y);
 
         [DllImport("user32.dll")]
+        public static extern bool IsIconic(int hwnd);
+
+        public const int SW_MINIMIZE = 6;
+        public const int SW_RESTORE = 9;
+
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(int hWnd, int nCmdShow);
+
+        [DllImport("user32.dll")]
         public static extern int GetClassName(int hWnd, StringBuilder lpString, int nMaxCount);
 
         [DllImport("user32.dll")]
         public static extern int GetWindowText(int hWnd, StringBuilder lpString, int nMaxCount);
+
+        public const uint WM_PASTE = 0x0302;
+        public const uint WM_KEYDOWN = 0x0100;
+        public const int VK_RETURN = 0x0D;
+
+        public const uint WM_LBUTTONDOWN = 0x0201;
+        public const uint WM_LBUTTONUP = 0x0202;
+        public const uint WM_KEYUP = 0x0101;
+        public const int MK_LBUTTON = 1;
+        public const byte VK_CONTROL = 0x11;
+        public const uint KEYEVENTF_KEYUP = 2;
 
         [DllImport("user32.dll")]
         public static extern int SendMessage(int hWnd, uint msg, int wParam, int lParam);

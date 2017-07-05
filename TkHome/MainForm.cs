@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
+using System.IO;
 
 namespace TkHome
 {
@@ -18,6 +20,7 @@ namespace TkHome
         private ProductQunfa _productQunfa = new ProductQunfa();
         private Alimama _alimama = new Alimama();
         private int _productCountPerPage = 100; // 自选库中每页显示的商品数
+        private bool _startQunfa = false;
         public MainForm()
         {
             InitializeComponent();
@@ -34,6 +37,7 @@ namespace TkHome
         private void OnFormClosing(object sender, FormClosingEventArgs e)
         {
             _productCollector.StopMonitor();
+            _productQunfa.StopTranslateUrl();
             _dbOperator.deinit();
         }
 
@@ -319,11 +323,91 @@ namespace TkHome
         }
 
         // 开始群发
-        private void qunfaButton_Click(object sender, EventArgs e)
+        private void qunfaButton_Click_1(object sender, EventArgs e)
         {
-
+            if (!_startQunfa)
+            {
+                qunfaButton.Text = "停止群发";
+                _startQunfa = true;
+                _productQunfa.StartTranslateUrl(_dbOperator, _alimama, adzoneComboBox.Text);
+                qunfaTimer.Start();
+            }
+            else
+            {
+                qunfaButton.Text = "开始群发";
+                _startQunfa = false;
+                qunfaTimer.Stop();
+                _productQunfa.StopTranslateUrl();
+            }
         }
-        #endregion 登录阿里妈妈页面
+
+        // 群发定时器
+        private void OnQunfaTimer(object sender, EventArgs e)
+        {
+            List<WndInfo> qunfaWndList = new List<WndInfo>();
+            for (int i = 0; i < qunfaListBox.CheckedItems.Count; i++)
+            {
+                WndInfo item = ((WndInfo)qunfaListBox.CheckedItems[i]);
+                qunfaWndList.Add(item);
+            }
+            List<TranslateUrlResult> resultList = _productQunfa.GetTranslateResult();
+            foreach (TranslateUrlResult result in resultList)
+            {
+                //群发
+                foreach (WndInfo wnd in qunfaWndList)
+                {
+                    try
+                    {
+                        if (wnd.IsQQWnd) // 发送到QQ窗口
+                        {
+                            if (Win32.IsIconic(wnd.Wnd))
+                            {
+                                Win32.ShowWindow(wnd.Wnd, Win32.SW_RESTORE); // 如果QQ窗口最小化，则恢复
+                            }
+
+                            // copy
+                            MemoryStream ms = new MemoryStream(System.Text.Encoding.Default.GetBytes(result.QQShowContent));
+                            Clipboard.SetData("QQ_RichEdit_Format", ms);
+
+                            Win32.SendMessage(wnd.Wnd, Win32.WM_PASTE, 0, 0); // paste
+
+                            Win32.SendMessage(wnd.Wnd, Win32.WM_KEYDOWN, Win32.VK_RETURN, 0); // send
+
+                            Win32.ShowWindow(wnd.Wnd, Win32.SW_MINIMIZE); // 最小化QQ窗口
+                        }
+                        else // 发送到微信窗口
+                        {
+                            int pos = 0x023a0113; // 275, 570
+
+                            // copy
+                            Clipboard.SetData(DataFormats.Html, result.WechatShowContent);
+
+                            // paste
+                            Win32.SendMessage(wnd.Wnd, Win32.WM_LBUTTONDOWN, Win32.MK_LBUTTON, pos);
+                            Thread.Sleep(10);
+                            Win32.SendMessage(wnd.Wnd, Win32.WM_LBUTTONUP, 0, pos);
+
+                            Win32.keybd_event(Win32.VK_CONTROL, 0, 0, 0);
+                            Win32.SendMessage(wnd.Wnd, Win32.WM_KEYDOWN, 'V', 0);
+                            Win32.SendMessage(wnd.Wnd, Win32.WM_KEYUP, 'V', 0);
+                            Win32.keybd_event(Win32.VK_CONTROL, 0, Win32.KEYEVENTF_KEYUP, 0);
+
+                            Win32.SendMessage(wnd.Wnd, Win32.WM_KEYDOWN, Win32.VK_RETURN, 0); // send
+                        }
+                        ListViewItem lv = qunfaListView.Items.Add(result.ProductTitle);
+                        lv.SubItems.Add(DateTime.Now.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("qunfa exception : " + ex.Message);
+                    }
+
+                    Clipboard.Clear();
+                    Thread.Sleep(1000);
+                }
+            }
+        }
+        #endregion 商品群发页面
 
         #region 实用工具页面
         // 转链
@@ -375,8 +459,6 @@ namespace TkHome
             }
         }
         #endregion
-
-
 
     }
 }
