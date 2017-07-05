@@ -38,8 +38,8 @@ namespace TkHome
         public string TkRate { get; set; }
         public string TkCommFee { get; set; }
         public string ZkPrice { get; set; }
-
     }
+
     class ProductCollector
     {
         private List<WndInfo> _qqQunList = new List<WndInfo>();
@@ -50,6 +50,9 @@ namespace TkHome
         private List<CollectURL> _collectURLList = new List<CollectURL>();
         private List<string> _parsedURLList = new List<string>(); // 已经解析过的URL列表，不需要重复解析
         private List<CollectURL> _failedURLList = new List<CollectURL>(); // 超级搜索失败的URL列表，后续重试
+        private int _startTime = 9;
+        private int _endTime = 21;
+        private int _interval = 5;
 
         public List<WndInfo> GetAllQQQunWnd()
         {
@@ -60,9 +63,12 @@ namespace TkHome
         }
 
         // 开始监控
-        public void StartMonitor(List<int> hwndList)
+        public void StartMonitor(List<int> qqWndList, int startTime, int endTime, int interval)
         {
-            _monitorQQWndList = hwndList;
+            _monitorQQWndList = qqWndList;
+            _startTime = startTime;
+            _endTime = endTime;
+            _interval = interval;
             _stopThread = false;
             _monitorThread = new Thread(MonitorThreadProc);
             _monitorThread.Start(this);
@@ -184,8 +190,9 @@ namespace TkHome
             {
                 DateTime nowTime = DateTime.Now;
                 TimeSpan delta = nowTime - lastCollectTime;
-                if (delta.TotalSeconds > 180) // 180秒
+                if (delta.TotalSeconds > colllector._interval * 60 && nowTime.Hour >= colllector._startTime && nowTime.Hour < colllector._endTime)
                 {
+                    Console.WriteLine("开始采集");
                     // 先遍历QQ窗口列表
                     foreach (int item in colllector._monitorQQWndList)
                     {

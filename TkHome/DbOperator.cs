@@ -33,12 +33,12 @@ namespace TkHome
 
             SQLiteTable optionTable = new SQLiteTable("option");
             optionTable.Columns.Add(new SQLiteColumn("id", ColType.Integer, true, true, true, "1"));
-            optionTable.Columns.Add(new SQLiteColumn("collect_starttime", ColType.Text));
-            optionTable.Columns.Add(new SQLiteColumn("collect_endtime", ColType.Text));
-            optionTable.Columns.Add(new SQLiteColumn("collect_interval", ColType.Text));
-            optionTable.Columns.Add(new SQLiteColumn("qunfa_starttime", ColType.Text));
-            optionTable.Columns.Add(new SQLiteColumn("qunfa_endtime", ColType.Text));
-            optionTable.Columns.Add(new SQLiteColumn("qunfa_interval", ColType.Text));
+            optionTable.Columns.Add(new SQLiteColumn("collect_starttime", ColType.Integer));
+            optionTable.Columns.Add(new SQLiteColumn("collect_endtime", ColType.Integer));
+            optionTable.Columns.Add(new SQLiteColumn("collect_interval", ColType.Integer));
+            optionTable.Columns.Add(new SQLiteColumn("qunfa_starttime", ColType.Integer));
+            optionTable.Columns.Add(new SQLiteColumn("qunfa_endtime", ColType.Integer));
+            optionTable.Columns.Add(new SQLiteColumn("qunfa_interval", ColType.Integer));
             _innerTableList.Add(optionTable);
         }
 
@@ -140,12 +140,20 @@ namespace TkHome
         }
 
         // 从自选库中加载商品信息
-        public List<ProductInfo> loadProductList(int startRow, int count)
+        public List<ProductInfo> loadProductList(int startRow, int count, bool bRandom = false)
         {
             List<ProductInfo> productList = new List<ProductInfo>();
             try
             {
-                DataTable dt = _helper.Select("select * from product limit " + startRow.ToString() + "," + count.ToString());
+                DataTable dt;
+                if (bRandom)
+                {
+                    dt = _helper.Select("select * from product order by random() limit " + count.ToString()); // 随机取               
+                }
+                else
+                {
+                    dt = _helper.Select("select * from product limit " + startRow.ToString() + "," + count.ToString());
+                }
                 foreach (DataRow row in dt.Rows)
                 {
                     int id = Convert.ToInt32(row["id"]);
@@ -183,6 +191,63 @@ namespace TkHome
                 _helper.Rollback();
             }
         }
+
+        public void loadCollectConfigure(out int startTime, out int endTime, out int interval)
+        {
+            startTime = 9;
+            endTime = 21;
+            interval = 5;
+            try
+            {
+                DataTable dt = _helper.Select("select * from option");
+                startTime = Convert.ToInt32(dt.Rows[0]["collect_starttime"]);
+                endTime = Convert.ToInt32(dt.Rows[0]["collect_endtime"]);
+                interval = Convert.ToInt32(dt.Rows[0]["collect_interval"]);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public void saveCollectConfigure(int startTime, int endTime, int interval)
+        {
+            try
+            {
+                _helper.Execute("update option set collect_starttime = " + startTime.ToString() + ", collect_endtime = " + endTime.ToString() + ", collect_interval = " + interval.ToString());
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public void loadQunfaConfigure(out int startTime, out int endTime, out int interval)
+        {
+            startTime = 9;
+            endTime = 21;
+            interval = 5;
+            try
+            {
+                DataTable dt = _helper.Select("select * from option");
+                startTime = Convert.ToInt32(dt.Rows[0]["qunfa_starttime"]);
+                endTime = Convert.ToInt32(dt.Rows[0]["qunfa_endtime"]);
+                interval = Convert.ToInt32(dt.Rows[0]["qunfa_interval"]);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public void saveQunfaConfigure(int startTime, int endTime, int interval)
+        {
+            try
+            {
+                _helper.Execute("update option set qunfa_starttime = " + startTime.ToString() + ", qunfa_endtime = " + endTime.ToString() + ", qunfa_interval = " + interval.ToString());
+            }
+            catch (Exception)
+            {
+            }
+        }
+        
         // 添加商品
         private void addProduct(string title, string url, string price, string rate, string commfee, string sale30, string addtime)
         {
@@ -200,7 +265,7 @@ namespace TkHome
         // 生成默认配置
         private void generateDefaultConfig()
         {
-            _helper.Execute("insert into option(collect_starttime, collect_endtime, collect_interval, qunfa_starttime, qunfa_endtime, qunfa_interval) values('9:00', '21:00', '5', '9:00', '21:00', '5')");
+            _helper.Execute("insert into option(collect_starttime, collect_endtime, collect_interval, qunfa_starttime, qunfa_endtime, qunfa_interval) values(9, 21, 5, 9, 21, 5)");
         }
     }
 }

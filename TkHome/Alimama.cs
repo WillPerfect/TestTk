@@ -126,6 +126,7 @@ namespace TkHome
                     TotalText += "【口令】 " + coupon_token + "\n";
                     TotalText += "【下单】 " + order_url + "\n";
                 }
+                TotalText += "长按复制这条信息，打开手机淘宝即可看到\n";
                 showContent = TotalText;
             }
             catch (Exception)

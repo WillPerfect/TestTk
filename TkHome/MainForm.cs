@@ -32,6 +32,8 @@ namespace TkHome
             loadImageTimer.Start();
             _dbOperator.init();
             LoadMyLibrary(); // 加载自选库
+            initCollectConfigure();
+            initQunfaConfigure();
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)
@@ -139,7 +141,9 @@ namespace TkHome
                     WndInfo item = ((WndInfo)collectListBox.CheckedItems[i]);
                     monitorQQWndList.Add(item.Wnd);
                 }
-                _productCollector.StartMonitor(monitorQQWndList); // 开始监控
+                int startTime, endTime, interval;
+                _dbOperator.loadCollectConfigure(out startTime, out endTime, out interval);
+                _productCollector.StartMonitor(monitorQQWndList, startTime, endTime, interval); // 开始监控
                 collectProductTimer.Start();
                 collectButton.Text = "停止采集";
             }
@@ -329,7 +333,9 @@ namespace TkHome
             {
                 qunfaButton.Text = "停止群发";
                 _startQunfa = true;
-                _productQunfa.StartTranslateUrl(_dbOperator, _alimama, adzoneComboBox.Text);
+                int startTime, endTime, interval;
+                _dbOperator.loadQunfaConfigure(out startTime, out endTime, out interval);
+                _productQunfa.StartTranslateUrl(_dbOperator, _alimama, adzoneComboBox.Text, startTime, endTime, interval);
                 qunfaTimer.Start();
             }
             else
@@ -394,8 +400,6 @@ namespace TkHome
 
                             Win32.SendMessage(wnd.Wnd, Win32.WM_KEYDOWN, Win32.VK_RETURN, 0); // send
                         }
-                        ListViewItem lv = qunfaListView.Items.Add(result.ProductTitle);
-                        lv.SubItems.Add(DateTime.Now.ToString());
                     }
                     catch (Exception ex)
                     {
@@ -405,7 +409,15 @@ namespace TkHome
                     Clipboard.Clear();
                     Thread.Sleep(1000);
                 }
+                ListViewItem lv = qunfaListView.Items.Add(result.ProductTitle);
+                lv.SubItems.Add(DateTime.Now.ToString());
             }
+        }
+
+        // 清空群发列表
+        private void clearQunfaButton_Click(object sender, EventArgs e)
+        {
+            qunfaListView.Items.Clear();
         }
         #endregion 商品群发页面
 
@@ -458,7 +470,53 @@ namespace TkHome
                 translateButton.Enabled = true;
             }
         }
-        #endregion
 
+        private void initCollectConfigure()
+        {
+            int startTime, endTime, interval;
+            _dbOperator.loadCollectConfigure(out startTime, out endTime, out interval);
+            collectStartUpDown.Value = startTime;
+            collectEndUpDown.Value = endTime;
+            collectIntervalUpDown.Value = interval;
+        }
+
+        private void initQunfaConfigure()
+        {
+            int startTime, endTime, interval;
+            _dbOperator.loadQunfaConfigure(out startTime, out endTime, out interval);
+            qunfaStartUpDown.Value = startTime;
+            qunfaEndUpDown.Value = endTime;
+            qunfaIntervalUpDown.Value = interval;
+        }
+
+        // 保存采集设置
+        private void saveCollectButton_Click(object sender, EventArgs e)
+        {
+            int startTime = Convert.ToInt32(collectStartUpDown.Value);
+            int endTime = Convert.ToInt32(collectEndUpDown.Value);
+            if (startTime >= endTime)
+            {
+                MessageBox.Show("起始时间必须小于结束时间");
+                return;
+            }
+            int interval = Convert.ToInt32(collectIntervalUpDown.Value);
+            _dbOperator.saveCollectConfigure(startTime, endTime, interval);
+        }
+
+
+        // 保存群发设置
+        private void saveQunfaButton_Click(object sender, EventArgs e)
+        {
+            int startTime = Convert.ToInt32(qunfaStartUpDown.Value);
+            int endTime = Convert.ToInt32(qunfaEndUpDown.Value);
+            if (startTime >= endTime)
+            {
+                MessageBox.Show("起始时间必须小于结束时间");
+                return;
+            }
+            int interval = Convert.ToInt32(qunfaIntervalUpDown.Value);
+            _dbOperator.saveQunfaConfigure(startTime, endTime, interval);
+        }
+        #endregion
     }
 }

@@ -16,12 +16,19 @@ namespace TkHome
         public DbOperator Database { get; set; }
         public Alimama Mama { get; set; }
         public string AdzoneName { get; set; }
-        public QunfaParam(ProductQunfa qunfa, DbOperator database, Alimama alimama, string adzoneName)
+        public int StartTime { get; set; }
+        public int EndTime { get; set; }
+        public int Interval { get; set; }
+
+        public QunfaParam(ProductQunfa qunfa, DbOperator database, Alimama alimama, string adzoneName, int startTime, int endTime, int interval)
         {
             Qunfa = qunfa;
             Database = database;
             Mama = alimama;
             AdzoneName = adzoneName;
+            StartTime = startTime;
+            EndTime = endTime;
+            Interval = interval;
         }
     }
 
@@ -43,9 +50,9 @@ namespace TkHome
     {
         private List<WndInfo> _qqWechatList = new List<WndInfo>(); // QQ微信窗口列表
         private Thread _qunfaThread;
-        public bool StopThread { get; set; }
-        public int QunfaStartRow { get; set; } // 群发开始行
-        public int QunfaCount { get; set; } // 一次群发的数量
+        private bool StopThread { get; set; }
+        private int QunfaStartRow { get; set; } // 群发开始行
+        private int QunfaCount { get; set; } // 一次群发的数量
         private List<TranslateUrlResult> _translateList = new List<TranslateUrlResult>();
         private object _translateListLock = new object();
 
@@ -62,11 +69,11 @@ namespace TkHome
             return _qqWechatList;
         }
 
-        public void StartTranslateUrl(DbOperator database, Alimama alimama, string adzoneName)
+        public void StartTranslateUrl(DbOperator database, Alimama alimama, string adzoneName, int startTime, int endTime, int interval)
         {
             StopThread = false;
             _qunfaThread = new Thread(QunfaThreadProc);
-            QunfaParam param = new QunfaParam(this, database, alimama, adzoneName);
+            QunfaParam param = new QunfaParam(this, database, alimama, adzoneName, startTime, endTime, interval);
             _qunfaThread.Start(param);
         }
 
@@ -134,10 +141,10 @@ namespace TkHome
             {
                 DateTime nowTime = DateTime.Now;
                 TimeSpan delta = nowTime - lastQunfaTime;
-                if (delta.TotalSeconds > 180) // 180秒
+                if (delta.TotalSeconds > qunfaParam.Interval * 60 && nowTime.Hour >= qunfaParam.StartTime && nowTime.Hour < qunfaParam.EndTime)
                 {
                     // 从数据库中加载商品
-                    List<ProductInfo> productList = qunfaParam.Database.loadProductList(qunfaParam.Qunfa.QunfaStartRow, qunfaParam.Qunfa.QunfaCount);
+                    List<ProductInfo> productList = qunfaParam.Database.loadProductList(qunfaParam.Qunfa.QunfaStartRow, qunfaParam.Qunfa.QunfaCount, true);
                     foreach (ProductInfo product in productList)
                     {
                         string url = product._auctionUrl;
