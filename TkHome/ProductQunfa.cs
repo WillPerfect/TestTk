@@ -154,8 +154,8 @@ namespace TkHome
                         {
                             break;
                         }
-                        string imgPath, showContent; // 图片路径，文案
-                        bool bSuccess = qunfaParam.Mama.TranslateURL(decryptURL, qunfaParam.AdzoneName, out imgPath, out showContent); // 转链
+                        string imgPath, qqShowContent, wechatShowContent; // 图片路径，文案
+                        bool bSuccess = qunfaParam.Mama.TranslateURL(decryptURL, qunfaParam.AdzoneName, out imgPath, out qqShowContent, out wechatShowContent); // 转链
                         if (qunfaParam.Qunfa.StopThread)
                         {
                             break;
@@ -166,8 +166,8 @@ namespace TkHome
                             continue;
                         }
 
-                        string strQQShowContent = ClipboardDataWrapper.WrapFroQQ(imgPath, showContent);
-                        string strWechatShowContent = ClipboardDataWrapper.WrapForWechat(imgPath, showContent);
+                        string strQQShowContent = ClipboardDataWrapper.WrapFroQQ(imgPath, qqShowContent);
+                        string strWechatShowContent = ClipboardDataWrapper.WrapForWechat(imgPath, wechatShowContent);
                         TranslateUrlResult result = new TranslateUrlResult(product._title, strQQShowContent, strWechatShowContent);
                         lock (_translateListLock)
                         {

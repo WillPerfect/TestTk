@@ -359,7 +359,10 @@ namespace TkHome
             List<TranslateUrlResult> resultList = _productQunfa.GetTranslateResult();
             foreach (TranslateUrlResult result in resultList)
             {
-                //群发
+                //QQ群发
+                MemoryStream ms = new MemoryStream(System.Text.Encoding.Default.GetBytes(result.QQShowContent));// copy
+                Clipboard.SetData("QQ_RichEdit_Format", ms);
+
                 foreach (WndInfo wnd in qunfaWndList)
                 {
                     try
@@ -371,22 +374,31 @@ namespace TkHome
                                 Win32.ShowWindow(wnd.Wnd, Win32.SW_RESTORE); // 如果QQ窗口最小化，则恢复
                             }
 
-                            // copy
-                            MemoryStream ms = new MemoryStream(System.Text.Encoding.Default.GetBytes(result.QQShowContent));
-                            Clipboard.SetData("QQ_RichEdit_Format", ms);
-
                             Win32.SendMessage(wnd.Wnd, Win32.WM_PASTE, 0, 0); // paste
 
                             Win32.SendMessage(wnd.Wnd, Win32.WM_KEYDOWN, Win32.VK_RETURN, 0); // send
 
                             Win32.ShowWindow(wnd.Wnd, Win32.SW_MINIMIZE); // 最小化QQ窗口
                         }
-                        else // 发送到微信窗口
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("qunfa exception : " + ex.Message);
+                    }
+
+                    Thread.Sleep(1000);
+                }
+                Clipboard.Clear();
+
+                //微信群发
+                Clipboard.SetData(DataFormats.Html, result.WechatShowContent);// copy
+                foreach (WndInfo wnd in qunfaWndList)
+                {
+                    try
+                    {
+                        if (!wnd.IsQQWnd) // 发送到微信窗口
                         {
                             int pos = 0x023a0113; // 275, 570
-
-                            // copy
-                            Clipboard.SetData(DataFormats.Html, result.WechatShowContent);
 
                             // paste
                             Win32.SendMessage(wnd.Wnd, Win32.WM_LBUTTONDOWN, Win32.MK_LBUTTON, pos);
@@ -406,9 +418,10 @@ namespace TkHome
                         Console.WriteLine("qunfa exception : " + ex.Message);
                     }
 
-                    Clipboard.Clear();
                     Thread.Sleep(1000);
                 }
+                Clipboard.Clear();
+
                 ListViewItem lv = qunfaListView.Items.Add(result.ProductTitle);
                 lv.SubItems.Add(DateTime.Now.ToString());
             }

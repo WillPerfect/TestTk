@@ -137,6 +137,78 @@ namespace TkHome
             }
             return true;
         }
+
+        // 转链，返回下载的图片路径,QQ文案，微信文案
+        public bool TranslateURL(string orignalURL, string adzoneName, out string imgPath, out string qqShowContent, out string wechatShowContent)
+        {
+            string QueryURL = "http://pub.alimama.com/items/search.json?q=";
+            QueryURL += System.Web.HttpUtility.UrlEncode(orignalURL);
+            HttpItem GetJuItem = new HttpItem()
+            {
+                URL = QueryURL,
+                ContentType = "application/x-www-form-urlencoded",
+                Accept = "*/*",
+            };
+            HttpHelper GetJuHelper = new HttpHelper();
+            HttpResult GetJuResult = GetJuHelper.GetHtml(GetJuItem);
+            string result = GetJuResult.Html;
+
+            try
+            {
+                JObject jp1 = (JObject)JsonConvert.DeserializeObject(result);
+                string title = jp1["data"]["pageList"][0]["title"].ToString();
+                string price = jp1["data"]["pageList"][0]["zkPrice"].ToString();
+                string coupon = jp1["data"]["pageList"][0]["couponAmount"].ToString();
+                string pictureURL = jp1["data"]["pageList"][0]["pictUrl"].ToString();
+
+                pictureURL = "http:" + pictureURL;
+                DownloadImg(pictureURL, out imgPath);
+
+                string siteId, adzoneId;
+                getSiteAdzoneId(adzoneName, out siteId, out adzoneId);
+
+                string itemid = getIdFromURL(orignalURL); // 商品id
+
+                string order_url, order_token, coupon_url, coupon_token;
+                getOrderURL(itemid, siteId, adzoneId, out order_url, out order_token, out coupon_url, out coupon_token);
+
+                string qqText = "【商品】 " + title + "\n";
+                string wechatText = "";
+                if (coupon == "0")
+                {
+                    // 没有优惠券
+                    qqText += "【价格】 " + price + "元！\n";
+                    wechatText = qqText;
+
+                    qqText += "【下单】 " + order_url + "\n";
+
+                    wechatText += "【口令】 " + order_token + "\n";
+                    wechatText += "长按复制这条信息，打开手机淘宝即可看到\n";
+                }
+                else
+                {
+                    // 有优惠券
+                    qqText += "【原价】 " + price + "元！\n";
+                    qqText += "【现价】 " + (float.Parse(price) - float.Parse(coupon)).ToString() + "秒杀！\n";
+                    wechatText = qqText;
+                    qqText += "【领券】 " + coupon_url + "\n";
+                    qqText += "【下单】 " + order_url + "\n";
+
+                    wechatText += "【口令】 " + coupon_token + "\n";
+                    wechatText += "长按复制这条信息，打开手机淘宝即可看到\n";
+                }
+                qqShowContent = qqText;
+                wechatShowContent = wechatText;
+            }
+            catch (Exception)
+            {
+                imgPath = "";
+                qqShowContent = "";
+                wechatShowContent = "";
+                return false;
+            }
+            return true;
+        }
         private void parseAdzone(String jsonText, List<string> adzoneList)
         {
             JObject jp2 = (JObject)JsonConvert.DeserializeObject(jsonText);
