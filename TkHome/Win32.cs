@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Drawing;
 using Accessibility;
 
 namespace TkHome
@@ -55,6 +56,11 @@ namespace TkHome
 
         [DllImport("user32.dll")]
         public static extern void SwitchToThisWindow(int hWnd, int fAltTab);
+
+        [DllImport("user32.dll")]//取设备场景 
+        public static extern IntPtr GetDC(IntPtr hwnd);//返回设备场景句柄 
+        [DllImport("gdi32.dll")]//取指定点颜色 
+        public static extern int GetPixel(IntPtr hdc, Point p);
 
         public const int CHILDID_SELF = 0;
         public const int CHILDID_1 = 1;

@@ -438,19 +438,26 @@ namespace TkHome
         // 转链
         private void translateButton_Click(object sender, EventArgs e)
         {
-            string url = urlTextBox.Text;
-            if (url == "")
+            if (!Alimama.IsOnline())
             {
-                return;
+                MessageBox.Show("检测到掉线，正在尝试重连，请稍后重试...");
             }
-            string adzoneName = adzoneComboBox.Text;
-            string imagePath, showContent;
-            _alimama.TranslateURL(url, adzoneName, out imagePath, out showContent);
+            else
+            {
+                string url = urlTextBox.Text;
+                if (url == "")
+                {
+                    return;
+                }
+                string adzoneName = adzoneComboBox.Text;
+                string imagePath, showContent;
+                _alimama.TranslateURL(url, adzoneName, out imagePath, out showContent);
 
-            TranslateLinkForm tlFrom = new TranslateLinkForm();
-            tlFrom.ImagePath = imagePath;
-            tlFrom.ShowText = showContent;
-            tlFrom.ShowDialog();
+                TranslateLinkForm tlFrom = new TranslateLinkForm();
+                tlFrom.ImagePath = imagePath;
+                tlFrom.ShowText = showContent;
+                tlFrom.ShowDialog();
+            }
         }
         #endregion 实用工具页面
 
@@ -471,16 +478,23 @@ namespace TkHome
         // 登录后获取推广位
         private void getAdzoneButton_Click(object sender, EventArgs e)
         {
-            List<string> adzoneList = _alimama.GetAdzone();
-            foreach (string item in adzoneList)
+            if (!Alimama.IsOnline())
             {
-                adzoneComboBox.Items.Add(item);
+                MessageBox.Show("检测到掉线，正在尝试重连，请稍后重试...");
             }
-            if (adzoneComboBox.Items.Count > 0)
+            else
             {
-                adzoneComboBox.SelectedIndex = 0;
-                qunfaButton.Enabled = true;
-                translateButton.Enabled = true;
+                List<string> adzoneList = _alimama.GetAdzone();
+                foreach (string item in adzoneList)
+                {
+                    adzoneComboBox.Items.Add(item);
+                }
+                if (adzoneComboBox.Items.Count > 0)
+                {
+                    adzoneComboBox.SelectedIndex = 0;
+                    qunfaButton.Enabled = true;
+                    translateButton.Enabled = true;
+                }
             }
         }
 

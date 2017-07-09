@@ -28,7 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.aliWebBrowser = new System.Windows.Forms.WebBrowser();
+            this.detectLoginTimer = new System.Windows.Forms.Timer(this.components);
+            this.loginTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // aliWebBrowser
@@ -42,12 +45,24 @@
             this.aliWebBrowser.TabIndex = 0;
             this.aliWebBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.OnDocumentComplete);
             // 
+            // detectLoginTimer
+            // 
+            this.detectLoginTimer.Interval = 60000;
+            this.detectLoginTimer.Tick += new System.EventHandler(this.OnDetectLoginTimer);
+            // 
+            // loginTimer
+            // 
+            this.loginTimer.Interval = 5000;
+            this.loginTimer.Tick += new System.EventHandler(this.OnLoginTimer);
+            // 
             // WebForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(387, 319);
             this.Controls.Add(this.aliWebBrowser);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "WebForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "请先登录阿里妈妈";
@@ -59,5 +74,7 @@
         #endregion
 
         private System.Windows.Forms.WebBrowser aliWebBrowser;
+        private System.Windows.Forms.Timer detectLoginTimer;
+        private System.Windows.Forms.Timer loginTimer;
     }
 }

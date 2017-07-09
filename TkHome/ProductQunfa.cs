@@ -143,48 +143,51 @@ namespace TkHome
                 TimeSpan delta = nowTime - lastQunfaTime;
                 if (delta.TotalSeconds > qunfaParam.Interval * 60 && nowTime.Hour >= qunfaParam.StartTime && nowTime.Hour < qunfaParam.EndTime)
                 {
-                    // 从数据库中加载商品
-                    List<ProductInfo> productList = qunfaParam.Database.loadProductList(qunfaParam.Qunfa.QunfaStartRow, qunfaParam.Qunfa.QunfaCount, true);
-                    foreach (ProductInfo product in productList)
+                    if (Alimama.IsOnline())
                     {
-                        string url = product._auctionUrl;
-                        string decryptURL = EncryptDES.Decrypt(url); // 解密
+                        // 从数据库中加载商品
+                        List<ProductInfo> productList = qunfaParam.Database.loadProductList(qunfaParam.Qunfa.QunfaStartRow, qunfaParam.Qunfa.QunfaCount, true);
+                        foreach (ProductInfo product in productList)
+                        {
+                            string url = product._auctionUrl;
+                            string decryptURL = EncryptDES.Decrypt(url); // 解密
 
-                        if (qunfaParam.Qunfa.StopThread)
-                        {
-                            break;
-                        }
-                        string imgPath, qqShowContent, wechatShowContent; // 图片路径，文案
-                        bool bSuccess = qunfaParam.Mama.TranslateURL(decryptURL, qunfaParam.AdzoneName, out imgPath, out qqShowContent, out wechatShowContent); // 转链
-                        if (qunfaParam.Qunfa.StopThread)
-                        {
-                            break;
-                        }
-                        if (!bSuccess) // 转链失败
-                        {
-                            Console.WriteLine("{0} translate failed", decryptURL);
-                            continue;
+                            if (qunfaParam.Qunfa.StopThread)
+                            {
+                                break;
+                            }
+                            string imgPath, qqShowContent, wechatShowContent; // 图片路径，文案
+                            bool bSuccess = qunfaParam.Mama.TranslateURL(decryptURL, qunfaParam.AdzoneName, out imgPath, out qqShowContent, out wechatShowContent); // 转链
+                            if (qunfaParam.Qunfa.StopThread)
+                            {
+                                break;
+                            }
+                            if (!bSuccess) // 转链失败
+                            {
+                                Console.WriteLine("{0} translate failed", decryptURL);
+                                continue;
+                            }
+
+                            string strQQShowContent = ClipboardDataWrapper.WrapFroQQ(imgPath, qqShowContent);
+                            string strWechatShowContent = ClipboardDataWrapper.WrapForWechat(imgPath, wechatShowContent);
+                            TranslateUrlResult result = new TranslateUrlResult(product._title, strQQShowContent, strWechatShowContent);
+                            lock (_translateListLock)
+                            {
+                                _translateList.Add(result);
+                            }
                         }
 
-                        string strQQShowContent = ClipboardDataWrapper.WrapFroQQ(imgPath, qqShowContent);
-                        string strWechatShowContent = ClipboardDataWrapper.WrapForWechat(imgPath, wechatShowContent);
-                        TranslateUrlResult result = new TranslateUrlResult(product._title, strQQShowContent, strWechatShowContent);
-                        lock (_translateListLock)
+                        if (productList.Count == 0)
                         {
-                            _translateList.Add(result);
+                            qunfaParam.Qunfa.QunfaStartRow = 0; // 从头开始群发
                         }
+                        else
+                        {
+                            qunfaParam.Qunfa.QunfaStartRow += qunfaParam.Qunfa.QunfaCount; // 取后面的数据
+                        }
+
+                        lastQunfaTime = nowTime;
                     }
-
-                    if (productList.Count == 0)
-                    {
-                        qunfaParam.Qunfa.QunfaStartRow = 0; // 从头开始群发
-                    }
-                    else
-                    {
-                        qunfaParam.Qunfa.QunfaStartRow += qunfaParam.Qunfa.QunfaCount; // 取后面的数据
-                    }
-
-                    lastQunfaTime = nowTime;
                 }
             }
         }
