@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace TkHome
 {
@@ -46,6 +47,7 @@ namespace TkHome
             string result = GetJuResult.Html;
             if (result.IndexOf("mmNick") == -1)
             {
+                Debug.WriteLine(result);
                 return false;
             }
             else
@@ -218,7 +220,7 @@ namespace TkHome
                 var id = ((JObject)item)["id"];
                 var name = ((JObject)item)["name"];
 
-                Console.WriteLine("siteid : " + id + "\t" + name.ToString());
+                Debug.WriteLine("siteid : " + id + "\t" + name.ToString());
 
                 Site site = new Site();
                 site.id = id.ToString();
@@ -232,7 +234,7 @@ namespace TkHome
                     {
                         var subid = ((JObject)subitem)["id"];
                         var subname = ((JObject)subitem)["name"];
-                        Console.WriteLine("adzoneid : " + subid + "\t" + subname.ToString());
+                        Debug.WriteLine("adzoneid : " + subid + "\t" + subname.ToString());
                         adzoneList.Add(subname.ToString());
 
                         Adzone adzone = new Adzone();

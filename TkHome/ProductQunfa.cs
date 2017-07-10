@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 // 商品群发类
 namespace TkHome
@@ -143,8 +144,10 @@ namespace TkHome
                 TimeSpan delta = nowTime - lastQunfaTime;
                 if (delta.TotalSeconds > qunfaParam.Interval * 60 && nowTime.Hour >= qunfaParam.StartTime && nowTime.Hour < qunfaParam.EndTime)
                 {
-                    if (Alimama.IsOnline())
+                    Debug.WriteLine("开始群发 " + DateTime.Now.ToString());
+                    while (!qunfaParam.Qunfa.StopThread) // 解析失败后重试
                     {
+                        bool bTranslatedSuccess = false;
                         // 从数据库中加载商品
                         List<ProductInfo> productList = qunfaParam.Database.loadProductList(qunfaParam.Qunfa.QunfaStartRow, qunfaParam.Qunfa.QunfaCount, true);
                         foreach (ProductInfo product in productList)
@@ -164,7 +167,7 @@ namespace TkHome
                             }
                             if (!bSuccess) // 转链失败
                             {
-                                Console.WriteLine("{0} translate failed", decryptURL);
+                                Debug.WriteLine("{0} translate failed", decryptURL);
                                 continue;
                             }
 
@@ -174,20 +177,26 @@ namespace TkHome
                             lock (_translateListLock)
                             {
                                 _translateList.Add(result);
+                                bTranslatedSuccess = true;
                             }
                         }
 
-                        if (productList.Count == 0)
+                        //                             if (productList.Count == 0)
+                        //                             {
+                        //                                 qunfaParam.Qunfa.QunfaStartRow = 0; // 从头开始群发
+                        //                             }
+                        //                             else
+                        //                             {
+                        //                                 qunfaParam.Qunfa.QunfaStartRow += qunfaParam.Qunfa.QunfaCount; // 取后面的数据
+                        //                             }
+                        // 
+                        if (bTranslatedSuccess) // 如果有结果，则不再取，否则继续取
                         {
-                            qunfaParam.Qunfa.QunfaStartRow = 0; // 从头开始群发
+                            break;
                         }
-                        else
-                        {
-                            qunfaParam.Qunfa.QunfaStartRow += qunfaParam.Qunfa.QunfaCount; // 取后面的数据
-                        }
-
-                        lastQunfaTime = nowTime;
                     }
+
+                    lastQunfaTime = nowTime;
                 }
             }
         }

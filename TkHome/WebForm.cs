@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DotNet4.Utilities;
+using System.Diagnostics;
 
 namespace TkHome
 {
@@ -35,7 +36,7 @@ namespace TkHome
 
                 if (curURL == Alimama._frontPage)
                 {
-                    Console.WriteLine("登录成功");
+                    Debug.WriteLine("登录成功");
                     _lastLoginedTime = DateTime.Now;
                     IsLogined = true;
                     this.Hide();
@@ -49,14 +50,14 @@ namespace TkHome
                     loginTimer.Start();
                 }
             }
-            Console.WriteLine("OnDocumentComplete " + aliWebBrowser.Document.Url.ToString());
+            Debug.WriteLine("OnDocumentComplete " + aliWebBrowser.Document.Url.ToString());
         }
 
         private void OnDetectLoginTimer(object sender, EventArgs e)
         {
             if (!Alimama.IsOnline())
             {
-                Console.WriteLine("检测到掉线 " + DateTime.Now.ToString());
+                Debug.WriteLine("检测到掉线 " + DateTime.Now.ToString());
 
                 detectLoginTimer.Stop();
                 this.Show();
@@ -74,7 +75,7 @@ namespace TkHome
                 {
                     detectLoginTimer.Interval = 10 * 60 * 1000; // 10分钟
                 }
-                Console.WriteLine("依旧在线 " + DateTime.Now.ToString());
+                Debug.WriteLine("依旧在线 " + DateTime.Now.ToString());
             }
         }
 
@@ -85,7 +86,7 @@ namespace TkHome
             {
                 he.InvokeMember("click");
                 _bClicked = true;
-                Console.WriteLine("Click");
+                Debug.WriteLine("Click");
             }
             loginTimer.Stop();
         }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using System.IO;
+using System.Diagnostics;
 
 namespace TkHome
 {
@@ -146,12 +147,16 @@ namespace TkHome
                 _productCollector.StartMonitor(monitorQQWndList, startTime, endTime, interval); // 开始监控
                 collectProductTimer.Start();
                 collectButton.Text = "停止采集";
+                collectListBox.Enabled = false;
+                refreshCollectButton.Enabled = false;
             }
             else
             {
                 _productCollector.StopMonitor(); // 停止监控
                 collectProductTimer.Stop();
                 collectButton.Text = "开始采集";
+                collectListBox.Enabled = true;
+                refreshCollectButton.Enabled = true;
             }
         }
 
@@ -307,7 +312,7 @@ namespace TkHome
                 }
             }
             // 删除项
-            for (int i = collectListBox.Items.Count - 1; i >= 0; i--)
+            for (int i = qunfaListBox.Items.Count - 1; i >= 0; i--)
             {
                 bool bFind = false;
                 foreach (WndInfo curItem in wndList)
@@ -337,6 +342,8 @@ namespace TkHome
                 _dbOperator.loadQunfaConfigure(out startTime, out endTime, out interval);
                 _productQunfa.StartTranslateUrl(_dbOperator, _alimama, adzoneComboBox.Text, startTime, endTime, interval);
                 qunfaTimer.Start();
+                qunfaListBox.Enabled = false;
+                refreshSendButton.Enabled = false;
             }
             else
             {
@@ -344,6 +351,8 @@ namespace TkHome
                 _startQunfa = false;
                 qunfaTimer.Stop();
                 _productQunfa.StopTranslateUrl();
+                qunfaListBox.Enabled = true;
+                refreshSendButton.Enabled = true;
             }
         }
 
@@ -383,7 +392,7 @@ namespace TkHome
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("qunfa exception : " + ex.Message);
+                        Debug.WriteLine("qunfa exception : " + ex.Message);
                     }
 
                     Thread.Sleep(1000);
@@ -415,7 +424,7 @@ namespace TkHome
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("qunfa exception : " + ex.Message);
+                        Debug.WriteLine("qunfa exception : " + ex.Message);
                     }
 
                     Thread.Sleep(1000);

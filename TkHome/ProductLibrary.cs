@@ -78,7 +78,7 @@ namespace TkHome
             lock (_insertImgLock)
             {
                 _productImageList.ForEach(t => imageList.Add(t));
-                if (_productImageList.Count > 400)
+                if (_productImageList.Count > 40)
                 {
                     _productImageList.Clear();                    
                 }

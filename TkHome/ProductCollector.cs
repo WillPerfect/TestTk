@@ -9,6 +9,7 @@ using System.Web;
 using DotNet4.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 
 // 产品收集类
 namespace TkHome
@@ -45,11 +46,15 @@ namespace TkHome
         private List<WndInfo> _qqQunList = new List<WndInfo>();
         private List<int> _monitorQQWndList = new List<int>(); // 当前正在监控的QQ窗口列表
         private object _collectURLLock = new object();
-        private Thread _monitorThread;
+        private Thread _monitorThread; // 监控QQ群线程
         public bool _stopThread = false;
         private List<CollectURL> _collectURLList = new List<CollectURL>();
         private List<string> _parsedURLList = new List<string>(); // 已经解析过的URL列表，不需要重复解析
         private List<CollectURL> _failedURLList = new List<CollectURL>(); // 超级搜索失败的URL列表，后续重试
+        private List<string> _tkURLList = new List<string>(); // 待解析的淘客URL列表
+        private object _tkURLLock = new object();
+        private Thread _parseTkURLThread; // 解析URL线程
+
         private int _startTime = 9;
         private int _endTime = 21;
         private int _interval = 5;
@@ -72,12 +77,18 @@ namespace TkHome
             _stopThread = false;
             _monitorThread = new Thread(MonitorThreadProc);
             _monitorThread.Start(this);
+            _parseTkURLThread = new Thread(ParseURLThread);
+            _parseTkURLThread.Start(this);
         }
 
         // 停止监控
         public void StopMonitor()
         {
             _stopThread = true;
+            if (_parseTkURLThread != null && _parseTkURLThread.IsAlive)
+            {
+                _parseTkURLThread.Join();
+            }
             if (_monitorThread != null && _monitorThread.IsAlive)
             {
                 _monitorThread.Join();                
@@ -142,36 +153,9 @@ namespace TkHome
 
                     if (_parsedURLList.IndexOf(url) == -1) // 没有解析过
                     {
-                        string strOriginURL = ParseTkURL(url);
-                        if (strOriginURL != "")
+                        lock (_tkURLLock)
                         {
-                            CollectURL newURL = new CollectURL();
-                            newURL.URL = url;
-
-                            string strTitle, sale30, tkRate, tkCommFee, zkPrice;
-                            GetProductInfo(strOriginURL, out strTitle, out sale30, out tkRate, out tkCommFee, out zkPrice);
-
-                            newURL.OriginURL = strOriginURL;
-                            if (strTitle == "")
-                            {
-                                // 超级搜索失败了，添加到失败列表中
-                                _failedURLList.Add(newURL);
-                            }
-                            else
-                            {
-                                // 成功
-                                newURL.Title = strTitle;
-                                newURL.Sale30 = sale30;
-                                newURL.TkRate = tkRate;
-                                newURL.TkCommFee = tkCommFee;
-                                newURL.ZkPrice = zkPrice;
-                                newURL.Time = DateTime.Now.ToString();
-                                lock (_collectURLLock)
-                                {
-                                    _collectURLList.Add(newURL);
-                                }
-                                _parsedURLList.Add(url); // 添加到已经解析过的列表中
-                            }
+                            _parsedURLList.Add(url); // 添加到待解析列表中去
                         }
                     }
                 }
@@ -192,7 +176,7 @@ namespace TkHome
                 TimeSpan delta = nowTime - lastCollectTime;
                 if (delta.TotalSeconds > colllector._interval * 60 && nowTime.Hour >= colllector._startTime && nowTime.Hour < colllector._endTime)
                 {
-                    Console.WriteLine("开始采集");
+                    Debug.WriteLine("开始采集");
                     // 先遍历QQ窗口列表
                     foreach (int item in colllector._monitorQQWndList)
                     {
@@ -309,13 +293,28 @@ namespace TkHome
             HttpResult GetJuResult = GetJuHelper.GetHtml(GetJuItem);
             if (GetJuResult.StatusCode == HttpStatusCode.OK)
             {
-                JObject jp = (JObject)JsonConvert.DeserializeObject(GetJuResult.Html);
-                JArray jArray = (JArray)jp["data"]["pageList"];
-                strTitle = jArray[0]["title"].ToString();
-                sale30 = jArray[0]["biz30day"].ToString();
-                tkRate = jArray[0]["tkRate"].ToString();
-                tkCommFee = jArray[0]["tkCommFee"].ToString();
-                zkPrice = jArray[0]["zkPrice"].ToString();
+                try
+                {
+                    JObject jp = (JObject)JsonConvert.DeserializeObject(GetJuResult.Html);
+                    JArray jArray = (JArray)jp["data"]["pageList"];
+                    strTitle = jArray[0]["title"].ToString();
+                    sale30 = jArray[0]["biz30day"].ToString();
+                    tkRate = jArray[0]["tkRate"].ToString();
+                    tkCommFee = jArray[0]["tkCommFee"].ToString();
+                    zkPrice = jArray[0]["zkPrice"].ToString();
+                }
+                catch (Exception)
+                {
+                    strTitle = "";
+                    sale30 = "";
+                    tkRate = "";
+                    tkCommFee = "";
+                    zkPrice = "";
+
+                    Debug.WriteLine(GetJuResult.StatusCode);
+                    Debug.WriteLine(url);
+                    Debug.WriteLine(strReqURL);
+                }
             }
             else
             {
@@ -325,9 +324,9 @@ namespace TkHome
                 tkCommFee = "";
                 zkPrice = "";
 
-                Console.WriteLine(GetJuResult.StatusCode);
-                Console.WriteLine(url);
-                Console.WriteLine(strReqURL);
+                Debug.WriteLine(GetJuResult.StatusCode);
+                Debug.WriteLine(url);
+                Debug.WriteLine(strReqURL);
             }
         }
 
@@ -349,9 +348,75 @@ namespace TkHome
                     {
                         _collectURLList.Add(_failedURLList[i]);
                     }
-                    Console.WriteLine(_failedURLList[i].Title);
+                    Debug.WriteLine(_failedURLList[i].Title);
                     _failedURLList.Remove(_failedURLList[i]);
                 }
+            }
+        }
+
+        private void ParseTkURLList()
+        {
+            string strTkURL = "";
+            lock (_tkURLLock)
+            {
+                if (_parsedURLList.Count > 0)
+                {
+                    strTkURL = _parsedURLList[0];
+                    _parsedURLList.RemoveAt(0); // 每次取一个
+                }
+            }
+            if (strTkURL != "")
+            {
+                string strOriginURL = ParseTkURL(strTkURL);
+                if (strOriginURL != "")
+                {
+                    CollectURL newURL = new CollectURL();
+                    newURL.URL = strTkURL;
+
+                    string strTitle, sale30, tkRate, tkCommFee, zkPrice;
+                    GetProductInfo(strOriginURL, out strTitle, out sale30, out tkRate, out tkCommFee, out zkPrice);
+
+                    newURL.OriginURL = strOriginURL;
+                    if (strTitle == "")
+                    {
+                        // 超级搜索失败了，添加到失败列表中
+                        _failedURLList.Add(newURL);
+                    }
+                    else
+                    {
+                        // 成功
+                        newURL.Title = strTitle;
+                        newURL.Sale30 = sale30;
+                        newURL.TkRate = tkRate;
+                        newURL.TkCommFee = tkCommFee;
+                        newURL.ZkPrice = zkPrice;
+                        newURL.Time = DateTime.Now.ToString();
+                        lock (_collectURLLock)
+                        {
+                            _collectURLList.Add(newURL);
+                        }
+                        _parsedURLList.Add(strTkURL); // 添加到已经解析过的列表中
+                    }
+                }
+            }
+        }
+        private static void ParseURLThread(object o)
+        {
+            DateTime lastParseTime = new DateTime();
+            ProductCollector collector = o as ProductCollector;
+            while (!collector._stopThread)
+            {
+                DateTime now = DateTime.Now;
+                TimeSpan delta = now - lastParseTime;
+                if (delta.TotalSeconds > 70)
+                {
+                    // 开始解析
+                    Debug.WriteLine("开始解析");
+
+                    collector.ParseTkURLList();
+                    lastParseTime = now;
+                }
+                Thread.Sleep(1000);
             }
         }
     }
