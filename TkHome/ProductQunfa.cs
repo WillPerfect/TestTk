@@ -36,14 +36,16 @@ namespace TkHome
     class TranslateUrlResult
     {
         public string ProductTitle { get; set; }
-        public string QQShowContent { get; set; }
-        public string WechatShowContent { get; set; } // 文案
+        public string QQShowContent { get; set; } // QQ文案
+        public string WechatShowContent { get; set; } // 微信文案
+        public string ImagePath { get; set; }
 
-        public TranslateUrlResult(string title, string qqShowContent, string wechatShowContent)
+        public TranslateUrlResult(string title, string qqShowContent, string wechatShowContent, string imagePath)
         {
             ProductTitle = title;
             QQShowContent = qqShowContent;
             WechatShowContent = wechatShowContent;
+            ImagePath = imagePath;
         }
     }
 
@@ -172,8 +174,15 @@ namespace TkHome
                             }
 
                             string strQQShowContent = ClipboardDataWrapper.WrapFroQQ(imgPath, qqShowContent);
-                            string strWechatShowContent = ClipboardDataWrapper.WrapForWechat(imgPath, wechatShowContent);
-                            TranslateUrlResult result = new TranslateUrlResult(product._title, strQQShowContent, strWechatShowContent);
+                            string strWechatShowContent = wechatShowContent;
+                            int nMajor = System.Environment.Version.Major;
+                            int nMinor = System.Environment.Version.Minor;
+                            if (nMajor >= 6 && nMinor >= 2)
+                            {
+                                // win8及以上
+                                strWechatShowContent = ClipboardDataWrapper.WrapForWechat(imgPath, wechatShowContent);
+                            }
+                            TranslateUrlResult result = new TranslateUrlResult(product._title, strQQShowContent, strWechatShowContent, imgPath);
                             lock (_translateListLock)
                             {
                                 _translateList.Add(result);
@@ -181,15 +190,6 @@ namespace TkHome
                             }
                         }
 
-                        //                             if (productList.Count == 0)
-                        //                             {
-                        //                                 qunfaParam.Qunfa.QunfaStartRow = 0; // 从头开始群发
-                        //                             }
-                        //                             else
-                        //                             {
-                        //                                 qunfaParam.Qunfa.QunfaStartRow += qunfaParam.Qunfa.QunfaCount; // 取后面的数据
-                        //                             }
-                        // 
                         if (bTranslatedSuccess) // 如果有结果，则不再取，否则继续取
                         {
                             break;

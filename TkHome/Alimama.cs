@@ -77,7 +77,7 @@ namespace TkHome
             return adzoneList;
         }
 
-        // 转链，返回下载的图片路径以及文案
+        // 转链，返回下载的图片路径以及通用文案
         public bool TranslateURL(string orignalURL, string adzoneName, out string imgPath, out string showContent)
         {
             string QueryURL = "http://pub.alimama.com/items/search.json?q=";
@@ -211,6 +211,7 @@ namespace TkHome
             }
             return true;
         }
+
         private void parseAdzone(String jsonText, List<string> adzoneList)
         {
             JObject jp2 = (JObject)JsonConvert.DeserializeObject(jsonText);

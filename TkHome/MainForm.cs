@@ -356,6 +356,51 @@ namespace TkHome
             }
         }
 
+        // 群发QQ窗口
+        private void qunfaQQWnd(List<WndInfo> wndList)
+        {
+            foreach (WndInfo wnd in wndList)
+            {
+                if (wnd.IsQQWnd) // 发送到QQ窗口
+                {
+                    if (Win32.IsIconic(wnd.Wnd))
+                    {
+                        Win32.ShowWindow(wnd.Wnd, Win32.SW_RESTORE); // 如果QQ窗口最小化，则恢复
+                    }
+
+                    Win32.SendMessage(wnd.Wnd, Win32.WM_PASTE, 0, 0); // paste
+
+                    Win32.SendMessage(wnd.Wnd, Win32.WM_KEYDOWN, Win32.VK_RETURN, 0); // send
+
+                    Win32.ShowWindow(wnd.Wnd, Win32.SW_MINIMIZE); // 最小化QQ窗口
+                }
+            }
+        }
+
+        // 群发微信窗口
+        private void qunfaWechatWnd(List<WndInfo> wndList)
+        {
+            foreach (WndInfo wnd in wndList)
+            {
+                if (!wnd.IsQQWnd) // 发送到微信窗口
+                {
+                    int pos = 0x023a0113; // 275, 570
+
+                    // paste
+                    Win32.SendMessage(wnd.Wnd, Win32.WM_LBUTTONDOWN, Win32.MK_LBUTTON, pos);
+                    Thread.Sleep(10);
+                    Win32.SendMessage(wnd.Wnd, Win32.WM_LBUTTONUP, 0, pos);
+
+                    Win32.keybd_event(Win32.VK_CONTROL, 0, 0, 0);
+                    Win32.SendMessage(wnd.Wnd, Win32.WM_KEYDOWN, 'V', 0);
+                    Win32.SendMessage(wnd.Wnd, Win32.WM_KEYUP, 'V', 0);
+                    Win32.keybd_event(Win32.VK_CONTROL, 0, Win32.KEYEVENTF_KEYUP, 0);
+
+                    Win32.SendMessage(wnd.Wnd, Win32.WM_KEYDOWN, Win32.VK_RETURN, 0); // send
+                }
+            }
+        }
+
         // 群发定时器
         private void OnQunfaTimer(object sender, EventArgs e)
         {
@@ -369,67 +414,47 @@ namespace TkHome
             foreach (TranslateUrlResult result in resultList)
             {
                 //QQ群发
-                MemoryStream ms = new MemoryStream(System.Text.Encoding.Default.GetBytes(result.QQShowContent));// copy
-                Clipboard.SetData("QQ_RichEdit_Format", ms);
-
-                foreach (WndInfo wnd in qunfaWndList)
+                try
                 {
-                    try
-                    {
-                        if (wnd.IsQQWnd) // 发送到QQ窗口
-                        {
-                            if (Win32.IsIconic(wnd.Wnd))
-                            {
-                                Win32.ShowWindow(wnd.Wnd, Win32.SW_RESTORE); // 如果QQ窗口最小化，则恢复
-                            }
-
-                            Win32.SendMessage(wnd.Wnd, Win32.WM_PASTE, 0, 0); // paste
-
-                            Win32.SendMessage(wnd.Wnd, Win32.WM_KEYDOWN, Win32.VK_RETURN, 0); // send
-
-                            Win32.ShowWindow(wnd.Wnd, Win32.SW_MINIMIZE); // 最小化QQ窗口
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debugger.Log(0, null, "qunfa exception : " + ex.Message);
-                    }
-
-                    Thread.Sleep(1000);
+                    MemoryStream ms = new MemoryStream(System.Text.Encoding.Default.GetBytes(result.QQShowContent));// copy
+                    Clipboard.SetData("QQ_RichEdit_Format", ms);
+                    qunfaQQWnd(qunfaWndList);
+                    Clipboard.Clear();
                 }
-                Clipboard.Clear();
+                catch (Exception)
+                {
+                }
 
                 //微信群发
-                Clipboard.SetData(DataFormats.Html, result.WechatShowContent);// copy
-                foreach (WndInfo wnd in qunfaWndList)
+                try
                 {
-                    try
+                    int nMajor = System.Environment.Version.Major;
+                    int nMinor = System.Environment.Version.Minor;
+                    if (nMajor >= 6 && nMinor >= 2)
                     {
-                        if (!wnd.IsQQWnd) // 发送到微信窗口
-                        {
-                            int pos = 0x023a0113; // 275, 570
-
-                            // paste
-                            Win32.SendMessage(wnd.Wnd, Win32.WM_LBUTTONDOWN, Win32.MK_LBUTTON, pos);
-                            Thread.Sleep(10);
-                            Win32.SendMessage(wnd.Wnd, Win32.WM_LBUTTONUP, 0, pos);
-
-                            Win32.keybd_event(Win32.VK_CONTROL, 0, 0, 0);
-                            Win32.SendMessage(wnd.Wnd, Win32.WM_KEYDOWN, 'V', 0);
-                            Win32.SendMessage(wnd.Wnd, Win32.WM_KEYUP, 'V', 0);
-                            Win32.keybd_event(Win32.VK_CONTROL, 0, Win32.KEYEVENTF_KEYUP, 0);
-
-                            Win32.SendMessage(wnd.Wnd, Win32.WM_KEYDOWN, Win32.VK_RETURN, 0); // send
-                        }
+                        // win8及以上
+                        Clipboard.SetData(DataFormats.Html, result.WechatShowContent);// copy
+                        qunfaWechatWnd(qunfaWndList);
+                        Clipboard.Clear();
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Debugger.Log(0, null, "qunfa exception : " + ex.Message);
-                    }
+                        // win7
+                        // 先粘贴图片
+                        Image img = Image.FromFile(result.ImagePath);
+                        Clipboard.SetDataObject(img);
+                        qunfaWechatWnd(qunfaWndList);
+                        Clipboard.Clear();
 
-                    Thread.Sleep(1000);
+                        // 再粘贴文字
+                        Clipboard.SetDataObject(result.WechatShowContent);
+                        qunfaWechatWnd(qunfaWndList);
+                        Clipboard.Clear();
+                    }
                 }
-                Clipboard.Clear();
+                catch (Exception)
+                {
+                }
 
                 ListViewItem lv = qunfaListView.Items.Add(result.ProductTitle);
                 lv.SubItems.Add(DateTime.Now.ToString());

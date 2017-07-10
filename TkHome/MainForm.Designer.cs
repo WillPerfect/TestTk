@@ -78,6 +78,7 @@
             this.columnHeader13 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader14 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.clearQunfaButton = new System.Windows.Forms.Button();
             this.qunfaButton = new System.Windows.Forms.Button();
             this.qunfaListView = new System.Windows.Forms.ListView();
             this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -94,11 +95,23 @@
             this.label6 = new System.Windows.Forms.Label();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.qunfaIntervalUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label17 = new System.Windows.Forms.Label();
+            this.qunfaEndUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label16 = new System.Windows.Forms.Label();
+            this.qunfaStartUpDown = new System.Windows.Forms.NumericUpDown();
+            this.saveQunfaButton = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.saveCollectButton = new System.Windows.Forms.Button();
+            this.collectIntervalUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
+            this.collectEndUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.collectStartUpDown = new System.Windows.Forms.NumericUpDown();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -110,19 +123,6 @@
             this.loadImageTimer = new System.Windows.Forms.Timer(this.components);
             this.collectProductTimer = new System.Windows.Forms.Timer(this.components);
             this.qunfaTimer = new System.Windows.Forms.Timer(this.components);
-            this.collectStartUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
-            this.collectEndUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label15 = new System.Windows.Forms.Label();
-            this.collectIntervalUpDown = new System.Windows.Forms.NumericUpDown();
-            this.saveCollectButton = new System.Windows.Forms.Button();
-            this.saveQunfaButton = new System.Windows.Forms.Button();
-            this.qunfaStartUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.qunfaEndUpDown = new System.Windows.Forms.NumericUpDown();
-            this.qunfaIntervalUpDown = new System.Windows.Forms.NumericUpDown();
-            this.clearQunfaButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -135,14 +135,14 @@
             this.groupBox4.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.groupBox7.SuspendLayout();
-            this.groupBox6.SuspendLayout();
-            this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.collectStartUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.collectEndUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.collectIntervalUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qunfaStartUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qunfaEndUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.qunfaIntervalUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qunfaEndUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qunfaStartUpDown)).BeginInit();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.collectIntervalUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.collectEndUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.collectStartUpDown)).BeginInit();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -581,6 +581,16 @@
             this.tabPage4.Text = "商品群发";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // clearQunfaButton
+            // 
+            this.clearQunfaButton.Location = new System.Drawing.Point(640, 558);
+            this.clearQunfaButton.Name = "clearQunfaButton";
+            this.clearQunfaButton.Size = new System.Drawing.Size(75, 23);
+            this.clearQunfaButton.TabIndex = 4;
+            this.clearQunfaButton.Text = "清空列表";
+            this.clearQunfaButton.UseVisualStyleBackColor = true;
+            this.clearQunfaButton.Click += new System.EventHandler(this.clearQunfaButton_Click);
+            // 
             // qunfaButton
             // 
             this.qunfaButton.Enabled = false;
@@ -742,6 +752,101 @@
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "群发设置";
             // 
+            // qunfaIntervalUpDown
+            // 
+            this.qunfaIntervalUpDown.Location = new System.Drawing.Point(597, 40);
+            this.qunfaIntervalUpDown.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.qunfaIntervalUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.qunfaIntervalUpDown.Name = "qunfaIntervalUpDown";
+            this.qunfaIntervalUpDown.ReadOnly = true;
+            this.qunfaIntervalUpDown.Size = new System.Drawing.Size(100, 21);
+            this.qunfaIntervalUpDown.TabIndex = 18;
+            this.qunfaIntervalUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.qunfaIntervalUpDown.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(385, 44);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(17, 12);
+            this.label17.TabIndex = 17;
+            this.label17.Text = "点";
+            // 
+            // qunfaEndUpDown
+            // 
+            this.qunfaEndUpDown.Location = new System.Drawing.Point(335, 40);
+            this.qunfaEndUpDown.Maximum = new decimal(new int[] {
+            24,
+            0,
+            0,
+            0});
+            this.qunfaEndUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.qunfaEndUpDown.Name = "qunfaEndUpDown";
+            this.qunfaEndUpDown.ReadOnly = true;
+            this.qunfaEndUpDown.Size = new System.Drawing.Size(46, 21);
+            this.qunfaEndUpDown.TabIndex = 16;
+            this.qunfaEndUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.qunfaEndUpDown.Value = new decimal(new int[] {
+            21,
+            0,
+            0,
+            0});
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(161, 45);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(17, 12);
+            this.label16.TabIndex = 15;
+            this.label16.Text = "点";
+            // 
+            // qunfaStartUpDown
+            // 
+            this.qunfaStartUpDown.Location = new System.Drawing.Point(108, 41);
+            this.qunfaStartUpDown.Maximum = new decimal(new int[] {
+            23,
+            0,
+            0,
+            0});
+            this.qunfaStartUpDown.Name = "qunfaStartUpDown";
+            this.qunfaStartUpDown.ReadOnly = true;
+            this.qunfaStartUpDown.Size = new System.Drawing.Size(46, 21);
+            this.qunfaStartUpDown.TabIndex = 4;
+            this.qunfaStartUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.qunfaStartUpDown.Value = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            // 
+            // saveQunfaButton
+            // 
+            this.saveQunfaButton.Location = new System.Drawing.Point(361, 86);
+            this.saveQunfaButton.Name = "saveQunfaButton";
+            this.saveQunfaButton.Size = new System.Drawing.Size(75, 23);
+            this.saveQunfaButton.TabIndex = 14;
+            this.saveQunfaButton.Text = "保存";
+            this.saveQunfaButton.UseVisualStyleBackColor = true;
+            this.saveQunfaButton.Click += new System.EventHandler(this.saveQunfaButton_Click);
+            // 
             // label14
             // 
             this.label14.AutoSize = true;
@@ -797,6 +902,101 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "采集设置";
             // 
+            // saveCollectButton
+            // 
+            this.saveCollectButton.Location = new System.Drawing.Point(361, 82);
+            this.saveCollectButton.Name = "saveCollectButton";
+            this.saveCollectButton.Size = new System.Drawing.Size(75, 23);
+            this.saveCollectButton.TabIndex = 9;
+            this.saveCollectButton.Text = "保存";
+            this.saveCollectButton.UseVisualStyleBackColor = true;
+            this.saveCollectButton.Click += new System.EventHandler(this.saveCollectButton_Click);
+            // 
+            // collectIntervalUpDown
+            // 
+            this.collectIntervalUpDown.Location = new System.Drawing.Point(597, 35);
+            this.collectIntervalUpDown.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.collectIntervalUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.collectIntervalUpDown.Name = "collectIntervalUpDown";
+            this.collectIntervalUpDown.ReadOnly = true;
+            this.collectIntervalUpDown.Size = new System.Drawing.Size(100, 21);
+            this.collectIntervalUpDown.TabIndex = 3;
+            this.collectIntervalUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.collectIntervalUpDown.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(385, 36);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(17, 12);
+            this.label15.TabIndex = 8;
+            this.label15.Text = "点";
+            // 
+            // collectEndUpDown
+            // 
+            this.collectEndUpDown.Location = new System.Drawing.Point(335, 32);
+            this.collectEndUpDown.Maximum = new decimal(new int[] {
+            24,
+            0,
+            0,
+            0});
+            this.collectEndUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.collectEndUpDown.Name = "collectEndUpDown";
+            this.collectEndUpDown.ReadOnly = true;
+            this.collectEndUpDown.Size = new System.Drawing.Size(46, 21);
+            this.collectEndUpDown.TabIndex = 3;
+            this.collectEndUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.collectEndUpDown.Value = new decimal(new int[] {
+            21,
+            0,
+            0,
+            0});
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(161, 37);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(17, 12);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "点";
+            // 
+            // collectStartUpDown
+            // 
+            this.collectStartUpDown.Location = new System.Drawing.Point(109, 33);
+            this.collectStartUpDown.Maximum = new decimal(new int[] {
+            23,
+            0,
+            0,
+            0});
+            this.collectStartUpDown.Name = "collectStartUpDown";
+            this.collectStartUpDown.ReadOnly = true;
+            this.collectStartUpDown.Size = new System.Drawing.Size(46, 21);
+            this.collectStartUpDown.TabIndex = 3;
+            this.collectStartUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.collectStartUpDown.Value = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            // 
             // label10
             // 
             this.label10.AutoSize = true;
@@ -843,7 +1043,7 @@
             this.groupBox5.Size = new System.Drawing.Size(813, 92);
             this.groupBox5.TabIndex = 0;
             this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "阿里妈妈设置";
+            this.groupBox5.Text = "阿里妈妈";
             // 
             // adzoneComboBox
             // 
@@ -890,206 +1090,6 @@
             this.qunfaTimer.Interval = 5000;
             this.qunfaTimer.Tick += new System.EventHandler(this.OnQunfaTimer);
             // 
-            // collectStartUpDown
-            // 
-            this.collectStartUpDown.Location = new System.Drawing.Point(109, 33);
-            this.collectStartUpDown.Maximum = new decimal(new int[] {
-            23,
-            0,
-            0,
-            0});
-            this.collectStartUpDown.Name = "collectStartUpDown";
-            this.collectStartUpDown.ReadOnly = true;
-            this.collectStartUpDown.Size = new System.Drawing.Size(46, 21);
-            this.collectStartUpDown.TabIndex = 3;
-            this.collectStartUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.collectStartUpDown.Value = new decimal(new int[] {
-            9,
-            0,
-            0,
-            0});
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(161, 37);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(17, 12);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "点";
-            // 
-            // collectEndUpDown
-            // 
-            this.collectEndUpDown.Location = new System.Drawing.Point(335, 32);
-            this.collectEndUpDown.Maximum = new decimal(new int[] {
-            24,
-            0,
-            0,
-            0});
-            this.collectEndUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.collectEndUpDown.Name = "collectEndUpDown";
-            this.collectEndUpDown.ReadOnly = true;
-            this.collectEndUpDown.Size = new System.Drawing.Size(46, 21);
-            this.collectEndUpDown.TabIndex = 3;
-            this.collectEndUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.collectEndUpDown.Value = new decimal(new int[] {
-            21,
-            0,
-            0,
-            0});
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(385, 36);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(17, 12);
-            this.label15.TabIndex = 8;
-            this.label15.Text = "点";
-            // 
-            // collectIntervalUpDown
-            // 
-            this.collectIntervalUpDown.Location = new System.Drawing.Point(597, 35);
-            this.collectIntervalUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            this.collectIntervalUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.collectIntervalUpDown.Name = "collectIntervalUpDown";
-            this.collectIntervalUpDown.ReadOnly = true;
-            this.collectIntervalUpDown.Size = new System.Drawing.Size(100, 21);
-            this.collectIntervalUpDown.TabIndex = 3;
-            this.collectIntervalUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.collectIntervalUpDown.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
-            // saveCollectButton
-            // 
-            this.saveCollectButton.Location = new System.Drawing.Point(361, 82);
-            this.saveCollectButton.Name = "saveCollectButton";
-            this.saveCollectButton.Size = new System.Drawing.Size(75, 23);
-            this.saveCollectButton.TabIndex = 9;
-            this.saveCollectButton.Text = "保存";
-            this.saveCollectButton.UseVisualStyleBackColor = true;
-            this.saveCollectButton.Click += new System.EventHandler(this.saveCollectButton_Click);
-            // 
-            // saveQunfaButton
-            // 
-            this.saveQunfaButton.Location = new System.Drawing.Point(361, 86);
-            this.saveQunfaButton.Name = "saveQunfaButton";
-            this.saveQunfaButton.Size = new System.Drawing.Size(75, 23);
-            this.saveQunfaButton.TabIndex = 14;
-            this.saveQunfaButton.Text = "保存";
-            this.saveQunfaButton.UseVisualStyleBackColor = true;
-            this.saveQunfaButton.Click += new System.EventHandler(this.saveQunfaButton_Click);
-            // 
-            // qunfaStartUpDown
-            // 
-            this.qunfaStartUpDown.Location = new System.Drawing.Point(108, 41);
-            this.qunfaStartUpDown.Maximum = new decimal(new int[] {
-            23,
-            0,
-            0,
-            0});
-            this.qunfaStartUpDown.Name = "qunfaStartUpDown";
-            this.qunfaStartUpDown.ReadOnly = true;
-            this.qunfaStartUpDown.Size = new System.Drawing.Size(46, 21);
-            this.qunfaStartUpDown.TabIndex = 4;
-            this.qunfaStartUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.qunfaStartUpDown.Value = new decimal(new int[] {
-            9,
-            0,
-            0,
-            0});
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(161, 45);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(17, 12);
-            this.label16.TabIndex = 15;
-            this.label16.Text = "点";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(385, 44);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(17, 12);
-            this.label17.TabIndex = 17;
-            this.label17.Text = "点";
-            // 
-            // qunfaEndUpDown
-            // 
-            this.qunfaEndUpDown.Location = new System.Drawing.Point(335, 40);
-            this.qunfaEndUpDown.Maximum = new decimal(new int[] {
-            24,
-            0,
-            0,
-            0});
-            this.qunfaEndUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.qunfaEndUpDown.Name = "qunfaEndUpDown";
-            this.qunfaEndUpDown.ReadOnly = true;
-            this.qunfaEndUpDown.Size = new System.Drawing.Size(46, 21);
-            this.qunfaEndUpDown.TabIndex = 16;
-            this.qunfaEndUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.qunfaEndUpDown.Value = new decimal(new int[] {
-            21,
-            0,
-            0,
-            0});
-            // 
-            // qunfaIntervalUpDown
-            // 
-            this.qunfaIntervalUpDown.Location = new System.Drawing.Point(597, 40);
-            this.qunfaIntervalUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            this.qunfaIntervalUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.qunfaIntervalUpDown.Name = "qunfaIntervalUpDown";
-            this.qunfaIntervalUpDown.ReadOnly = true;
-            this.qunfaIntervalUpDown.Size = new System.Drawing.Size(100, 21);
-            this.qunfaIntervalUpDown.TabIndex = 18;
-            this.qunfaIntervalUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.qunfaIntervalUpDown.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
-            // clearQunfaButton
-            // 
-            this.clearQunfaButton.Location = new System.Drawing.Point(640, 558);
-            this.clearQunfaButton.Name = "clearQunfaButton";
-            this.clearQunfaButton.Size = new System.Drawing.Size(75, 23);
-            this.clearQunfaButton.TabIndex = 4;
-            this.clearQunfaButton.Text = "清空列表";
-            this.clearQunfaButton.UseVisualStyleBackColor = true;
-            this.clearQunfaButton.Click += new System.EventHandler(this.clearQunfaButton_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1123,15 +1123,15 @@
             this.tabPage6.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.qunfaIntervalUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qunfaEndUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.qunfaStartUpDown)).EndInit();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.collectStartUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.collectEndUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.collectIntervalUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qunfaStartUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qunfaEndUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.qunfaIntervalUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.collectEndUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.collectStartUpDown)).EndInit();
+            this.groupBox5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

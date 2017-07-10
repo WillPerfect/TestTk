@@ -56,18 +56,31 @@ namespace TkHome
         // 复制到微信
         private void copyToWeChatButton_Click(object sender, EventArgs e)
         {
-            StringBuilder sb1 = new StringBuilder();
-            sb1.Append("<html><body>");
-            sb1.AppendFormat("<img src='{0}' />", ImagePath);
-
-            string[] lines = contentRichTextBox.Lines;
-            for (int i = 0; i < lines.Length; i++)
+            // 这里要判断版本号
+            int nMajor = System.Environment.Version.Major;
+            int nMinor = System.Environment.Version.Minor;
+            if (nMajor >= 6 && nMinor >= 2)
             {
-                sb1.Append("<br>");
-                sb1.Append(lines[i]);
+                // win8及以上
+                StringBuilder sb1 = new StringBuilder();
+                sb1.Append("<html><body>");
+                sb1.AppendFormat("<img src='{0}' />", ImagePath);
+
+                string[] lines = contentRichTextBox.Lines;
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    sb1.Append("<br>");
+                    sb1.Append(lines[i]);
+                }
+                sb1.Append("</body></html>");
+                Clipboard.SetData(DataFormats.Html, sb1.ToString());
             }
-            sb1.Append("</body></html>");
-            Clipboard.SetData(DataFormats.Html, sb1.ToString());
+            else
+            {
+                // 这种HTML有问题，会导致中文乱码
+                Clipboard.SetDataObject(contentRichTextBox.Text);
+            }
+
         }
     }
 }
