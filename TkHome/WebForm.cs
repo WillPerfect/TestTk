@@ -36,7 +36,7 @@ namespace TkHome
 
                 if (curURL == Alimama._frontPage)
                 {
-                    Debug.WriteLine("登录成功");
+                    Debugger.Log(0, null, "登录成功");
                     _lastLoginedTime = DateTime.Now;
                     IsLogined = true;
                     this.Hide();
@@ -50,14 +50,14 @@ namespace TkHome
                     loginTimer.Start();
                 }
             }
-            Debug.WriteLine("OnDocumentComplete " + aliWebBrowser.Document.Url.ToString());
+            Debugger.Log(0, null, "OnDocumentComplete " + aliWebBrowser.Document.Url.ToString());
         }
 
         private void OnDetectLoginTimer(object sender, EventArgs e)
         {
             if (!Alimama.IsOnline())
             {
-                Debug.WriteLine("检测到掉线 " + DateTime.Now.ToString());
+                Debugger.Log(0, null, "检测到掉线 " + DateTime.Now.ToString());
 
                 detectLoginTimer.Stop();
                 this.Show();
@@ -75,7 +75,7 @@ namespace TkHome
                 {
                     detectLoginTimer.Interval = 10 * 60 * 1000; // 10分钟
                 }
-                Debug.WriteLine("依旧在线 " + DateTime.Now.ToString());
+                Debugger.Log(0, null, "依旧在线 " + DateTime.Now.ToString());
             }
         }
 
@@ -86,7 +86,7 @@ namespace TkHome
             {
                 he.InvokeMember("click");
                 _bClicked = true;
-                Debug.WriteLine("Click");
+                Debugger.Log(0, null, "Click");
             }
             loginTimer.Stop();
         }

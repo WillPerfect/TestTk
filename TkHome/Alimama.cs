@@ -47,7 +47,7 @@ namespace TkHome
             string result = GetJuResult.Html;
             if (result.IndexOf("mmNick") == -1)
             {
-                Debug.WriteLine(result);
+                Debugger.Log(0, null, result);
                 return false;
             }
             else
@@ -220,7 +220,7 @@ namespace TkHome
                 var id = ((JObject)item)["id"];
                 var name = ((JObject)item)["name"];
 
-                Debug.WriteLine("siteid : " + id + "\t" + name.ToString());
+                Debugger.Log(0, null, "siteid : " + id + "\t" + name.ToString());
 
                 Site site = new Site();
                 site.id = id.ToString();
@@ -234,7 +234,7 @@ namespace TkHome
                     {
                         var subid = ((JObject)subitem)["id"];
                         var subname = ((JObject)subitem)["name"];
-                        Debug.WriteLine("adzoneid : " + subid + "\t" + subname.ToString());
+                        Debugger.Log(0, null, "adzoneid : " + subid + "\t" + subname.ToString());
                         adzoneList.Add(subname.ToString());
 
                         Adzone adzone = new Adzone();

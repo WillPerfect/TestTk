@@ -144,7 +144,7 @@ namespace TkHome
                 TimeSpan delta = nowTime - lastQunfaTime;
                 if (delta.TotalSeconds > qunfaParam.Interval * 60 && nowTime.Hour >= qunfaParam.StartTime && nowTime.Hour < qunfaParam.EndTime)
                 {
-                    Debug.WriteLine("开始群发 " + DateTime.Now.ToString());
+                    Debugger.Log(0, null, "开始群发 " + DateTime.Now.ToString());
                     while (!qunfaParam.Qunfa.StopThread) // 解析失败后重试
                     {
                         bool bTranslatedSuccess = false;
@@ -167,7 +167,7 @@ namespace TkHome
                             }
                             if (!bSuccess) // 转链失败
                             {
-                                Debug.WriteLine("{0} translate failed", decryptURL);
+                                Debugger.Log(0, null, decryptURL + " translate failed");
                                 continue;
                             }
 

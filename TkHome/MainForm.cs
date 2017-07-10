@@ -392,7 +392,7 @@ namespace TkHome
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine("qunfa exception : " + ex.Message);
+                        Debugger.Log(0, null, "qunfa exception : " + ex.Message);
                     }
 
                     Thread.Sleep(1000);
@@ -424,7 +424,7 @@ namespace TkHome
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine("qunfa exception : " + ex.Message);
+                        Debugger.Log(0, null, "qunfa exception : " + ex.Message);
                     }
 
                     Thread.Sleep(1000);

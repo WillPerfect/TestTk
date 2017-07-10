@@ -176,7 +176,7 @@ namespace TkHome
                 TimeSpan delta = nowTime - lastCollectTime;
                 if (delta.TotalSeconds > colllector._interval * 60 && nowTime.Hour >= colllector._startTime && nowTime.Hour < colllector._endTime)
                 {
-                    Debug.WriteLine("开始采集");
+                    Debugger.Log(0, null, "开始采集");
                     // 先遍历QQ窗口列表
                     foreach (int item in colllector._monitorQQWndList)
                     {
@@ -311,9 +311,9 @@ namespace TkHome
                     tkCommFee = "";
                     zkPrice = "";
 
-                    Debug.WriteLine(GetJuResult.StatusCode);
-                    Debug.WriteLine(url);
-                    Debug.WriteLine(strReqURL);
+                    Debugger.Log(0, null, GetJuResult.StatusCode.ToString());
+                    Debugger.Log(0, null, url);
+                    Debugger.Log(0, null, strReqURL);
                 }
             }
             else
@@ -324,9 +324,9 @@ namespace TkHome
                 tkCommFee = "";
                 zkPrice = "";
 
-                Debug.WriteLine(GetJuResult.StatusCode);
-                Debug.WriteLine(url);
-                Debug.WriteLine(strReqURL);
+                Debugger.Log(0, null, GetJuResult.StatusCode.ToString());
+                Debugger.Log(0, null, url);
+                Debugger.Log(0, null, strReqURL);
             }
         }
 
@@ -348,7 +348,7 @@ namespace TkHome
                     {
                         _collectURLList.Add(_failedURLList[i]);
                     }
-                    Debug.WriteLine(_failedURLList[i].Title);
+                    Debugger.Log(0, null, _failedURLList[i].Title);
                     _failedURLList.Remove(_failedURLList[i]);
                 }
             }
@@ -411,7 +411,7 @@ namespace TkHome
                 if (delta.TotalSeconds > 70)
                 {
                     // 开始解析
-                    Debug.WriteLine("开始解析");
+                    Debugger.Log(0, null, "开始解析");
 
                     collector.ParseTkURLList();
                     lastParseTime = now;
