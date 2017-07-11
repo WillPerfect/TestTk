@@ -10,7 +10,7 @@ using System.IO;
 // 操作数据库类
 namespace TkHome
 {
-    class DbOperator
+    public class DbOperator
     {
         private string _dbName = "TkHome.dat";
         private List<SQLiteTable> _innerTableList = new List<SQLiteTable>();
@@ -33,6 +33,8 @@ namespace TkHome
 
             SQLiteTable optionTable = new SQLiteTable("option");
             optionTable.Columns.Add(new SQLiteColumn("id", ColType.Integer, true, true, true, "1"));
+            optionTable.Columns.Add(new SQLiteColumn("reconnect", ColType.Integer, false, false, true, "0"));
+            optionTable.Columns.Add(new SQLiteColumn("reconnect_delayseconds", ColType.Integer, false, false, true, "5"));
             optionTable.Columns.Add(new SQLiteColumn("collect_starttime", ColType.Integer));
             optionTable.Columns.Add(new SQLiteColumn("collect_endtime", ColType.Integer));
             optionTable.Columns.Add(new SQLiteColumn("collect_interval", ColType.Integer));
@@ -192,56 +194,44 @@ namespace TkHome
             }
         }
 
-        public void loadCollectConfigure(out int startTime, out int endTime, out int interval)
+        public Configure loadConfigre()
         {
-            startTime = 9;
-            endTime = 21;
-            interval = 5;
+            Configure conf = new Configure();
+
             try
             {
                 DataTable dt = _helper.Select("select * from option");
-                startTime = Convert.ToInt32(dt.Rows[0]["collect_starttime"]);
-                endTime = Convert.ToInt32(dt.Rows[0]["collect_endtime"]);
-                interval = Convert.ToInt32(dt.Rows[0]["collect_interval"]);
+                conf.Reconnect = Convert.ToBoolean(dt.Rows[0]["reconnect"]);
+                conf.ReconnectDelaySeconds = Convert.ToInt32(dt.Rows[0]["reconnect_delayseconds"]);
+
+                conf.CollectStartTime = Convert.ToInt32(dt.Rows[0]["collect_starttime"]);
+                conf.CollectEndTime = Convert.ToInt32(dt.Rows[0]["collect_endtime"]);
+                conf.CollectInterval = Convert.ToInt32(dt.Rows[0]["collect_interval"]);
+
+                conf.QunfaStartTime = Convert.ToInt32(dt.Rows[0]["qunfa_starttime"]);
+                conf.QunfaEndTime = Convert.ToInt32(dt.Rows[0]["qunfa_endtime"]);
+                conf.QunfaInterval = Convert.ToInt32(dt.Rows[0]["qunfa_interval"]);
             }
             catch (Exception)
             {
             }
+
+            return conf;
         }
 
-        public void saveCollectConfigure(int startTime, int endTime, int interval)
+        public void saveCofigure(Configure conf)
         {
+            string sql = "update option set reconnect = " + Convert.ToInt32(conf.Reconnect) + ", ";
+            sql += "reconnect_delayseconds = " + conf.ReconnectDelaySeconds + ", ";
+            sql += "collect_starttime = " + conf.CollectStartTime + ", ";
+            sql += "collect_endtime = " + conf.CollectEndTime + ", ";
+            sql += "collect_interval = " + conf.CollectInterval + ", ";
+            sql += "qunfa_starttime = " + conf.QunfaStartTime + ", ";
+            sql += "qunfa_endtime = " + conf.QunfaEndTime + ", ";
+            sql += "qunfa_interval = " + conf.QunfaInterval;
             try
             {
-                _helper.Execute("update option set collect_starttime = " + startTime.ToString() + ", collect_endtime = " + endTime.ToString() + ", collect_interval = " + interval.ToString());
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        public void loadQunfaConfigure(out int startTime, out int endTime, out int interval)
-        {
-            startTime = 9;
-            endTime = 21;
-            interval = 5;
-            try
-            {
-                DataTable dt = _helper.Select("select * from option");
-                startTime = Convert.ToInt32(dt.Rows[0]["qunfa_starttime"]);
-                endTime = Convert.ToInt32(dt.Rows[0]["qunfa_endtime"]);
-                interval = Convert.ToInt32(dt.Rows[0]["qunfa_interval"]);
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        public void saveQunfaConfigure(int startTime, int endTime, int interval)
-        {
-            try
-            {
-                _helper.Execute("update option set qunfa_starttime = " + startTime.ToString() + ", qunfa_endtime = " + endTime.ToString() + ", qunfa_interval = " + interval.ToString());
+                _helper.Execute(sql);
             }
             catch (Exception)
             {
@@ -265,7 +255,7 @@ namespace TkHome
         // 生成默认配置
         private void generateDefaultConfig()
         {
-            _helper.Execute("insert into option(collect_starttime, collect_endtime, collect_interval, qunfa_starttime, qunfa_endtime, qunfa_interval) values(9, 21, 5, 9, 21, 5)");
+            _helper.Execute("insert into option(reconnect, reconnect_delayseconds, collect_starttime, collect_endtime, collect_interval, qunfa_starttime, qunfa_endtime, qunfa_interval) values(0, 5, 9, 21, 5, 9, 21, 5)");
         }
     }
 }

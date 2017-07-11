@@ -15,9 +15,10 @@ namespace TkHome
 {
     public partial class MainForm : Form
     {
+        public static DbOperator Database = new DbOperator();
+
         private ProductLibrary _productLibrary = new ProductLibrary();
         private ProductCollector _productCollector = new ProductCollector();
-        private DbOperator _dbOperator = new DbOperator();
         private ProductQunfa _productQunfa = new ProductQunfa();
         private Alimama _alimama = new Alimama();
         private int _productCountPerPage = 100; // 自选库中每页显示的商品数
@@ -31,17 +32,16 @@ namespace TkHome
         {
             LoadProductLibrary(); // 加载产品库
             loadImageTimer.Start();
-            _dbOperator.init();
+            Database.init();
             LoadMyLibrary(); // 加载自选库
-            initCollectConfigure();
-            initQunfaConfigure();
+            initConfigure();
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)
         {
             _productCollector.StopMonitor();
             _productQunfa.StopTranslateUrl();
-            _dbOperator.deinit();
+            Database.deinit();
         }
 
         #region 产品库页面
@@ -126,7 +126,7 @@ namespace TkHome
             {
                 selectedProductList.Add(new ProductInfo(item.SubItems[0].Text, "", item.SubItems[4].Text, item.SubItems[2].Text, item.SubItems[3].Text, item.SubItems[1].Text, item.Tag as string));
             }
-            _dbOperator.addProductList(selectedProductList);
+            Database.addProductList(selectedProductList);
         }
         #endregion 产品库页面
 
@@ -143,7 +143,10 @@ namespace TkHome
                     monitorQQWndList.Add(item.Wnd);
                 }
                 int startTime, endTime, interval;
-                _dbOperator.loadCollectConfigure(out startTime, out endTime, out interval);
+                Configure conf = Database.loadConfigre();
+                startTime = conf.CollectStartTime;
+                endTime = conf.CollectEndTime;
+                interval = conf.CollectInterval;
                 _productCollector.StartMonitor(monitorQQWndList, startTime, endTime, interval); // 开始监控
                 collectProductTimer.Start();
                 collectButton.Text = "停止采集";
@@ -219,7 +222,7 @@ namespace TkHome
             {
                 selectedProductList.Add(new ProductInfo(item.SubItems[0].Text, "", item.SubItems[4].Text, item.SubItems[2].Text, item.SubItems[3].Text, item.SubItems[1].Text, item.Tag as string));
             }
-            _dbOperator.addProductList(selectedProductList);
+            Database.addProductList(selectedProductList);
         }
 
         // 删除采集项
@@ -247,7 +250,7 @@ namespace TkHome
 
             int curPage = int.Parse(pageLabel2.Text);
             int startRow = (curPage - 1) * _productCountPerPage;
-            List<ProductInfo> productList = _dbOperator.loadProductList(startRow, _productCountPerPage);
+            List<ProductInfo> productList = Database.loadProductList(startRow, _productCountPerPage);
             foreach (ProductInfo product in productList)
             {
                 ListViewItem lv = MyLibraryListView.Items.Add(product._id.ToString());
@@ -292,7 +295,7 @@ namespace TkHome
             {
                 productIdList.Add(Convert.ToInt32(item.Text));
             }
-            _dbOperator.delProductIdList(productIdList);
+            Database.delProductIdList(productIdList);
             LoadMyLibrary();
         }
         #endregion 自选库页面
@@ -339,8 +342,11 @@ namespace TkHome
                 qunfaButton.Text = "停止群发";
                 _startQunfa = true;
                 int startTime, endTime, interval;
-                _dbOperator.loadQunfaConfigure(out startTime, out endTime, out interval);
-                _productQunfa.StartTranslateUrl(_dbOperator, _alimama, adzoneComboBox.Text, startTime, endTime, interval);
+                Configure conf = Database.loadConfigre();
+                startTime = conf.QunfaStartTime;
+                endTime = conf.QunfaEndTime;
+                interval = conf.QunfaInterval;
+                _productQunfa.StartTranslateUrl(Database, _alimama, adzoneComboBox.Text, startTime, endTime, interval);
                 qunfaTimer.Start();
                 qunfaListBox.Enabled = false;
                 refreshSendButton.Enabled = false;
@@ -532,51 +538,58 @@ namespace TkHome
             }
         }
 
-        private void initCollectConfigure()
+        private void initConfigure()
         {
-            int startTime, endTime, interval;
-            _dbOperator.loadCollectConfigure(out startTime, out endTime, out interval);
-            collectStartUpDown.Value = startTime;
-            collectEndUpDown.Value = endTime;
-            collectIntervalUpDown.Value = interval;
+            Configure conf = Database.loadConfigre();
+            reConnectCheckbox.Checked = conf.Reconnect;
+            delayUpDown.Value = conf.ReconnectDelaySeconds;
+
+            collectStartUpDown.Value = conf.CollectStartTime;
+            collectEndUpDown.Value = conf.CollectEndTime;
+            collectIntervalUpDown.Value = conf.CollectInterval;
+
+            qunfaStartUpDown.Value = conf.QunfaStartTime;
+            qunfaEndUpDown.Value = conf.QunfaEndTime;
+            qunfaIntervalUpDown.Value = conf.QunfaInterval;
         }
 
-        private void initQunfaConfigure()
+        private void OnReconnectChanged(object sender, EventArgs e)
         {
-            int startTime, endTime, interval;
-            _dbOperator.loadQunfaConfigure(out startTime, out endTime, out interval);
-            qunfaStartUpDown.Value = startTime;
-            qunfaEndUpDown.Value = endTime;
-            qunfaIntervalUpDown.Value = interval;
+            delayUpDown.Enabled = reConnectCheckbox.Checked;
         }
 
-        // 保存采集设置
-        private void saveCollectButton_Click(object sender, EventArgs e)
+        // 保存配置
+        private void saveConfigButton_Click(object sender, EventArgs e)
         {
-            int startTime = Convert.ToInt32(collectStartUpDown.Value);
-            int endTime = Convert.ToInt32(collectEndUpDown.Value);
-            if (startTime >= endTime)
+            int collect_startTime = Convert.ToInt32(collectStartUpDown.Value);
+            int collect_endTime = Convert.ToInt32(collectEndUpDown.Value);
+            if (collect_startTime >= collect_endTime)
             {
-                MessageBox.Show("起始时间必须小于结束时间");
+                MessageBox.Show("采集起始时间必须小于结束时间");
                 return;
             }
-            int interval = Convert.ToInt32(collectIntervalUpDown.Value);
-            _dbOperator.saveCollectConfigure(startTime, endTime, interval);
-        }
+            int collect_interval = Convert.ToInt32(collectIntervalUpDown.Value);
 
-
-        // 保存群发设置
-        private void saveQunfaButton_Click(object sender, EventArgs e)
-        {
-            int startTime = Convert.ToInt32(qunfaStartUpDown.Value);
-            int endTime = Convert.ToInt32(qunfaEndUpDown.Value);
-            if (startTime >= endTime)
+            int qunfa_startTime = Convert.ToInt32(qunfaStartUpDown.Value);
+            int qunfa_endTime = Convert.ToInt32(qunfaEndUpDown.Value);
+            if (qunfa_startTime >= qunfa_endTime)
             {
-                MessageBox.Show("起始时间必须小于结束时间");
+                MessageBox.Show("群发起始时间必须小于结束时间");
                 return;
             }
-            int interval = Convert.ToInt32(qunfaIntervalUpDown.Value);
-            _dbOperator.saveQunfaConfigure(startTime, endTime, interval);
+            int qunfa_interval = Convert.ToInt32(qunfaIntervalUpDown.Value);
+
+            Configure conf = new Configure();
+            conf.Reconnect = reConnectCheckbox.Checked;
+            conf.ReconnectDelaySeconds = Convert.ToInt32(delayUpDown.Value);
+            conf.CollectStartTime = collect_startTime;
+            conf.CollectEndTime = collect_endTime;
+            conf.CollectInterval = collect_interval;
+            conf.QunfaStartTime = qunfa_startTime;
+            conf.QunfaEndTime = qunfa_endTime;
+            conf.QunfaInterval = qunfa_interval;
+
+            Database.saveCofigure(conf);
         }
         #endregion
     }

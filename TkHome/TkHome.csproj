@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Alimama.cs" />
     <Compile Include="ClipboardDataWrapper.cs" />
+    <Compile Include="Configure.cs" />
     <Compile Include="DbOperator.cs" />
     <Compile Include="EncryptDES.cs" />
     <Compile Include="EncryptMd5.cs" />

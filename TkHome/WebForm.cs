@@ -45,8 +45,10 @@ namespace TkHome
             }
             else
             {
-                if (!_bClicked)
+                Configure conf = MainForm.Database.loadConfigre();
+                if (!_bClicked && conf.Reconnect) // 设置了断线重连
                 {
+                    loginTimer.Interval = conf.ReconnectDelaySeconds * 1000; // 延时
                     loginTimer.Start();
                 }
             }

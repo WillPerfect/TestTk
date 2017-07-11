@@ -31,7 +31,7 @@ namespace TkHome
         public Image _img { get; set; }
     }
 
-    class ProductInfo
+    public class ProductInfo
     {
         public int _id { get; set; }
         public string _title { get; set; }

@@ -100,13 +100,11 @@
             this.qunfaEndUpDown = new System.Windows.Forms.NumericUpDown();
             this.label16 = new System.Windows.Forms.Label();
             this.qunfaStartUpDown = new System.Windows.Forms.NumericUpDown();
-            this.saveQunfaButton = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.saveCollectButton = new System.Windows.Forms.Button();
             this.collectIntervalUpDown = new System.Windows.Forms.NumericUpDown();
             this.label15 = new System.Windows.Forms.Label();
             this.collectEndUpDown = new System.Windows.Forms.NumericUpDown();
@@ -123,6 +121,11 @@
             this.loadImageTimer = new System.Windows.Forms.Timer(this.components);
             this.collectProductTimer = new System.Windows.Forms.Timer(this.components);
             this.qunfaTimer = new System.Windows.Forms.Timer(this.components);
+            this.reConnectCheckbox = new System.Windows.Forms.CheckBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.delayUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label19 = new System.Windows.Forms.Label();
+            this.saveConfigButton = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -143,6 +146,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.collectEndUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.collectStartUpDown)).BeginInit();
             this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.delayUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -723,6 +727,7 @@
             // 
             // tabPage6
             // 
+            this.tabPage6.Controls.Add(this.saveConfigButton);
             this.tabPage6.Controls.Add(this.groupBox7);
             this.tabPage6.Controls.Add(this.groupBox6);
             this.tabPage6.Controls.Add(this.groupBox5);
@@ -740,21 +745,20 @@
             this.groupBox7.Controls.Add(this.qunfaEndUpDown);
             this.groupBox7.Controls.Add(this.label16);
             this.groupBox7.Controls.Add(this.qunfaStartUpDown);
-            this.groupBox7.Controls.Add(this.saveQunfaButton);
             this.groupBox7.Controls.Add(this.label14);
             this.groupBox7.Controls.Add(this.label13);
             this.groupBox7.Controls.Add(this.label11);
             this.groupBox7.Controls.Add(this.label12);
-            this.groupBox7.Location = new System.Drawing.Point(9, 250);
+            this.groupBox7.Location = new System.Drawing.Point(8, 261);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(813, 121);
+            this.groupBox7.Size = new System.Drawing.Size(813, 90);
             this.groupBox7.TabIndex = 2;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "群发设置";
             // 
             // qunfaIntervalUpDown
             // 
-            this.qunfaIntervalUpDown.Location = new System.Drawing.Point(597, 40);
+            this.qunfaIntervalUpDown.Location = new System.Drawing.Point(597, 35);
             this.qunfaIntervalUpDown.Maximum = new decimal(new int[] {
             60,
             0,
@@ -779,7 +783,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(385, 44);
+            this.label17.Location = new System.Drawing.Point(385, 39);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(17, 12);
             this.label17.TabIndex = 17;
@@ -787,7 +791,7 @@
             // 
             // qunfaEndUpDown
             // 
-            this.qunfaEndUpDown.Location = new System.Drawing.Point(335, 40);
+            this.qunfaEndUpDown.Location = new System.Drawing.Point(335, 35);
             this.qunfaEndUpDown.Maximum = new decimal(new int[] {
             24,
             0,
@@ -812,7 +816,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(161, 45);
+            this.label16.Location = new System.Drawing.Point(161, 40);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(17, 12);
             this.label16.TabIndex = 15;
@@ -820,7 +824,7 @@
             // 
             // qunfaStartUpDown
             // 
-            this.qunfaStartUpDown.Location = new System.Drawing.Point(108, 41);
+            this.qunfaStartUpDown.Location = new System.Drawing.Point(108, 36);
             this.qunfaStartUpDown.Maximum = new decimal(new int[] {
             23,
             0,
@@ -837,20 +841,10 @@
             0,
             0});
             // 
-            // saveQunfaButton
-            // 
-            this.saveQunfaButton.Location = new System.Drawing.Point(361, 86);
-            this.saveQunfaButton.Name = "saveQunfaButton";
-            this.saveQunfaButton.Size = new System.Drawing.Size(75, 23);
-            this.saveQunfaButton.TabIndex = 14;
-            this.saveQunfaButton.Text = "保存";
-            this.saveQunfaButton.UseVisualStyleBackColor = true;
-            this.saveQunfaButton.Click += new System.EventHandler(this.saveQunfaButton_Click);
-            // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(43, 43);
+            this.label14.Location = new System.Drawing.Point(43, 38);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(59, 12);
             this.label14.TabIndex = 7;
@@ -859,7 +853,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(271, 43);
+            this.label13.Location = new System.Drawing.Point(271, 38);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(59, 12);
             this.label13.TabIndex = 8;
@@ -868,7 +862,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(706, 43);
+            this.label11.Location = new System.Drawing.Point(706, 38);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(29, 12);
             this.label11.TabIndex = 10;
@@ -877,7 +871,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(532, 43);
+            this.label12.Location = new System.Drawing.Point(532, 38);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(59, 12);
             this.label12.TabIndex = 9;
@@ -885,7 +879,6 @@
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.saveCollectButton);
             this.groupBox6.Controls.Add(this.collectIntervalUpDown);
             this.groupBox6.Controls.Add(this.label15);
             this.groupBox6.Controls.Add(this.collectEndUpDown);
@@ -895,22 +888,12 @@
             this.groupBox6.Controls.Add(this.label9);
             this.groupBox6.Controls.Add(this.label8);
             this.groupBox6.Controls.Add(this.label7);
-            this.groupBox6.Location = new System.Drawing.Point(9, 115);
+            this.groupBox6.Location = new System.Drawing.Point(8, 154);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(813, 117);
+            this.groupBox6.Size = new System.Drawing.Size(813, 87);
             this.groupBox6.TabIndex = 1;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "采集设置";
-            // 
-            // saveCollectButton
-            // 
-            this.saveCollectButton.Location = new System.Drawing.Point(361, 82);
-            this.saveCollectButton.Name = "saveCollectButton";
-            this.saveCollectButton.Size = new System.Drawing.Size(75, 23);
-            this.saveCollectButton.TabIndex = 9;
-            this.saveCollectButton.Text = "保存";
-            this.saveCollectButton.UseVisualStyleBackColor = true;
-            this.saveCollectButton.Click += new System.EventHandler(this.saveCollectButton_Click);
             // 
             // collectIntervalUpDown
             // 
@@ -1035,12 +1018,16 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.label19);
+            this.groupBox5.Controls.Add(this.delayUpDown);
+            this.groupBox5.Controls.Add(this.label18);
+            this.groupBox5.Controls.Add(this.reConnectCheckbox);
             this.groupBox5.Controls.Add(this.adzoneComboBox);
             this.groupBox5.Controls.Add(this.getAdzoneButton);
             this.groupBox5.Controls.Add(this.loginAliButton);
             this.groupBox5.Location = new System.Drawing.Point(9, 4);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(813, 92);
+            this.groupBox5.Size = new System.Drawing.Size(813, 131);
             this.groupBox5.TabIndex = 0;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "阿里妈妈";
@@ -1090,6 +1077,65 @@
             this.qunfaTimer.Interval = 5000;
             this.qunfaTimer.Tick += new System.EventHandler(this.OnQunfaTimer);
             // 
+            // reConnectCheckbox
+            // 
+            this.reConnectCheckbox.AutoSize = true;
+            this.reConnectCheckbox.Location = new System.Drawing.Point(44, 81);
+            this.reConnectCheckbox.Name = "reConnectCheckbox";
+            this.reConnectCheckbox.Size = new System.Drawing.Size(204, 16);
+            this.reConnectCheckbox.TabIndex = 3;
+            this.reConnectCheckbox.Text = "掉线自动登录(需要登录阿里旺旺)";
+            this.reConnectCheckbox.UseVisualStyleBackColor = true;
+            this.reConnectCheckbox.CheckedChanged += new System.EventHandler(this.OnReconnectChanged);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(405, 81);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(83, 12);
+            this.label18.TabIndex = 4;
+            this.label18.Text = "自动登录延时:";
+            // 
+            // delayUpDown
+            // 
+            this.delayUpDown.Enabled = false;
+            this.delayUpDown.Location = new System.Drawing.Point(501, 75);
+            this.delayUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.delayUpDown.Name = "delayUpDown";
+            this.delayUpDown.ReadOnly = true;
+            this.delayUpDown.Size = new System.Drawing.Size(120, 21);
+            this.delayUpDown.TabIndex = 5;
+            this.delayUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.delayUpDown.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(628, 81);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(155, 12);
+            this.label19.TabIndex = 6;
+            this.label19.Text = "秒 (增大能提高登录成功率)";
+            // 
+            // saveConfigButton
+            // 
+            this.saveConfigButton.Location = new System.Drawing.Point(380, 370);
+            this.saveConfigButton.Name = "saveConfigButton";
+            this.saveConfigButton.Size = new System.Drawing.Size(75, 23);
+            this.saveConfigButton.TabIndex = 15;
+            this.saveConfigButton.Text = "保存配置";
+            this.saveConfigButton.UseVisualStyleBackColor = true;
+            this.saveConfigButton.Click += new System.EventHandler(this.saveConfigButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1132,6 +1178,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.collectEndUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.collectStartUpDown)).EndInit();
             this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.delayUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1224,13 +1272,16 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.NumericUpDown collectEndUpDown;
         private System.Windows.Forms.NumericUpDown collectIntervalUpDown;
-        private System.Windows.Forms.Button saveCollectButton;
-        private System.Windows.Forms.Button saveQunfaButton;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.NumericUpDown qunfaStartUpDown;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.NumericUpDown qunfaEndUpDown;
         private System.Windows.Forms.NumericUpDown qunfaIntervalUpDown;
         private System.Windows.Forms.Button clearQunfaButton;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.NumericUpDown delayUpDown;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.CheckBox reConnectCheckbox;
+        private System.Windows.Forms.Button saveConfigButton;
     }
 }

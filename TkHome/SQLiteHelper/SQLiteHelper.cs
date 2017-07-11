@@ -401,9 +401,9 @@ namespace System.Data.SQLite
 
                 if (col.PrimaryKey)
                     sb.Append(" primary key");
-                else if (col.NotNull)
+                if (col.NotNull)
                     sb.Append(" not null");
-                else if (col.DefaultValue.Length > 0)
+                if (col.DefaultValue.Length > 0)
                 {
                     sb.Append(" default ");
 
