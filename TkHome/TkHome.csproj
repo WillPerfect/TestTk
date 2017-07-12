@@ -65,6 +65,8 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="HttpHelper.cs" />
+    <Compile Include="ListViewExtensions.cs" />
+    <Compile Include="ListViewHelper.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

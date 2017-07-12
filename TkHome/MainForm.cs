@@ -30,6 +30,16 @@ namespace TkHome
 
         private void OnFormLoad(object sender, EventArgs e)
         {
+            // 支持排序
+            productListView.ListViewItemSorter = new Common.ListViewColumnSorter();
+            productListView.ColumnClick += new ColumnClickEventHandler(Common.ListViewHelper.ListView_ColumnClick);
+
+            collectListView.ListViewItemSorter = new Common.ListViewColumnSorter();
+            collectListView.ColumnClick += new ColumnClickEventHandler(Common.ListViewHelper.ListView_ColumnClick);
+
+            MyLibraryListView.ListViewItemSorter = new Common.ListViewColumnSorter();
+            MyLibraryListView.ColumnClick += new ColumnClickEventHandler(Common.ListViewHelper.ListView_ColumnClick);
+
             LoadProductLibrary(); // 加载产品库
             loadImageTimer.Start();
             Database.init();
@@ -173,7 +183,7 @@ namespace TkHome
                 {
                     ListViewItem lv = collectListView.Items.Add(item.Title);
                     lv.SubItems.Add(item.ZkPrice);
-                    lv.SubItems.Add(item.TkRate);
+                    lv.SubItems.Add(item.TkRate + "%");
                     lv.SubItems.Add(item.TkCommFee);
                     lv.SubItems.Add(item.Sale30);
                     lv.SubItems.Add(item.Time);
