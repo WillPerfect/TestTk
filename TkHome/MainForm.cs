@@ -23,6 +23,8 @@ namespace TkHome
         private Alimama _alimama = new Alimama();
         private int _productCountPerPage = 100; // 自选库中每页显示的商品数
         private bool _startQunfa = false;
+        private bool _collectAutoSync = false; // 自动同步采集信息到自选库
+
         public MainForm()
         {
             InitializeComponent();
@@ -157,11 +159,22 @@ namespace TkHome
                 startTime = conf.CollectStartTime;
                 endTime = conf.CollectEndTime;
                 interval = conf.CollectInterval;
+                _collectAutoSync = conf.CollectAutoSync;
                 _productCollector.StartMonitor(monitorQQWndList, startTime, endTime, interval); // 开始监控
                 collectProductTimer.Start();
                 collectButton.Text = "停止采集";
                 collectListBox.Enabled = false;
                 refreshCollectButton.Enabled = false;
+
+                if (_collectAutoSync) // 如果勾选了自动同步到自选库，则先把已采集商品同步到自选库中
+                {
+                    List<ProductInfo> selectedProductList = new List<ProductInfo>();
+                    foreach (ListViewItem item in collectListView.Items)
+                    {
+                        selectedProductList.Add(new ProductInfo(item.SubItems[0].Text, "", item.SubItems[4].Text, item.SubItems[2].Text, item.SubItems[3].Text, item.SubItems[1].Text, item.Tag as string));
+                    }
+                    Database.addProductList(selectedProductList);
+                }
             }
             else
             {
@@ -188,6 +201,11 @@ namespace TkHome
                     lv.SubItems.Add(item.Sale30);
                     lv.SubItems.Add(item.Time);
                     lv.Tag = item.OriginURL;
+
+                    if (_collectAutoSync) // 自动同步到自选库
+                    {
+                        Database.addProduct(lv.SubItems[0].Text, lv.Tag as string, lv.SubItems[1].Text, lv.SubItems[2].Text, lv.SubItems[3].Text, lv.SubItems[4].Text, DateTime.Now.ToString());
+                    }
                 }
                 collectProductLabel.Text = "已采集商品(" + collectListView.Items.Count.ToString() + ")";
             }
@@ -557,6 +575,7 @@ namespace TkHome
             collectStartUpDown.Value = conf.CollectStartTime;
             collectEndUpDown.Value = conf.CollectEndTime;
             collectIntervalUpDown.Value = conf.CollectInterval;
+            collectAutoSyncCheckbox.Checked = conf.CollectAutoSync;
 
             qunfaStartUpDown.Value = conf.QunfaStartTime;
             qunfaEndUpDown.Value = conf.QunfaEndTime;
@@ -595,6 +614,7 @@ namespace TkHome
             conf.CollectStartTime = collect_startTime;
             conf.CollectEndTime = collect_endTime;
             conf.CollectInterval = collect_interval;
+            conf.CollectAutoSync = collectAutoSyncCheckbox.Checked;
             conf.QunfaStartTime = qunfa_startTime;
             conf.QunfaEndTime = qunfa_endTime;
             conf.QunfaInterval = qunfa_interval;

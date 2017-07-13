@@ -15,6 +15,8 @@ namespace TkHome
         public int CollectEndTime { get; set; }
         public int CollectInterval { get; set; }
 
+        public bool CollectAutoSync { get; set; }
+
         public int QunfaStartTime { get; set; }
         public int QunfaEndTime { get; set; }
         public int QunfaInterval { get; set; }

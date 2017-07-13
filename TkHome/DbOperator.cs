@@ -38,6 +38,7 @@ namespace TkHome
             optionTable.Columns.Add(new SQLiteColumn("collect_starttime", ColType.Integer));
             optionTable.Columns.Add(new SQLiteColumn("collect_endtime", ColType.Integer));
             optionTable.Columns.Add(new SQLiteColumn("collect_interval", ColType.Integer));
+            optionTable.Columns.Add(new SQLiteColumn("collect_autosync", ColType.Integer, false, false, true, "0"));
             optionTable.Columns.Add(new SQLiteColumn("qunfa_starttime", ColType.Integer));
             optionTable.Columns.Add(new SQLiteColumn("qunfa_endtime", ColType.Integer));
             optionTable.Columns.Add(new SQLiteColumn("qunfa_interval", ColType.Integer));
@@ -207,6 +208,7 @@ namespace TkHome
                 conf.CollectStartTime = Convert.ToInt32(dt.Rows[0]["collect_starttime"]);
                 conf.CollectEndTime = Convert.ToInt32(dt.Rows[0]["collect_endtime"]);
                 conf.CollectInterval = Convert.ToInt32(dt.Rows[0]["collect_interval"]);
+                conf.CollectAutoSync = Convert.ToBoolean(dt.Rows[0]["collect_autosync"]);
 
                 conf.QunfaStartTime = Convert.ToInt32(dt.Rows[0]["qunfa_starttime"]);
                 conf.QunfaEndTime = Convert.ToInt32(dt.Rows[0]["qunfa_endtime"]);
@@ -226,6 +228,7 @@ namespace TkHome
             sql += "collect_starttime = " + conf.CollectStartTime + ", ";
             sql += "collect_endtime = " + conf.CollectEndTime + ", ";
             sql += "collect_interval = " + conf.CollectInterval + ", ";
+            sql += "collect_autosync = " + Convert.ToInt32(conf.CollectAutoSync) + ", ";
             sql += "qunfa_starttime = " + conf.QunfaStartTime + ", ";
             sql += "qunfa_endtime = " + conf.QunfaEndTime + ", ";
             sql += "qunfa_interval = " + conf.QunfaInterval;
@@ -239,7 +242,7 @@ namespace TkHome
         }
         
         // 添加商品
-        private void addProduct(string title, string url, string price, string rate, string commfee, string sale30, string addtime)
+        public void addProduct(string title, string url, string price, string rate, string commfee, string sale30, string addtime)
         {
             try
             {
@@ -255,7 +258,7 @@ namespace TkHome
         // 生成默认配置
         private void generateDefaultConfig()
         {
-            _helper.Execute("insert into option(reconnect, reconnect_delayseconds, collect_starttime, collect_endtime, collect_interval, qunfa_starttime, qunfa_endtime, qunfa_interval) values(0, 5, 9, 21, 5, 9, 21, 5)");
+            _helper.Execute("insert into option(reconnect, reconnect_delayseconds, collect_starttime, collect_endtime, collect_interval, collect_autosync, qunfa_starttime, qunfa_endtime, qunfa_interval) values(0, 5, 9, 21, 5, 0, 9, 21, 5)");
         }
     }
 }

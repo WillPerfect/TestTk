@@ -94,6 +94,7 @@
             this.urlTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.saveConfigButton = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.qunfaIntervalUpDown = new System.Windows.Forms.NumericUpDown();
             this.label17 = new System.Windows.Forms.Label();
@@ -115,17 +116,17 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.delayUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label18 = new System.Windows.Forms.Label();
+            this.reConnectCheckbox = new System.Windows.Forms.CheckBox();
             this.adzoneComboBox = new System.Windows.Forms.ComboBox();
             this.getAdzoneButton = new System.Windows.Forms.Button();
             this.loginAliButton = new System.Windows.Forms.Button();
             this.loadImageTimer = new System.Windows.Forms.Timer(this.components);
             this.collectProductTimer = new System.Windows.Forms.Timer(this.components);
             this.qunfaTimer = new System.Windows.Forms.Timer(this.components);
-            this.reConnectCheckbox = new System.Windows.Forms.CheckBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.delayUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label19 = new System.Windows.Forms.Label();
-            this.saveConfigButton = new System.Windows.Forms.Button();
+            this.collectAutoSyncCheckbox = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -738,6 +739,16 @@
             this.tabPage6.Text = "设置";
             this.tabPage6.UseVisualStyleBackColor = true;
             // 
+            // saveConfigButton
+            // 
+            this.saveConfigButton.Location = new System.Drawing.Point(382, 395);
+            this.saveConfigButton.Name = "saveConfigButton";
+            this.saveConfigButton.Size = new System.Drawing.Size(75, 23);
+            this.saveConfigButton.TabIndex = 15;
+            this.saveConfigButton.Text = "保存配置";
+            this.saveConfigButton.UseVisualStyleBackColor = true;
+            this.saveConfigButton.Click += new System.EventHandler(this.saveConfigButton_Click);
+            // 
             // groupBox7
             // 
             this.groupBox7.Controls.Add(this.qunfaIntervalUpDown);
@@ -749,7 +760,7 @@
             this.groupBox7.Controls.Add(this.label13);
             this.groupBox7.Controls.Add(this.label11);
             this.groupBox7.Controls.Add(this.label12);
-            this.groupBox7.Location = new System.Drawing.Point(8, 261);
+            this.groupBox7.Location = new System.Drawing.Point(9, 288);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(813, 90);
             this.groupBox7.TabIndex = 2;
@@ -879,6 +890,7 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.collectAutoSyncCheckbox);
             this.groupBox6.Controls.Add(this.collectIntervalUpDown);
             this.groupBox6.Controls.Add(this.label15);
             this.groupBox6.Controls.Add(this.collectEndUpDown);
@@ -890,7 +902,7 @@
             this.groupBox6.Controls.Add(this.label7);
             this.groupBox6.Location = new System.Drawing.Point(8, 154);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(813, 87);
+            this.groupBox6.Size = new System.Drawing.Size(813, 115);
             this.groupBox6.TabIndex = 1;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "采集设置";
@@ -1032,6 +1044,55 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "阿里妈妈";
             // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(628, 81);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(155, 12);
+            this.label19.TabIndex = 6;
+            this.label19.Text = "秒 (增大能提高登录成功率)";
+            // 
+            // delayUpDown
+            // 
+            this.delayUpDown.Enabled = false;
+            this.delayUpDown.Location = new System.Drawing.Point(501, 75);
+            this.delayUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.delayUpDown.Name = "delayUpDown";
+            this.delayUpDown.ReadOnly = true;
+            this.delayUpDown.Size = new System.Drawing.Size(120, 21);
+            this.delayUpDown.TabIndex = 5;
+            this.delayUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.delayUpDown.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(405, 81);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(83, 12);
+            this.label18.TabIndex = 4;
+            this.label18.Text = "自动登录延时:";
+            // 
+            // reConnectCheckbox
+            // 
+            this.reConnectCheckbox.AutoSize = true;
+            this.reConnectCheckbox.Location = new System.Drawing.Point(44, 81);
+            this.reConnectCheckbox.Name = "reConnectCheckbox";
+            this.reConnectCheckbox.Size = new System.Drawing.Size(204, 16);
+            this.reConnectCheckbox.TabIndex = 3;
+            this.reConnectCheckbox.Text = "掉线自动登录(需要登录阿里旺旺)";
+            this.reConnectCheckbox.UseVisualStyleBackColor = true;
+            this.reConnectCheckbox.CheckedChanged += new System.EventHandler(this.OnReconnectChanged);
+            // 
             // adzoneComboBox
             // 
             this.adzoneComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -1077,64 +1138,15 @@
             this.qunfaTimer.Interval = 5000;
             this.qunfaTimer.Tick += new System.EventHandler(this.OnQunfaTimer);
             // 
-            // reConnectCheckbox
+            // collectAutoSyncCheckbox
             // 
-            this.reConnectCheckbox.AutoSize = true;
-            this.reConnectCheckbox.Location = new System.Drawing.Point(44, 81);
-            this.reConnectCheckbox.Name = "reConnectCheckbox";
-            this.reConnectCheckbox.Size = new System.Drawing.Size(204, 16);
-            this.reConnectCheckbox.TabIndex = 3;
-            this.reConnectCheckbox.Text = "掉线自动登录(需要登录阿里旺旺)";
-            this.reConnectCheckbox.UseVisualStyleBackColor = true;
-            this.reConnectCheckbox.CheckedChanged += new System.EventHandler(this.OnReconnectChanged);
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(405, 81);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(83, 12);
-            this.label18.TabIndex = 4;
-            this.label18.Text = "自动登录延时:";
-            // 
-            // delayUpDown
-            // 
-            this.delayUpDown.Enabled = false;
-            this.delayUpDown.Location = new System.Drawing.Point(501, 75);
-            this.delayUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.delayUpDown.Name = "delayUpDown";
-            this.delayUpDown.ReadOnly = true;
-            this.delayUpDown.Size = new System.Drawing.Size(120, 21);
-            this.delayUpDown.TabIndex = 5;
-            this.delayUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.delayUpDown.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(628, 81);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(155, 12);
-            this.label19.TabIndex = 6;
-            this.label19.Text = "秒 (增大能提高登录成功率)";
-            // 
-            // saveConfigButton
-            // 
-            this.saveConfigButton.Location = new System.Drawing.Point(380, 370);
-            this.saveConfigButton.Name = "saveConfigButton";
-            this.saveConfigButton.Size = new System.Drawing.Size(75, 23);
-            this.saveConfigButton.TabIndex = 15;
-            this.saveConfigButton.Text = "保存配置";
-            this.saveConfigButton.UseVisualStyleBackColor = true;
-            this.saveConfigButton.Click += new System.EventHandler(this.saveConfigButton_Click);
+            this.collectAutoSyncCheckbox.AutoSize = true;
+            this.collectAutoSyncCheckbox.Location = new System.Drawing.Point(46, 77);
+            this.collectAutoSyncCheckbox.Name = "collectAutoSyncCheckbox";
+            this.collectAutoSyncCheckbox.Size = new System.Drawing.Size(120, 16);
+            this.collectAutoSyncCheckbox.TabIndex = 9;
+            this.collectAutoSyncCheckbox.Text = "自动同步到自选库";
+            this.collectAutoSyncCheckbox.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -1283,5 +1295,6 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.CheckBox reConnectCheckbox;
         private System.Windows.Forms.Button saveConfigButton;
+        private System.Windows.Forms.CheckBox collectAutoSyncCheckbox;
     }
 }
