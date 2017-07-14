@@ -187,6 +187,7 @@ namespace TkHome
                             {
                                 _translateList.Add(result);
                                 bTranslatedSuccess = true;
+                                qunfaParam.Database.updateProductSendTime(product._id); // 更新商品的最新发送时间戳
                             }
                         }
 

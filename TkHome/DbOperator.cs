@@ -29,6 +29,7 @@ namespace TkHome
             productTable.Columns.Add(new SQLiteColumn("commfee", ColType.Text));
             productTable.Columns.Add(new SQLiteColumn("sale30", ColType.Text));
             productTable.Columns.Add(new SQLiteColumn("addtime", ColType.Text));
+            productTable.Columns.Add(new SQLiteColumn("sendtime", ColType.Integer, false, false, true, "0")); // 发送时间戳
             _innerTableList.Add(productTable);
 
             SQLiteTable optionTable = new SQLiteTable("option");
@@ -143,20 +144,18 @@ namespace TkHome
         }
 
         // 从自选库中加载商品信息
-        public List<ProductInfo> loadProductList(int startRow, int count, bool bRandom = false)
+        public List<ProductInfo> loadProductList(int startRow, int count, bool bOrderBySendTime = false)
         {
             List<ProductInfo> productList = new List<ProductInfo>();
             try
             {
-                DataTable dt;
-                if (bRandom)
+                string sql = "select * from product limit " + startRow.ToString() + "," + count.ToString();
+                if (bOrderBySendTime)
                 {
-                    dt = _helper.Select("select * from product order by random() limit " + count.ToString()); // 随机取               
+                    sql = "select * from product order by sendtime limit " + startRow.ToString() + "," + count.ToString();
                 }
-                else
-                {
-                    dt = _helper.Select("select * from product limit " + startRow.ToString() + "," + count.ToString());
-                }
+                DataTable dt = _helper.Select(sql);
+
                 foreach (DataRow row in dt.Rows)
                 {
                     int id = Convert.ToInt32(row["id"]);
@@ -249,6 +248,20 @@ namespace TkHome
                 string enURL = EncryptDES.Encrypt(url); // URL进行加密
                 string sql = "insert into product(title, url, price, rate, commfee, sale30, addtime) values ('" + title + "', '" + enURL + "', '"
                     + price + "', '" + rate + "', '" + commfee + "', '" + sale30 + "', '" + addtime + "')";
+                _helper.Execute(sql);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public void updateProductSendTime(int id)
+        {
+            try
+            {
+                DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
+                long timeStamp = (long)(DateTime.Now - startTime).TotalSeconds; // 相差秒数
+                string sql = "update product set sendtime = " + timeStamp + " where id = " + id;
                 _helper.Execute(sql);
             }
             catch (Exception)
