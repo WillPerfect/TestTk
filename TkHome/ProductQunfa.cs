@@ -199,6 +199,7 @@ namespace TkHome
 
                     lastQunfaTime = nowTime;
                 }
+                Thread.Sleep(1000);
             }
         }
     }
