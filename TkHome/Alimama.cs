@@ -47,7 +47,6 @@ namespace TkHome
             string result = GetJuResult.Html;
             if (result.IndexOf("mmNick") == -1)
             {
-                Debugger.Log(0, null, result);
                 return false;
             }
             else

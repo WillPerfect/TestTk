@@ -30,10 +30,9 @@ namespace TkHome
 
         private void OnDocumentComplete(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
+            string curURL = aliWebBrowser.Document.Url.ToString();
             if (Alimama.IsOnline())
             {
-                string curURL = aliWebBrowser.Document.Url.ToString();
-
                 if (curURL == Alimama._frontPage)
                 {
                     Debugger.Log(0, null, "登录成功");
@@ -45,14 +44,23 @@ namespace TkHome
             }
             else
             {
-                Configure conf = MainForm.Database.loadConfigre();
-                if (!_bClicked && conf.Reconnect) // 设置了断线重连
+                if (curURL == "https://login.taobao.com/member/login.jhtml")
                 {
-                    loginTimer.Interval = conf.ReconnectDelaySeconds * 1000; // 延时
-                    loginTimer.Start();
+                    // 跳转到淘宝去了
+                    detectLoginTimer.Start(); // 需要再跳转到登录页面
+                    Debugger.Log(0, null, "重新跳转");
+                }
+                else
+                {
+                    Configure conf = MainForm.Database.loadConfigre();
+                    if (!_bClicked && conf.Reconnect) // 设置了断线重连
+                    {
+                        loginTimer.Interval = conf.ReconnectDelaySeconds * 1000; // 延时
+                        loginTimer.Start();
+                    }
                 }
             }
-            Debugger.Log(0, null, "OnDocumentComplete " + aliWebBrowser.Document.Url.ToString());
+            Debugger.Log(0, null, "OnDocumentComplete " + curURL);
         }
 
         private void OnDetectLoginTimer(object sender, EventArgs e)
