@@ -47,18 +47,6 @@
             this.searchTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.clearCollectButton = new System.Windows.Forms.Button();
-            this.delCollectButton = new System.Windows.Forms.Button();
-            this.addToMyLibrary2 = new System.Windows.Forms.Button();
-            this.collectListView = new System.Windows.Forms.ListView();
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader21 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader22 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader25 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.collectProductLabel = new System.Windows.Forms.Label();
             this.collectListBox = new System.Windows.Forms.CheckedListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.collectButton = new System.Windows.Forms.Button();
@@ -106,6 +94,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.collectAutoSyncCheckbox = new System.Windows.Forms.CheckBox();
             this.collectIntervalUpDown = new System.Windows.Forms.NumericUpDown();
             this.label15 = new System.Windows.Forms.Label();
             this.collectEndUpDown = new System.Windows.Forms.NumericUpDown();
@@ -126,11 +115,21 @@
             this.loadImageTimer = new System.Windows.Forms.Timer(this.components);
             this.collectProductTimer = new System.Windows.Forms.Timer(this.components);
             this.qunfaTimer = new System.Windows.Forms.Timer(this.components);
-            this.collectAutoSyncCheckbox = new System.Windows.Forms.CheckBox();
+            this.collectProductLabel = new System.Windows.Forms.Label();
+            this.collectListView = new System.Windows.Forms.ListView();
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader21 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader22 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader25 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.addToMyLibrary2 = new System.Windows.Forms.Button();
+            this.delCollectButton = new System.Windows.Forms.Button();
+            this.clearCollectButton = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -148,6 +147,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.collectStartUpDown)).BeginInit();
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.delayUpDown)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -186,9 +186,9 @@
             // 
             // nextPage1
             // 
-            this.nextPage1.Location = new System.Drawing.Point(722, 557);
+            this.nextPage1.Location = new System.Drawing.Point(748, 558);
             this.nextPage1.Name = "nextPage1";
-            this.nextPage1.Size = new System.Drawing.Size(75, 23);
+            this.nextPage1.Size = new System.Drawing.Size(75, 30);
             this.nextPage1.TabIndex = 8;
             this.nextPage1.Text = "下一页";
             this.nextPage1.UseVisualStyleBackColor = true;
@@ -197,7 +197,7 @@
             // pageLabel1
             // 
             this.pageLabel1.AutoSize = true;
-            this.pageLabel1.Location = new System.Drawing.Point(692, 562);
+            this.pageLabel1.Location = new System.Drawing.Point(724, 567);
             this.pageLabel1.Name = "pageLabel1";
             this.pageLabel1.Size = new System.Drawing.Size(11, 12);
             this.pageLabel1.TabIndex = 7;
@@ -205,9 +205,9 @@
             // 
             // lastPage1
             // 
-            this.lastPage1.Location = new System.Drawing.Point(596, 557);
+            this.lastPage1.Location = new System.Drawing.Point(635, 558);
             this.lastPage1.Name = "lastPage1";
-            this.lastPage1.Size = new System.Drawing.Size(75, 23);
+            this.lastPage1.Size = new System.Drawing.Size(75, 30);
             this.lastPage1.TabIndex = 6;
             this.lastPage1.Text = "上一页";
             this.lastPage1.UseVisualStyleBackColor = true;
@@ -215,9 +215,9 @@
             // 
             // addToMyLibrary1
             // 
-            this.addToMyLibrary1.Location = new System.Drawing.Point(455, 557);
+            this.addToMyLibrary1.Location = new System.Drawing.Point(510, 558);
             this.addToMyLibrary1.Name = "addToMyLibrary1";
-            this.addToMyLibrary1.Size = new System.Drawing.Size(121, 23);
+            this.addToMyLibrary1.Size = new System.Drawing.Size(101, 30);
             this.addToMyLibrary1.TabIndex = 5;
             this.addToMyLibrary1.Text = "添加到自选库";
             this.addToMyLibrary1.UseVisualStyleBackColor = true;
@@ -236,7 +236,7 @@
             this.productListView.LargeImageList = this.productLibraryImageList;
             this.productListView.Location = new System.Drawing.Point(9, 44);
             this.productListView.Name = "productListView";
-            this.productListView.Size = new System.Drawing.Size(813, 499);
+            this.productListView.Size = new System.Drawing.Size(813, 505);
             this.productListView.SmallImageList = this.productLibraryImageList;
             this.productListView.TabIndex = 4;
             this.productListView.UseCompatibleStateImageBehavior = false;
@@ -271,9 +271,9 @@
             // 
             // clearSearchButton
             // 
-            this.clearSearchButton.Location = new System.Drawing.Point(722, 12);
+            this.clearSearchButton.Location = new System.Drawing.Point(722, 7);
             this.clearSearchButton.Name = "clearSearchButton";
-            this.clearSearchButton.Size = new System.Drawing.Size(100, 23);
+            this.clearSearchButton.Size = new System.Drawing.Size(100, 30);
             this.clearSearchButton.TabIndex = 3;
             this.clearSearchButton.Text = "清空搜索条件";
             this.clearSearchButton.UseVisualStyleBackColor = true;
@@ -281,9 +281,9 @@
             // 
             // searchButton
             // 
-            this.searchButton.Location = new System.Drawing.Point(641, 12);
+            this.searchButton.Location = new System.Drawing.Point(641, 7);
             this.searchButton.Name = "searchButton";
-            this.searchButton.Size = new System.Drawing.Size(75, 23);
+            this.searchButton.Size = new System.Drawing.Size(75, 30);
             this.searchButton.TabIndex = 2;
             this.searchButton.Text = "搜索";
             this.searchButton.UseVisualStyleBackColor = true;
@@ -318,103 +318,6 @@
             this.tabPage2.Text = "商品采集";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.clearCollectButton);
-            this.groupBox2.Controls.Add(this.delCollectButton);
-            this.groupBox2.Controls.Add(this.addToMyLibrary2);
-            this.groupBox2.Controls.Add(this.collectListView);
-            this.groupBox2.Controls.Add(this.collectProductLabel);
-            this.groupBox2.Location = new System.Drawing.Point(262, 7);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(560, 582);
-            this.groupBox2.TabIndex = 4;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "结果";
-            // 
-            // clearCollectButton
-            // 
-            this.clearCollectButton.Location = new System.Drawing.Point(467, 542);
-            this.clearCollectButton.Name = "clearCollectButton";
-            this.clearCollectButton.Size = new System.Drawing.Size(75, 23);
-            this.clearCollectButton.TabIndex = 4;
-            this.clearCollectButton.Text = "清空列表";
-            this.clearCollectButton.UseVisualStyleBackColor = true;
-            this.clearCollectButton.Click += new System.EventHandler(this.clearCollectButton_Click);
-            // 
-            // delCollectButton
-            // 
-            this.delCollectButton.Location = new System.Drawing.Point(386, 543);
-            this.delCollectButton.Name = "delCollectButton";
-            this.delCollectButton.Size = new System.Drawing.Size(75, 23);
-            this.delCollectButton.TabIndex = 3;
-            this.delCollectButton.Text = "删除";
-            this.delCollectButton.UseVisualStyleBackColor = true;
-            this.delCollectButton.Click += new System.EventHandler(this.delCollectButton_Click);
-            // 
-            // addToMyLibrary2
-            // 
-            this.addToMyLibrary2.Location = new System.Drawing.Point(243, 543);
-            this.addToMyLibrary2.Name = "addToMyLibrary2";
-            this.addToMyLibrary2.Size = new System.Drawing.Size(106, 23);
-            this.addToMyLibrary2.TabIndex = 2;
-            this.addToMyLibrary2.Text = "添加到自选库";
-            this.addToMyLibrary2.UseVisualStyleBackColor = true;
-            this.addToMyLibrary2.Click += new System.EventHandler(this.addToMyLibrary2_Click);
-            // 
-            // collectListView
-            // 
-            this.collectListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader6,
-            this.columnHeader21,
-            this.columnHeader22,
-            this.columnHeader23,
-            this.columnHeader24,
-            this.columnHeader25});
-            this.collectListView.FullRowSelect = true;
-            this.collectListView.HideSelection = false;
-            this.collectListView.Location = new System.Drawing.Point(19, 59);
-            this.collectListView.Name = "collectListView";
-            this.collectListView.Size = new System.Drawing.Size(523, 468);
-            this.collectListView.TabIndex = 1;
-            this.collectListView.UseCompatibleStateImageBehavior = false;
-            this.collectListView.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader6
-            // 
-            this.columnHeader6.Text = "标题";
-            this.columnHeader6.Width = 400;
-            // 
-            // columnHeader21
-            // 
-            this.columnHeader21.Text = "价格";
-            // 
-            // columnHeader22
-            // 
-            this.columnHeader22.Text = "佣金比例";
-            // 
-            // columnHeader23
-            // 
-            this.columnHeader23.Text = "佣金";
-            // 
-            // columnHeader24
-            // 
-            this.columnHeader24.Text = "月销";
-            // 
-            // columnHeader25
-            // 
-            this.columnHeader25.Text = "采集时间";
-            this.columnHeader25.Width = 150;
-            // 
-            // collectProductLabel
-            // 
-            this.collectProductLabel.AutoSize = true;
-            this.collectProductLabel.Location = new System.Drawing.Point(261, 24);
-            this.collectProductLabel.Name = "collectProductLabel";
-            this.collectProductLabel.Size = new System.Drawing.Size(65, 12);
-            this.collectProductLabel.TabIndex = 0;
-            this.collectProductLabel.Text = "已采集商品";
-            // 
             // collectListBox
             // 
             this.collectListBox.FormattingEnabled = true;
@@ -437,9 +340,9 @@
             // 
             // collectButton
             // 
-            this.collectButton.Location = new System.Drawing.Point(78, 544);
+            this.collectButton.Location = new System.Drawing.Point(68, 542);
             this.collectButton.Name = "collectButton";
-            this.collectButton.Size = new System.Drawing.Size(75, 23);
+            this.collectButton.Size = new System.Drawing.Size(91, 30);
             this.collectButton.TabIndex = 2;
             this.collectButton.Text = "开始采集";
             this.collectButton.UseVisualStyleBackColor = true;
@@ -449,7 +352,7 @@
             // 
             this.refreshCollectButton.Location = new System.Drawing.Point(140, 20);
             this.refreshCollectButton.Name = "refreshCollectButton";
-            this.refreshCollectButton.Size = new System.Drawing.Size(75, 23);
+            this.refreshCollectButton.Size = new System.Drawing.Size(75, 30);
             this.refreshCollectButton.TabIndex = 1;
             this.refreshCollectButton.Text = "刷新";
             this.refreshCollectButton.UseVisualStyleBackColor = true;
@@ -458,7 +361,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(33, 25);
+            this.label2.Location = new System.Drawing.Point(66, 30);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 12);
             this.label2.TabIndex = 0;
@@ -481,9 +384,9 @@
             // 
             // nextPage2
             // 
-            this.nextPage2.Location = new System.Drawing.Point(731, 560);
+            this.nextPage2.Location = new System.Drawing.Point(748, 557);
             this.nextPage2.Name = "nextPage2";
-            this.nextPage2.Size = new System.Drawing.Size(75, 23);
+            this.nextPage2.Size = new System.Drawing.Size(75, 30);
             this.nextPage2.TabIndex = 5;
             this.nextPage2.Text = "下一页";
             this.nextPage2.UseVisualStyleBackColor = true;
@@ -492,7 +395,7 @@
             // pageLabel2
             // 
             this.pageLabel2.AutoSize = true;
-            this.pageLabel2.Location = new System.Drawing.Point(703, 564);
+            this.pageLabel2.Location = new System.Drawing.Point(721, 564);
             this.pageLabel2.Name = "pageLabel2";
             this.pageLabel2.Size = new System.Drawing.Size(11, 12);
             this.pageLabel2.TabIndex = 4;
@@ -500,9 +403,9 @@
             // 
             // lastPage2
             // 
-            this.lastPage2.Location = new System.Drawing.Point(611, 559);
+            this.lastPage2.Location = new System.Drawing.Point(629, 556);
             this.lastPage2.Name = "lastPage2";
-            this.lastPage2.Size = new System.Drawing.Size(75, 23);
+            this.lastPage2.Size = new System.Drawing.Size(75, 30);
             this.lastPage2.TabIndex = 3;
             this.lastPage2.Text = "上一页";
             this.lastPage2.UseVisualStyleBackColor = true;
@@ -510,9 +413,9 @@
             // 
             // refreshMyLibraryButton
             // 
-            this.refreshMyLibraryButton.Location = new System.Drawing.Point(388, 559);
+            this.refreshMyLibraryButton.Location = new System.Drawing.Point(388, 556);
             this.refreshMyLibraryButton.Name = "refreshMyLibraryButton";
-            this.refreshMyLibraryButton.Size = new System.Drawing.Size(75, 23);
+            this.refreshMyLibraryButton.Size = new System.Drawing.Size(75, 30);
             this.refreshMyLibraryButton.TabIndex = 2;
             this.refreshMyLibraryButton.Text = "刷新";
             this.refreshMyLibraryButton.UseVisualStyleBackColor = true;
@@ -520,9 +423,9 @@
             // 
             // delMyLibraryItemButton
             // 
-            this.delMyLibraryItemButton.Location = new System.Drawing.Point(477, 560);
+            this.delMyLibraryItemButton.Location = new System.Drawing.Point(477, 557);
             this.delMyLibraryItemButton.Name = "delMyLibraryItemButton";
-            this.delMyLibraryItemButton.Size = new System.Drawing.Size(75, 23);
+            this.delMyLibraryItemButton.Size = new System.Drawing.Size(75, 30);
             this.delMyLibraryItemButton.TabIndex = 1;
             this.delMyLibraryItemButton.Text = "删除";
             this.delMyLibraryItemButton.UseVisualStyleBackColor = true;
@@ -575,7 +478,6 @@
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.clearQunfaButton);
-            this.tabPage4.Controls.Add(this.qunfaButton);
             this.tabPage4.Controls.Add(this.qunfaListView);
             this.tabPage4.Controls.Add(this.label5);
             this.tabPage4.Controls.Add(this.groupBox3);
@@ -588,9 +490,9 @@
             // 
             // clearQunfaButton
             // 
-            this.clearQunfaButton.Location = new System.Drawing.Point(640, 558);
+            this.clearQunfaButton.Location = new System.Drawing.Point(720, 552);
             this.clearQunfaButton.Name = "clearQunfaButton";
-            this.clearQunfaButton.Size = new System.Drawing.Size(75, 23);
+            this.clearQunfaButton.Size = new System.Drawing.Size(91, 30);
             this.clearQunfaButton.TabIndex = 4;
             this.clearQunfaButton.Text = "清空列表";
             this.clearQunfaButton.UseVisualStyleBackColor = true;
@@ -599,9 +501,9 @@
             // qunfaButton
             // 
             this.qunfaButton.Enabled = false;
-            this.qunfaButton.Location = new System.Drawing.Point(736, 558);
+            this.qunfaButton.Location = new System.Drawing.Point(84, 545);
             this.qunfaButton.Name = "qunfaButton";
-            this.qunfaButton.Size = new System.Drawing.Size(75, 23);
+            this.qunfaButton.Size = new System.Drawing.Size(91, 30);
             this.qunfaButton.TabIndex = 3;
             this.qunfaButton.Text = "开始群发";
             this.qunfaButton.UseVisualStyleBackColor = true;
@@ -641,6 +543,7 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.qunfaListBox);
+            this.groupBox3.Controls.Add(this.qunfaButton);
             this.groupBox3.Controls.Add(this.refreshSendButton);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Location = new System.Drawing.Point(9, 7);
@@ -660,9 +563,9 @@
             // 
             // refreshSendButton
             // 
-            this.refreshSendButton.Location = new System.Drawing.Point(140, 21);
+            this.refreshSendButton.Location = new System.Drawing.Point(152, 16);
             this.refreshSendButton.Name = "refreshSendButton";
-            this.refreshSendButton.Size = new System.Drawing.Size(75, 23);
+            this.refreshSendButton.Size = new System.Drawing.Size(75, 30);
             this.refreshSendButton.TabIndex = 1;
             this.refreshSendButton.Text = "刷新";
             this.refreshSendButton.UseVisualStyleBackColor = true;
@@ -671,7 +574,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(47, 26);
+            this.label4.Location = new System.Drawing.Point(79, 26);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 0;
@@ -704,7 +607,7 @@
             this.translateButton.Enabled = false;
             this.translateButton.Location = new System.Drawing.Point(355, 87);
             this.translateButton.Name = "translateButton";
-            this.translateButton.Size = new System.Drawing.Size(75, 23);
+            this.translateButton.Size = new System.Drawing.Size(75, 30);
             this.translateButton.TabIndex = 2;
             this.translateButton.Text = "转链";
             this.translateButton.UseVisualStyleBackColor = true;
@@ -741,9 +644,9 @@
             // 
             // saveConfigButton
             // 
-            this.saveConfigButton.Location = new System.Drawing.Point(382, 395);
+            this.saveConfigButton.Location = new System.Drawing.Point(353, 395);
             this.saveConfigButton.Name = "saveConfigButton";
-            this.saveConfigButton.Size = new System.Drawing.Size(75, 23);
+            this.saveConfigButton.Size = new System.Drawing.Size(91, 30);
             this.saveConfigButton.TabIndex = 15;
             this.saveConfigButton.Text = "保存配置";
             this.saveConfigButton.UseVisualStyleBackColor = true;
@@ -906,6 +809,16 @@
             this.groupBox6.TabIndex = 1;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "采集设置";
+            // 
+            // collectAutoSyncCheckbox
+            // 
+            this.collectAutoSyncCheckbox.AutoSize = true;
+            this.collectAutoSyncCheckbox.Location = new System.Drawing.Point(46, 77);
+            this.collectAutoSyncCheckbox.Name = "collectAutoSyncCheckbox";
+            this.collectAutoSyncCheckbox.Size = new System.Drawing.Size(120, 16);
+            this.collectAutoSyncCheckbox.TabIndex = 9;
+            this.collectAutoSyncCheckbox.Text = "自动同步到自选库";
+            this.collectAutoSyncCheckbox.UseVisualStyleBackColor = true;
             // 
             // collectIntervalUpDown
             // 
@@ -1097,7 +1010,7 @@
             // 
             this.adzoneComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.adzoneComboBox.FormattingEnabled = true;
-            this.adzoneComboBox.Location = new System.Drawing.Point(501, 37);
+            this.adzoneComboBox.Location = new System.Drawing.Point(501, 40);
             this.adzoneComboBox.Name = "adzoneComboBox";
             this.adzoneComboBox.Size = new System.Drawing.Size(168, 20);
             this.adzoneComboBox.TabIndex = 2;
@@ -1105,9 +1018,9 @@
             // getAdzoneButton
             // 
             this.getAdzoneButton.Enabled = false;
-            this.getAdzoneButton.Location = new System.Drawing.Point(405, 35);
+            this.getAdzoneButton.Location = new System.Drawing.Point(386, 35);
             this.getAdzoneButton.Name = "getAdzoneButton";
-            this.getAdzoneButton.Size = new System.Drawing.Size(89, 23);
+            this.getAdzoneButton.Size = new System.Drawing.Size(108, 30);
             this.getAdzoneButton.TabIndex = 1;
             this.getAdzoneButton.Text = "获取推广位";
             this.getAdzoneButton.UseVisualStyleBackColor = true;
@@ -1117,7 +1030,7 @@
             // 
             this.loginAliButton.Location = new System.Drawing.Point(43, 36);
             this.loginAliButton.Name = "loginAliButton";
-            this.loginAliButton.Size = new System.Drawing.Size(114, 23);
+            this.loginAliButton.Size = new System.Drawing.Size(122, 30);
             this.loginAliButton.TabIndex = 0;
             this.loginAliButton.Text = "登录阿里妈妈";
             this.loginAliButton.UseVisualStyleBackColor = true;
@@ -1138,15 +1051,102 @@
             this.qunfaTimer.Interval = 5000;
             this.qunfaTimer.Tick += new System.EventHandler(this.OnQunfaTimer);
             // 
-            // collectAutoSyncCheckbox
+            // collectProductLabel
             // 
-            this.collectAutoSyncCheckbox.AutoSize = true;
-            this.collectAutoSyncCheckbox.Location = new System.Drawing.Point(46, 77);
-            this.collectAutoSyncCheckbox.Name = "collectAutoSyncCheckbox";
-            this.collectAutoSyncCheckbox.Size = new System.Drawing.Size(120, 16);
-            this.collectAutoSyncCheckbox.TabIndex = 9;
-            this.collectAutoSyncCheckbox.Text = "自动同步到自选库";
-            this.collectAutoSyncCheckbox.UseVisualStyleBackColor = true;
+            this.collectProductLabel.AutoSize = true;
+            this.collectProductLabel.Location = new System.Drawing.Point(261, 24);
+            this.collectProductLabel.Name = "collectProductLabel";
+            this.collectProductLabel.Size = new System.Drawing.Size(65, 12);
+            this.collectProductLabel.TabIndex = 0;
+            this.collectProductLabel.Text = "已采集商品";
+            // 
+            // collectListView
+            // 
+            this.collectListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader6,
+            this.columnHeader21,
+            this.columnHeader22,
+            this.columnHeader23,
+            this.columnHeader24,
+            this.columnHeader25});
+            this.collectListView.FullRowSelect = true;
+            this.collectListView.HideSelection = false;
+            this.collectListView.Location = new System.Drawing.Point(19, 57);
+            this.collectListView.Name = "collectListView";
+            this.collectListView.Size = new System.Drawing.Size(523, 479);
+            this.collectListView.TabIndex = 1;
+            this.collectListView.UseCompatibleStateImageBehavior = false;
+            this.collectListView.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "标题";
+            this.columnHeader6.Width = 400;
+            // 
+            // columnHeader21
+            // 
+            this.columnHeader21.Text = "价格";
+            // 
+            // columnHeader22
+            // 
+            this.columnHeader22.Text = "佣金比例";
+            // 
+            // columnHeader23
+            // 
+            this.columnHeader23.Text = "佣金";
+            // 
+            // columnHeader24
+            // 
+            this.columnHeader24.Text = "月销";
+            // 
+            // columnHeader25
+            // 
+            this.columnHeader25.Text = "采集时间";
+            this.columnHeader25.Width = 150;
+            // 
+            // addToMyLibrary2
+            // 
+            this.addToMyLibrary2.Location = new System.Drawing.Point(239, 543);
+            this.addToMyLibrary2.Name = "addToMyLibrary2";
+            this.addToMyLibrary2.Size = new System.Drawing.Size(110, 30);
+            this.addToMyLibrary2.TabIndex = 2;
+            this.addToMyLibrary2.Text = "添加到自选库";
+            this.addToMyLibrary2.UseVisualStyleBackColor = true;
+            this.addToMyLibrary2.Click += new System.EventHandler(this.addToMyLibrary2_Click);
+            // 
+            // delCollectButton
+            // 
+            this.delCollectButton.Location = new System.Drawing.Point(373, 543);
+            this.delCollectButton.Name = "delCollectButton";
+            this.delCollectButton.Size = new System.Drawing.Size(75, 30);
+            this.delCollectButton.TabIndex = 3;
+            this.delCollectButton.Text = "删除";
+            this.delCollectButton.UseVisualStyleBackColor = true;
+            this.delCollectButton.Click += new System.EventHandler(this.delCollectButton_Click);
+            // 
+            // clearCollectButton
+            // 
+            this.clearCollectButton.Location = new System.Drawing.Point(454, 542);
+            this.clearCollectButton.Name = "clearCollectButton";
+            this.clearCollectButton.Size = new System.Drawing.Size(88, 30);
+            this.clearCollectButton.TabIndex = 4;
+            this.clearCollectButton.Text = "清空列表";
+            this.clearCollectButton.UseVisualStyleBackColor = true;
+            this.clearCollectButton.Click += new System.EventHandler(this.clearCollectButton_Click);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.clearCollectButton);
+            this.groupBox2.Controls.Add(this.delCollectButton);
+            this.groupBox2.Controls.Add(this.addToMyLibrary2);
+            this.groupBox2.Controls.Add(this.collectListView);
+            this.groupBox2.Controls.Add(this.collectProductLabel);
+            this.groupBox2.Location = new System.Drawing.Point(262, 7);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(560, 582);
+            this.groupBox2.TabIndex = 4;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "结果";
             // 
             // MainForm
             // 
@@ -1165,8 +1165,6 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -1192,6 +1190,8 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.delayUpDown)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1219,13 +1219,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckedListBox collectListBox;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button collectButton;
-        private System.Windows.Forms.Button clearCollectButton;
-        private System.Windows.Forms.Button delCollectButton;
-        private System.Windows.Forms.Button addToMyLibrary2;
-        private System.Windows.Forms.ListView collectListView;
-        private System.Windows.Forms.Label collectProductLabel;
         private System.Windows.Forms.ListView MyLibraryListView;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ColumnHeader columnHeader10;
@@ -1268,12 +1262,6 @@
         private System.Windows.Forms.ImageList productLibraryImageList;
         private System.Windows.Forms.Timer loadImageTimer;
         private System.Windows.Forms.Timer collectProductTimer;
-        private System.Windows.Forms.ColumnHeader columnHeader6;
-        private System.Windows.Forms.ColumnHeader columnHeader21;
-        private System.Windows.Forms.ColumnHeader columnHeader22;
-        private System.Windows.Forms.ColumnHeader columnHeader23;
-        private System.Windows.Forms.ColumnHeader columnHeader24;
-        private System.Windows.Forms.ColumnHeader columnHeader25;
         private System.Windows.Forms.Button refreshMyLibraryButton;
         private System.Windows.Forms.Button nextPage2;
         private System.Windows.Forms.Label pageLabel2;
@@ -1296,5 +1284,17 @@
         private System.Windows.Forms.CheckBox reConnectCheckbox;
         private System.Windows.Forms.Button saveConfigButton;
         private System.Windows.Forms.CheckBox collectAutoSyncCheckbox;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button clearCollectButton;
+        private System.Windows.Forms.Button delCollectButton;
+        private System.Windows.Forms.Button addToMyLibrary2;
+        private System.Windows.Forms.ListView collectListView;
+        private System.Windows.Forms.ColumnHeader columnHeader6;
+        private System.Windows.Forms.ColumnHeader columnHeader21;
+        private System.Windows.Forms.ColumnHeader columnHeader22;
+        private System.Windows.Forms.ColumnHeader columnHeader23;
+        private System.Windows.Forms.ColumnHeader columnHeader24;
+        private System.Windows.Forms.ColumnHeader columnHeader25;
+        private System.Windows.Forms.Label collectProductLabel;
     }
 }

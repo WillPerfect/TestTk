@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.loginButton = new System.Windows.Forms.Button();
-            this.nameTextBox = new System.Windows.Forms.TextBox();
-            this.pwdTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.pwdTextBox = new System.Windows.Forms.TextBox();
+            this.nameTextBox = new System.Windows.Forms.TextBox();
+            this.loginButton = new System.Windows.Forms.Button();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -47,60 +47,60 @@
             this.groupBox1.Controls.Add(this.loginButton);
             this.groupBox1.Location = new System.Drawing.Point(12, 11);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(315, 142);
+            this.groupBox1.Size = new System.Drawing.Size(315, 140);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "登录";
             // 
-            // loginButton
-            // 
-            this.loginButton.Location = new System.Drawing.Point(112, 107);
-            this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(75, 23);
-            this.loginButton.TabIndex = 2;
-            this.loginButton.Text = "登录";
-            this.loginButton.UseVisualStyleBackColor = true;
-            this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
-            // 
-            // nameTextBox
-            // 
-            this.nameTextBox.Location = new System.Drawing.Point(112, 28);
-            this.nameTextBox.Name = "nameTextBox";
-            this.nameTextBox.Size = new System.Drawing.Size(146, 21);
-            this.nameTextBox.TabIndex = 0;
-            this.nameTextBox.Text = "test";
-            // 
-            // pwdTextBox
-            // 
-            this.pwdTextBox.Location = new System.Drawing.Point(112, 68);
-            this.pwdTextBox.Name = "pwdTextBox";
-            this.pwdTextBox.PasswordChar = '*';
-            this.pwdTextBox.Size = new System.Drawing.Size(146, 21);
-            this.pwdTextBox.TabIndex = 1;
-            this.pwdTextBox.Text = "test";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(54, 32);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 12);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "账号：";
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(56, 72);
+            this.label2.Location = new System.Drawing.Point(61, 70);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 12);
             this.label2.TabIndex = 5;
             this.label2.Text = "密码：";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(59, 30);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(41, 12);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "账号：";
+            // 
+            // pwdTextBox
+            // 
+            this.pwdTextBox.Location = new System.Drawing.Point(106, 66);
+            this.pwdTextBox.Name = "pwdTextBox";
+            this.pwdTextBox.PasswordChar = '*';
+            this.pwdTextBox.Size = new System.Drawing.Size(155, 21);
+            this.pwdTextBox.TabIndex = 1;
+            this.pwdTextBox.Text = "test";
+            // 
+            // nameTextBox
+            // 
+            this.nameTextBox.Location = new System.Drawing.Point(106, 26);
+            this.nameTextBox.Name = "nameTextBox";
+            this.nameTextBox.Size = new System.Drawing.Size(155, 21);
+            this.nameTextBox.TabIndex = 0;
+            this.nameTextBox.Text = "test";
+            // 
+            // loginButton
+            // 
+            this.loginButton.Location = new System.Drawing.Point(123, 99);
+            this.loginButton.Name = "loginButton";
+            this.loginButton.Size = new System.Drawing.Size(75, 30);
+            this.loginButton.TabIndex = 2;
+            this.loginButton.Text = "登录";
+            this.loginButton.UseVisualStyleBackColor = true;
+            this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
+            // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(215, 164);
+            this.linkLabel1.Location = new System.Drawing.Point(215, 159);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(113, 12);
             this.linkLabel1.TabIndex = 1;
@@ -111,7 +111,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(340, 189);
+            this.ClientSize = new System.Drawing.Size(340, 178);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
