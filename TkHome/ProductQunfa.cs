@@ -170,7 +170,8 @@ namespace TkHome
                             if (!bSuccess) // 转链失败
                             {
                                 Debugger.Log(0, null, decryptURL + " translate failed");
-                                continue;
+                                qunfaParam.Database.updateProductSendTime(product._id); // 更新商品的最新发送时间戳
+                                break;
                             }
 
                             string strQQShowContent = ClipboardDataWrapper.WrapFroQQ(imgPath, qqShowContent);
@@ -195,6 +196,7 @@ namespace TkHome
                         {
                             break;
                         }
+                        Thread.Sleep(1000);
                     }
 
                     lastQunfaTime = nowTime;

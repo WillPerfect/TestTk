@@ -1,0 +1,14 @@
+E:\windows\project\works\TestTk\TkHome\bin\Release\TkHome.exe.config
+E:\windows\project\works\TestTk\TkHome\bin\Release\TkHome.exe
+E:\windows\project\works\TestTk\TkHome\bin\Release\TkHome.pdb
+E:\windows\project\works\TestTk\TkHome\bin\Release\Newtonsoft.Json.dll
+E:\windows\project\works\TestTk\TkHome\bin\Release\System.Data.SQLite.DLL
+E:\windows\project\works\TestTk\TkHome\obj\Release\TkHome.Form1.resources
+E:\windows\project\works\TestTk\TkHome\obj\Release\TkHome.MainForm.resources
+E:\windows\project\works\TestTk\TkHome\obj\Release\TkHome.Properties.Resources.resources
+E:\windows\project\works\TestTk\TkHome\obj\Release\TkHome.TranslateLinkForm.resources
+E:\windows\project\works\TestTk\TkHome\obj\Release\TkHome.WebForm.resources
+E:\windows\project\works\TestTk\TkHome\obj\Release\TkHome.csproj.GenerateResource.Cache
+E:\windows\project\works\TestTk\TkHome\obj\Release\TkHome.exe
+E:\windows\project\works\TestTk\TkHome\obj\Release\TkHome.pdb
+E:\windows\project\works\TestTk\TkHome\obj\Release\TkHome.csprojResolveAssemblyReference.cache

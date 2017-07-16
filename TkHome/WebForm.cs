@@ -44,21 +44,52 @@ namespace TkHome
             }
             else
             {
-                if (curURL == "https://login.taobao.com/member/login.jhtml")
-                {
-                    // 跳转到淘宝去了
-                    detectLoginTimer.Start(); // 需要再跳转到登录页面
-                    Debugger.Log(0, null, "重新跳转");
-                }
-                else
-                {
-                    Configure conf = MainForm.Database.loadConfigre();
-                    if (!_bClicked && conf.Reconnect) // 设置了断线重连
-                    {
-                        loginTimer.Interval = conf.ReconnectDelaySeconds * 1000; // 延时
-                        loginTimer.Start();
-                    }
-                }
+                 HtmlElement he = aliWebBrowser.Document.GetElementById("J_SubmitQuick");
+                 if (he != null)
+                 {
+                     Configure conf = MainForm.Database.loadConfigre();
+                     if (!_bClicked && conf.Reconnect) // 设置了断线重连
+                     {
+                         loginTimer.Interval = conf.ReconnectDelaySeconds * 1000; // 延时点快速登录按钮
+                         loginTimer.Start();
+                     }
+                 }
+                 else
+                 {
+                     _bClicked = false;
+                     aliWebBrowser.Navigate(_loginURL);
+                 }
+
+//                 if (curURL == _loginURL)
+//                 {
+//                     Configure conf = MainForm.Database.loadConfigre();
+//                     if (!_bClicked && conf.Reconnect) // 设置了断线重连
+//                     {
+//                         loginTimer.Interval = conf.ReconnectDelaySeconds * 1000; // 延时点快速登录按钮
+//                         loginTimer.Start();
+//                     }
+//                 }
+//                 else
+//                 {
+//                     _bClicked = false;
+//                     aliWebBrowser.Navigate(_loginURL);
+//                 }
+
+//                 if (curURL == "https://login.taobao.com/member/login.jhtml")
+//                 {
+//                     // 跳转到淘宝去了
+//                     detectLoginTimer.Start(); // 需要再跳转到登录页面
+//                     Debugger.Log(0, null, "重新跳转");
+//                 }
+//                 else
+//                 {
+//                     Configure conf = MainForm.Database.loadConfigre();
+//                     if (!_bClicked && conf.Reconnect) // 设置了断线重连
+//                     {
+//                         loginTimer.Interval = conf.ReconnectDelaySeconds * 1000; // 延时
+//                         loginTimer.Start();
+//                     }
+//                 }
             }
             Debugger.Log(0, null, "OnDocumentComplete " + curURL);
         }
