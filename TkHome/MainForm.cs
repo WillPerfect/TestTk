@@ -148,6 +148,11 @@ namespace TkHome
         {
             if (!collectProductTimer.Enabled)
             {
+                if (collectListBox.CheckedItems.Count == 0)
+                {
+                    MessageBox.Show("请至少选择一个QQ群窗口");
+                    return;
+                }
                 List<int> monitorQQWndList = new List<int>();
                 for (int i = 0; i < collectListBox.CheckedItems.Count; i++)
                 {
@@ -367,6 +372,11 @@ namespace TkHome
         {
             if (!_startQunfa)
             {
+                if (qunfaListBox.SelectedItems.Count == 0)
+                {
+                    MessageBox.Show("请至少选择一个QQ或微信窗口");
+                    return;
+                }
                 qunfaButton.Text = "停止群发";
                 _startQunfa = true;
                 int startTime, endTime, interval;
